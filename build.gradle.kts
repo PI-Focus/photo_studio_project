@@ -33,7 +33,6 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
-	runtimeOnly("org.springframework.boot:spring-boot-devtools")
 }
 
 tasks.withType<Test> {
