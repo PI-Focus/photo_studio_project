@@ -6,11 +6,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @SuppressWarnings("PMD.AtLeastOneConstructor")
 @Controller
-public class BookingController {
+public class HomeController {
     @GetMapping()
-    public String getMessage(Model model) {
+    public String getIndex(Model model) {
         String message = "Very important text!";
         model.addAttribute("message", message);
-        return "message";
+
+        return "index";
     }
 }
