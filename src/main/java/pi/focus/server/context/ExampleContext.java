@@ -1,8 +1,9 @@
-package pi.focus.server;
+package pi.focus.server.context;
 
 import java.util.List;
 
-public class PageData implements ContextData {
+// Realization of context for example page
+public class ExampleContext implements IExampleContext {
     private int number;
     private List<Integer> numbers;
     private String textString;
@@ -10,7 +11,7 @@ public class PageData implements ContextData {
     private String picture;
     private List<String> pictures;
 
-    public PageData(
+    public ExampleContext(
         int number,
         List<Integer> numbers,
         String textString,

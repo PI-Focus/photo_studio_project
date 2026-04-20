@@ -1,8 +1,9 @@
-package pi.focus.server;
+package pi.focus.server.context;
 
 import java.util.List;
 
-public interface ContextData {
+// context for example page
+public interface IExampleContext {
     int getNumber();
     List<Integer> getNumbers();
     String getTextString();

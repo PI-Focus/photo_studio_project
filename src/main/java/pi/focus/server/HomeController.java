@@ -4,48 +4,47 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.Collections;
-import java.util.List;
+import pi.focus.server.context.mocks.ExampleContextMock;
 
 @SuppressWarnings({"PMD.AtLeastOneConstructor", "PMD.AvoidDuplicateLiterals"})
 @Controller
 public class HomeController {
-    private final PageData data = new PageData(
-            5,
-            List.of(1, 2, 3, 4, 5),
-            "Very cool text!",
-            List.of("Text number one", "Text number two", "Text number three", "Text number four", "Text number five"),
-            "/images/placeholder.png",
-            Collections.nCopies(5, "/images/placeholder.png")
-    );
+    // TODO: Add switch logic between mocks and realization
 
     @GetMapping()
     public String getInfo(Model model) {
-        model.addAttribute("context", data);
+        model.addAttribute("info", new ExampleContextMock());
         return "info";
     }
 
     @GetMapping("/photorooms")
     public String getPhotorooms(Model model) {
-        model.addAttribute("context", data);
+        model.addAttribute("photorooms", new ExampleContextMock());
         return "photorooms";
     }
 
     @GetMapping("/equipment")
     public String getEquipment(Model model) {
-        model.addAttribute("context", data);
+        model.addAttribute("equipment", new ExampleContextMock());
         return "equipment";
     }
 
     @GetMapping("/photographers")
     public String getPhotographers(Model model) {
-        model.addAttribute("context", data);
+        model.addAttribute("photographers", new ExampleContextMock());
         return "photographers";
     }
 
     @GetMapping("/login")
     public String getLogin(Model model) {
-        model.addAttribute("context", data);
+        model.addAttribute("login", new ExampleContextMock());
         return "login";
     }
+
+    @GetMapping("/example")
+    public String getExample(Model model) {
+        model.addAttribute("example", new ExampleContextMock());
+        return "example";
+    }
+    
 }
