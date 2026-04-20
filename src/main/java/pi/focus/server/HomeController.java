@@ -4,14 +4,47 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-@SuppressWarnings("PMD.AtLeastOneConstructor")
+import pi.focus.server.context.mocks.ExampleContextMock;
+
+@SuppressWarnings({"PMD.AtLeastOneConstructor", "PMD.AvoidDuplicateLiterals"})
 @Controller
 public class HomeController {
-    @GetMapping()
-    public String getIndex(Model model) {
-        String message = "Very important text!";
-        model.addAttribute("message", message);
+    // TODO: Add switch logic between mocks and realization
 
-        return "index";
+    @GetMapping()
+    public String getInfo(Model model) {
+        model.addAttribute("info", new ExampleContextMock());
+        return "info";
     }
+
+    @GetMapping("/photorooms")
+    public String getPhotorooms(Model model) {
+        model.addAttribute("photorooms", new ExampleContextMock());
+        return "photorooms";
+    }
+
+    @GetMapping("/equipment")
+    public String getEquipment(Model model) {
+        model.addAttribute("equipment", new ExampleContextMock());
+        return "equipment";
+    }
+
+    @GetMapping("/photographers")
+    public String getPhotographers(Model model) {
+        model.addAttribute("photographers", new ExampleContextMock());
+        return "photographers";
+    }
+
+    @GetMapping("/login")
+    public String getLogin(Model model) {
+        model.addAttribute("login", new ExampleContextMock());
+        return "login";
+    }
+
+    @GetMapping("/example")
+    public String getExample(Model model) {
+        model.addAttribute("example", new ExampleContextMock());
+        return "example";
+    }
+    
 }
