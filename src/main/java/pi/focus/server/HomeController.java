@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import pi.focus.server.context.mocks.ExampleContextMock;
+import pi.focus.server.context.mocks.InfoContextMock;
 
 @SuppressWarnings({"PMD.AtLeastOneConstructor", "PMD.AvoidDuplicateLiterals"})
 @Controller
@@ -13,7 +14,7 @@ public class HomeController {
 
     @GetMapping()
     public String getInfo(Model model) {
-        model.addAttribute("info", new ExampleContextMock());
+        model.addAttribute("info", new InfoContextMock());
         return "info";
     }
 

@@ -1,5 +1,9 @@
 <div th:fragment="about" class="data-block-odd about-block">
-    THIS IS ABOUT BLOCK
+    <div class="logo-name">
+        <img th:src="${info.aboutBlock.logo != null ? info.aboutBlock.logo : '/images/placeholder.png'}" alt="logo" />
+        <p>ФОТОСТУДИЯ «ФОКУС»</p>
+    </div>
+    <div th:text="${info.aboutBlock.description}" class="about-description"></div>
 </div>
 
 <div th:fragment="rent-rules" class="data-block-even rent-rules-block">

@@ -1,0 +1,24 @@
+.about-block {
+    --logo-diameter: 3em;
+    display: flex;
+    flex-direction: column;
+    
+
+    > .logo-name {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+
+        > img {
+            border-radius: 100%;
+            height: var(--logo-diameter);
+            margin-right: 20px;
+        }
+    }
+
+    > .about-description {
+        margin-top: 20px;
+    }
+}
+

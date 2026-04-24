@@ -63,8 +63,10 @@ body {
 
 .data-block-odd {
     background-color: var(--color-bg);
+    padding: 25px;
 }
 
 .data-block-even {
     background-color: var(--color-primary);
+    padding: 25px;
 }
