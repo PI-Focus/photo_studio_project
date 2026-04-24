@@ -4,16 +4,18 @@
     <meta charset="UTF-8">
     <title>Message</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet" th:href="@{/css/index.css}">
+    <link rel="stylesheet" th:href="@{/css/info.css}">
 </head>
 <body>
 <div th:replace="~{fragments/header :: header}"></div>
 
 <div class="main-wrapper">
-    <p th:text="${info.textString}"></p>
-    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nisi explicabo pariatur voluptate qui corrupti totam corporis molestias earum officiis maxime nesciunt aliquid dolore odio, aut voluptatum. Fuga ullam excepturi tempora!
+    <div th:replace="~{fragments/info/blocks :: about}"></div>
+
+    <div th:replace="~{fragments/info/blocks :: rent-rules}"></div>
+
+    <div th:replace="~{fragments/info/blocks :: imaged-router}"></div>
 </div>
-<a th:href="@{/example}">ПРОВЕРКА КОНТЕКСТА</a>
 
 <div th:replace="~{fragments/footer :: footer}"></div>
 </body>
