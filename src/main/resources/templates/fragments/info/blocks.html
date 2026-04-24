@@ -1,13 +1,20 @@
 <div th:fragment="about" class="data-block-odd about-block">
     <div class="logo-name">
-        <img th:src="${info.aboutBlock.logo != null ? info.aboutBlock.logo : '/images/placeholder.png'}" alt="logo" />
+        <img th:src="${info.aboutBlock.logo != null ? info.aboutBlock.logo : '/images/placeholder.png'}" alt="Логотип студии «Фокус»" />
         <p>ФОТОСТУДИЯ «ФОКУС»</p>
     </div>
     <div th:text="${info.aboutBlock.description}" class="about-description"></div>
 </div>
 
 <div th:fragment="rent-rules" class="data-block-even rent-rules-block">
-    THIS IS RENT RULES BLOCK
+    <p>ПРАВИЛА АРЕНДЫ</h1>
+    <div class="carousel">
+        <div class="text-card" th:each="rule: ${info.rentRules}">
+            <h3 class="text-card-title" th:text="${rule.title}">Заголовок правила</h3>
+            <p class="text-card-text" th:text="${rule.text}">Текст правила</p>
+        </div>
+
+    </div>
 </div>
 
 <div th:fragment="imaged-router" class="data-block-odd imaged-router-block">
