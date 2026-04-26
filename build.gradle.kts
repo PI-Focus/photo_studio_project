@@ -3,6 +3,7 @@ plugins {
 	id("org.springframework.boot") version "4.0.5"
 	id("io.spring.dependency-management") version "1.1.7"
     pmd
+	jacoco
 }
 
 group = "pi.focus"
@@ -45,4 +46,11 @@ tasks.named<Pmd>("pmdMain") {
 
 tasks.named<Pmd>("pmdTest") {
     ruleSetFiles = files("pmdTest.xml")
+}
+
+tasks.test {
+	finalizedBy(tasks.jacocoTestReport)
+}
+tasks.jacocoTestReport {
+	dependsOn(tasks.test)
 }
