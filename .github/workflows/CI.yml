@@ -61,7 +61,7 @@ jobs:
       - run: echo "Generating JaCoCo reports"
       - run: ./gradlew jacocoTestReport
       - name: Generate JaCoCo report in GitHub
-        uses: jjmrocha/jacoco-summary@v1
+        uses: jjmrocha/jacoco-summary@v1.1.1
 
   pmd:
     runs-on: ubuntu-latest
