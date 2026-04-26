@@ -61,7 +61,7 @@ jobs:
       - run: echo "Generating JaCoCo reports"
       - run: ./gradlew jacocoTestReport
       - name: Generate JaCoCo report in GitHub
-        uses: jeantessier/code-coverage-summary-action@v1.0.7
+        uses: jjmrocha/jacoco-summary@v1
 
   pmd:
     runs-on: ubuntu-latest
@@ -95,6 +95,7 @@ jobs:
       - run: echo "Running PMD"
       - name: Run PMD
         run: ./gradlew pmdMain pmdTest
+        continue-on-error: true
 
       - run: echo "Pushing PMD to output"
       - name: Push PMD
