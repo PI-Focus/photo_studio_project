@@ -1,0 +1,103 @@
+name: CI
+
+on:
+  pull_request: 
+    branches:
+      - develop
+    paths:
+      - '**.java'
+      - '**.xml'
+      - '**.kts'
+      - '**.kt'
+      - '/src/main/resources/**'
+      - '/src/test/resources/**'
+  workflow_dispatch: 
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Checking out code"
+      - name: Checkout code
+        uses: actions/checkout@v6.0.2
+
+      - run: echo "Setting up Java"
+      - name: Setup Java JDK
+        uses: actions/setup-java@v5.2.0
+        with:
+          java-version: 21
+          distribution: 'oracle'
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - run: Building project
+      - name: Build project without PMD
+        run: ./gradlew build -x pmdMain -x pmdTest
+
+      - run: echo "Caching gradlew and build"
+      - name: Cache gradlew and build
+        uses: actions/cache@v5.0.5
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            ~/build
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      - run: echo "Initiating tests"
+      - name: Start tests
+        run: ./gradlew test -x jacocoTestReport
+
+      - name: Test report
+        uses: dorny/test-reporter@v3
+        if: ${{ !cancelled() }}
+        with:
+          name: Tests
+          path: build/test-results/test/TEST-*.xml
+          reporter: java-junit
+
+      - run: Generating JaCoCo reports
+      - run: ./gradlew jacocoTestReport
+      - name: Generate JaCoCo report in GitHub
+        uses: jeantessier/code-coverage-summary-action@v1.0.7
+
+  pmd:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - run: echo "Checking out code"
+      - name: Checkout code
+        uses: actions/checkout@v6.0.2
+
+      - run: echo "Setting up Java"
+      - name: Setup Java JDK
+        uses: actions/setup-java@v5.2.0
+        with:
+          java-version: 21
+          distribution: 'oracle'
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - run: Granting cache back
+      - name: Grant cache
+        uses: actions/cache@v5.0.5
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            ~/build
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle-
+
+      - run: echo "Running PMD"
+      - name: Run PMD
+        run: ./gradlew pmdMain pmdTest
+
+      - run: Pushing PMD to output
+      - name: Push PMD
+        uses: jwgmeligmeyling/pmd-github-action@v1.2
+        with:
+          path: "/build/reports/pmd/*.xml"
