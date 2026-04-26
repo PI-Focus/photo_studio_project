@@ -11,6 +11,7 @@ on:
       - '**.kt'
       - '/src/main/resources/**'
       - '/src/test/resources/**'
+  workflow_dispatch: 
 
 jobs:
   test:
