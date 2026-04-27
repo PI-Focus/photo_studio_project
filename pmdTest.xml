@@ -21,6 +21,7 @@
     </rule>
 
     <rule ref="category/java/design.xml">
+        <exclude name="AtLeastOneConstructor"/>
         <exclude name="CognitiveComplexity"/>4
         <exclude name="CyclomaticComplexity"/>
         <exclude name="ExcessiveImports"/>
