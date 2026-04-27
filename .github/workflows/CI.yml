@@ -95,10 +95,3 @@ jobs:
       - run: echo "Running PMD"
       - name: Run PMD
         run: ./gradlew pmdMain pmdTest
-        continue-on-error: true
-
-      - run: echo "Pushing PMD to output"
-      - name: Push PMD
-        uses: jwgmeligmeyling/pmd-github-action@v1.2
-        with:
-          path: '~/build/reports/pmd/**.xml'
