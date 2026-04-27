@@ -10,8 +10,6 @@ import pi.focus.server.service.context.mocks.InfoContextMock;
 @SuppressWarnings({"PMD.AtLeastOneConstructor", "PMD.AvoidDuplicateLiterals"})
 @Controller
 public class HomeController {
-    // TODO: Add switch logic between mocks and realization
-
     @GetMapping()
     public String getInfo(Model model) {
         model.addAttribute("info", new InfoContextMock());

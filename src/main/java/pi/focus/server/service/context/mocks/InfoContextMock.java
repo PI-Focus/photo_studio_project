@@ -2,6 +2,9 @@ package pi.focus.server.service.context.mocks;
 
 import java.util.List;
 
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
+
 import pi.focus.server.api.context.IInfoContext;
 import pi.focus.server.api.models.IAboutDataBlock;
 import pi.focus.server.api.models.IImagedTab;
@@ -10,6 +13,8 @@ import pi.focus.server.service.models.mocks.AboutDataBlockMock;
 import pi.focus.server.service.models.mocks.ImagedTabMock;
 import pi.focus.server.service.models.mocks.TextCardMock;
 
+@Service
+@Profile("dev")
 public class InfoContextMock implements IInfoContext {
     private List<ITextCard> rentRules;
     private List<IImagedTab> imagedTabs;
