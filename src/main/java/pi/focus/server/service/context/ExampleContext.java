@@ -1,6 +1,8 @@
-package pi.focus.server.context;
+package pi.focus.server.service.context;
 
 import java.util.List;
+
+import pi.focus.server.api.context.IExampleContext;
 
 // Realization of context for example page
 public class ExampleContext implements IExampleContext {

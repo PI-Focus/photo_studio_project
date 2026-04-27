@@ -1,9 +1,9 @@
-package pi.focus.server.context.mocks;
+package pi.focus.server.service.context.mocks;
 
 import java.util.Collections;
 import java.util.List;
 
-import pi.focus.server.context.IExampleContext;
+import pi.focus.server.api.context.IExampleContext;
 
 public class ExampleContextMock implements IExampleContext {
 

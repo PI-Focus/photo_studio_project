@@ -1,11 +1,11 @@
-package pi.focus.server;
+package pi.focus.server.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
-import pi.focus.server.context.mocks.ExampleContextMock;
-import pi.focus.server.context.mocks.InfoContextMock;
+import pi.focus.server.service.context.mocks.ExampleContextMock;
+import pi.focus.server.service.context.mocks.InfoContextMock;
 
 @SuppressWarnings({"PMD.AtLeastOneConstructor", "PMD.AvoidDuplicateLiterals"})
 @Controller
@@ -15,37 +15,37 @@ public class HomeController {
     @GetMapping()
     public String getInfo(Model model) {
         model.addAttribute("info", new InfoContextMock());
-        return "info";
+        return "pages/info";
     }
 
     @GetMapping("/photorooms")
     public String getPhotorooms(Model model) {
         model.addAttribute("photorooms", new ExampleContextMock());
-        return "photorooms";
+        return "pages/photorooms";
     }
 
     @GetMapping("/equipment")
     public String getEquipment(Model model) {
         model.addAttribute("equipment", new ExampleContextMock());
-        return "equipment";
+        return "pages/equipment";
     }
 
     @GetMapping("/photographers")
     public String getPhotographers(Model model) {
         model.addAttribute("photographers", new ExampleContextMock());
-        return "photographers";
+        return "pages/photographers";
     }
 
     @GetMapping("/login")
     public String getLogin(Model model) {
         model.addAttribute("login", new ExampleContextMock());
-        return "login";
+        return "pages/login";
     }
 
     @GetMapping("/example")
     public String getExample(Model model) {
         model.addAttribute("example", new ExampleContextMock());
-        return "example";
+        return "pages/example";
     }
     
 }

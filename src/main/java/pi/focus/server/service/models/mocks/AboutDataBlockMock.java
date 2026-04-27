@@ -1,6 +1,6 @@
-package pi.focus.server.models.mocks;
+package pi.focus.server.service.models.mocks;
 
-import pi.focus.server.models.IAboutDataBlock;
+import pi.focus.server.api.models.IAboutDataBlock;
 
 public class AboutDataBlockMock implements IAboutDataBlock {
 

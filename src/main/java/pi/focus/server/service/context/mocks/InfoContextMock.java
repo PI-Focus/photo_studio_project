@@ -1,14 +1,14 @@
-package pi.focus.server.context.mocks;
+package pi.focus.server.service.context.mocks;
 
 import java.util.List;
 
-import pi.focus.server.context.IInfoContext;
-import pi.focus.server.models.IAboutDataBlock;
-import pi.focus.server.models.IImagedTab;
-import pi.focus.server.models.ITextCard;
-import pi.focus.server.models.mocks.AboutDataBlockMock;
-import pi.focus.server.models.mocks.ImagedTabMock;
-import pi.focus.server.models.mocks.TextCardMock;
+import pi.focus.server.api.context.IInfoContext;
+import pi.focus.server.api.models.IAboutDataBlock;
+import pi.focus.server.api.models.IImagedTab;
+import pi.focus.server.api.models.ITextCard;
+import pi.focus.server.service.models.mocks.AboutDataBlockMock;
+import pi.focus.server.service.models.mocks.ImagedTabMock;
+import pi.focus.server.service.models.mocks.TextCardMock;
 
 public class InfoContextMock implements IInfoContext {
     private List<ITextCard> rentRules;

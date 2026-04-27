@@ -1,6 +1,6 @@
-package pi.focus.server.models.mocks;
+package pi.focus.server.service.models.mocks;
 
-import pi.focus.server.models.IImagedTextCard;
+import pi.focus.server.api.models.IImagedTextCard;
 
 public class ImagedTextCardMock extends TextCardMock implements IImagedTextCard {
     private String imageUrl;

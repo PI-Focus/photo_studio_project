@@ -1,4 +1,4 @@
-package pi.focus.server.models;
+package pi.focus.server.api.models;
 
 public interface IImagedTab extends IImagedTextCard{
     String getTabName();

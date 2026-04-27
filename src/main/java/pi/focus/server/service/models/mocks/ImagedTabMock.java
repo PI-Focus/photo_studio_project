@@ -1,6 +1,6 @@
-package pi.focus.server.models.mocks;
+package pi.focus.server.service.models.mocks;
 
-import pi.focus.server.models.IImagedTab;
+import pi.focus.server.api.models.IImagedTab;
 
 public class ImagedTabMock extends ImagedTextCardMock implements IImagedTab{
     private String tabName;
