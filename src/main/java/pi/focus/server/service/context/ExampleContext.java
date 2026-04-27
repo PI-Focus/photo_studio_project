@@ -1,9 +1,18 @@
-package pi.focus.server.context;
+package pi.focus.server.service.context;
 
 import java.util.List;
 
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
+
+import pi.focus.server.api.context.IExampleContext;
+
+@SuppressWarnings({"PMD.DataClass"})
 // Realization of context for example page
-public class ExampleContext implements IExampleContext {
+@Service         
+@Profile("prod")
+
+public final class ExampleContext implements IExampleContext {
     private int number;
     private List<Integer> numbers;
     private String textString;

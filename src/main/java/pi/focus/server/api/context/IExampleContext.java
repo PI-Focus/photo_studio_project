@@ -1,4 +1,4 @@
-package pi.focus.server.context;
+package pi.focus.server.api.context;
 
 import java.util.List;
 

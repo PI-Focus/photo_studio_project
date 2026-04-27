@@ -7,13 +7,33 @@
     --color-secondary: #BCBABA;
     --color-accent: #FFFFFF;
     --color-bg: #D9D9D9;
+    --color-page: #FFF;
     --color-text-bright: #FFFFFF;
     --color-text-dark: #000000;
+
+    --font-base: 16px; 
+    
+    /* Отступы в rem */
+    --space-xs: 0.25rem;  /* 4px */
+    --space-s: 0.5rem;    /* 8px */
+    --space-m: 1rem;      /* 16px */
+    --space-l: 1.5rem;    /* 24px */
+    --space-xl: 2rem;     /* 32px */
+    
+    /* Шрифты */
+    --text-sm: 0.875rem;  /* 14px */
+    --text-base: 1rem;    /* 16px */
+    --text-lg: 1.25rem;   /* 20px */
+    --text-xl: 1.5rem;    /* 24px */
+    
+    /* Радиусы */
+    --radius-s: 0.25rem;
+    --radius-m: 0.5rem;
 }
 
 html {
     font-size: 25px;
-    background-color: var(--color-bg);
+    background-color: var(--color-page);
 }
 
 body {
@@ -58,4 +78,14 @@ body {
 .main-wrapper {
     width: var(--max-width);
     margin: auto;
+}
+
+.data-block-odd {
+    background-color: var(--color-bg);
+    padding: 2rem;
+}
+
+.data-block-even {
+    background-color: var(--color-primary);
+    padding: 2rem;
 }

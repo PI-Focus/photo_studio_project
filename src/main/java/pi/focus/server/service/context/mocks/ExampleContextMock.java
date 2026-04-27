@@ -1,10 +1,15 @@
-package pi.focus.server.context.mocks;
+package pi.focus.server.service.context.mocks;
 
 import java.util.Collections;
 import java.util.List;
 
-import pi.focus.server.context.IExampleContext;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
 
+import pi.focus.server.api.context.IExampleContext;
+
+@Service
+@Profile("dev")
 public class ExampleContextMock implements IExampleContext {
 
     @Override
