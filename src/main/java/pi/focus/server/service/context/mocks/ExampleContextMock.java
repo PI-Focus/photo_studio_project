@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import pi.focus.server.api.context.IExampleContext;
 
+@SuppressWarnings({"PMD.AtLeastOneConstructor"})
 @Service
 @Profile("dev")
 public class ExampleContextMock implements IExampleContext {

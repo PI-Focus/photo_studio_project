@@ -16,8 +16,8 @@ import pi.focus.server.service.models.mocks.TextCardMock;
 @Service
 @Profile("dev")
 public class InfoContextMock implements IInfoContext {
-    private List<ITextCard> rentRules;
-    private List<IImagedTab> imagedTabs;
+    private final List<ITextCard> rentRules;
+    private final List<IImagedTab> imagedTabs;
 
     public InfoContextMock() {
         rentRules = List.of(

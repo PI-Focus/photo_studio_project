@@ -3,7 +3,7 @@ package pi.focus.server.service.models.mocks;
 import pi.focus.server.api.models.IImagedTextCard;
 
 public class ImagedTextCardMock extends TextCardMock implements IImagedTextCard {
-    private String imageUrl;
+    private final String imageUrl;
 
     public ImagedTextCardMock(String title, String text, String imageUrl) {
         super(title, text);

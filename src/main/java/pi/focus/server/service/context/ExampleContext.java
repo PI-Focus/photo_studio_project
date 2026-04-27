@@ -7,11 +7,12 @@ import org.springframework.stereotype.Service;
 
 import pi.focus.server.api.context.IExampleContext;
 
-
+@SuppressWarnings({"PMD.DataClass"})
 // Realization of context for example page
-@Service          // Это бин Spring
+@Service         
 @Profile("prod")
-public class ExampleContext implements IExampleContext {
+
+public final class ExampleContext implements IExampleContext {
     private int number;
     private List<Integer> numbers;
     private String textString;

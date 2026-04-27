@@ -3,8 +3,8 @@ package pi.focus.server.service.models.mocks;
 import pi.focus.server.api.models.ITextCard;
 
 public class TextCardMock implements ITextCard{
-    private String title;
-    private String text;
+    private final String title;
+    private final String text;
 
     public TextCardMock(String title, String text) {
         this.title = title;
