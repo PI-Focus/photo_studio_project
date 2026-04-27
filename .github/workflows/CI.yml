@@ -31,7 +31,7 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
 
-      - run: Building project
+      - run: echo "Building project"
       - name: Build project without PMD
         run: ./gradlew build -x pmdMain -x pmdTest
 
@@ -58,10 +58,10 @@ jobs:
           path: build/test-results/test/TEST-*.xml
           reporter: java-junit
 
-      - run: Generating JaCoCo reports
+      - run: echo "Generating JaCoCo reports"
       - run: ./gradlew jacocoTestReport
       - name: Generate JaCoCo report in GitHub
-        uses: jeantessier/code-coverage-summary-action@v1.0.7
+        uses: jjmrocha/jacoco-summary@v1.1.1
 
   pmd:
     runs-on: ubuntu-latest
@@ -81,7 +81,7 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x gradlew
 
-      - run: Granting cache back
+      - run: echo "Granting cache back"
       - name: Grant cache
         uses: actions/cache@v5.0.5
         with:
@@ -95,9 +95,3 @@ jobs:
       - run: echo "Running PMD"
       - name: Run PMD
         run: ./gradlew pmdMain pmdTest
-
-      - run: Pushing PMD to output
-      - name: Push PMD
-        uses: jwgmeligmeyling/pmd-github-action@v1.2
-        with:
-          path: "/build/reports/pmd/*.xml"
