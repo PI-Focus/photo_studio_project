@@ -2,7 +2,7 @@ package pi.focus.server.service.models.mocks;
 
 import pi.focus.server.api.models.IAboutDataBlock;
 
-@SuppressWarnings({"PMD.AtLeastOneConstructor", "PMD.AvoidDuplicateLiterals"})
+@SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
 public class AboutDataBlockMock implements IAboutDataBlock {
 
     @Override
