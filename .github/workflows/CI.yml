@@ -101,4 +101,4 @@ jobs:
       - name: Push PMD
         uses: jwgmeligmeyling/pmd-github-action@v1.2
         with:
-          path: "/build/reports/pmd/*.xml"
+          path: "~/build/reports/pmd/*.xml"
