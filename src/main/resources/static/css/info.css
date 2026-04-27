@@ -119,4 +119,48 @@
     }
 }
 
+.imaged-router-block {
+    .tabs-nav {
+        display: flex;
+    }
 
+    .tab-btn {
+        background: var(--color-secondary);
+        cursor: pointer;
+        border: none;
+        transition: background 0.2s;
+    }
+
+    .tab-btn.active {
+        background: var(--color-primary);
+    }
+
+    .tab-panel {
+        display: none;
+        animation: fadeIn 0.25s ease;
+    }
+
+    .tab-panel.active { 
+        display: block; 
+    }
+
+    .tabs-content {
+        background: var(--color-primary);
+    }
+
+    .item-card {
+        display: grid;
+        grid-template-columns: 1fr 2fr;
+        
+        padding: 2rem;
+    }
+
+    .item-info {
+        display: flex;
+        flex-direction: column;
+
+        > h2 {
+            align-self: center;
+        }
+    }
+}
