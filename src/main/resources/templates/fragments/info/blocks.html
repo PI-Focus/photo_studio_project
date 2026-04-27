@@ -6,14 +6,20 @@
     <div th:text="${info.aboutBlock.description}" class="about-description"></div>
 </div>
 
-<div th:fragment="rent-rules" class="data-block-even rent-rules-block">
-    <p>ПРАВИЛА АРЕНДЫ</h1>
-    <div class="carousel">
-        <div class="text-card" th:each="rule: ${info.rentRules}">
-            <h3 class="text-card-title" th:text="${rule.title}">Заголовок правила</h3>
-            <p class="text-card-text" th:text="${rule.text}">Текст правила</p>
+<div th:fragment="rent-rules" class="data-block-even rent-rules-block carousel-instance">
+    <p>ПРАВИЛА АРЕНДЫ</p>
+    
+    <div class="carousel-wrapper">
+        <button type="button" class="carousel-btn carousel-btn--prev">Назад</button>
+        <div class="carousel-viewport">
+            <div class="carousel">
+                <div class="text-card" th:each="rule: ${info.rentRules}">
+                    <h3 class="text-card-title" th:text="${rule.title}">Заголовок</h3>
+                    <p class="text-card-text" th:text="${rule.text}">Текст</p>
+                </div>
+            </div>
         </div>
-
+        <button type="button" class="carousel-btn carousel-btn--next">Вперёд</button>
     </div>
 </div>
 
