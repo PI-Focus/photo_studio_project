@@ -1,5 +1,4 @@
 .about-block {
-    --logo-diameter: 3em;
     display: flex;
     flex-direction: column;
     
@@ -8,11 +7,11 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.5rem;
+        font-size: var(--text-xl);
 
         > img {
             border-radius: 100%;
-            height: var(--logo-diameter);
+            height: var(--diameter-xl);
             margin-right: 20px;
         }
     }
@@ -28,14 +27,14 @@
     align-items: center;
 
     > p {
-        font-size: 1.5rem;
+        font-size: var(--text-xl);
         margin-top: 0;
-        margin-bottom: .5rem;
+        margin-bottom: var(--space-m);
     }
 
     .carousel-wrapper {
         --cards: 3;
-        --gap: 20px;
+        --gap: var(--space-m);
 
         width: 100%;
         display: flex;
@@ -50,35 +49,36 @@
     .carousel {
         display: flex;
         gap: var(--gap);
-        transition: transform 0.3s ease-in-out;
+        transition: transform var(--time-m) ease-in-out;
     }
 
     .text-card {
         flex: 0 0 calc((100% - (var(--gap) * (var(--cards) - 1))) / var(--cards));
-        background-color: var(--color-bg);  
+        background-color: var(--color-primary);  
         display: flex;
         flex-direction: column;
         align-items: center;
     }
 
     .text-card-title {
-        margin: .3rem;
+        margin: var(--space-m);
     }
 
     .text-card-text {
-        margin: .3rem;
+        margin: var(--space-m);
+        margin-top: 0;
     }
 
     .carousel-btn {
         background: transparent;
-        border: 2px solid var(--color-text-bright, white);
-        width: 2rem;
-        height: 2rem;
+        border: 2px solid var(--color-primary);
+        width: var(--diameter-l);
+        height: var(--diameter-l);
         border-radius: 50%;
         margin: var(--gap);
         padding: 0;
         cursor: pointer;
-        transition: all 0.2s ease;
+        transition: all var(--time-m) ease;
         
         color: transparent;
         
@@ -94,7 +94,7 @@
         width: 100%;
         height: 100%;
         
-        background-color: var(--color-text-bright, white);
+        background-color: var(--color-primary);
         
         -webkit-mask-size: contain;
         mask-size: contain;
@@ -115,7 +115,7 @@
     }
 
     .carousel-btn:hover:not(:disabled)::before {
-        background-color: var(--color-accent, orange);
+        background-color: var(--color-accent);
     }
 }
 
@@ -128,7 +128,9 @@
         background: var(--color-secondary);
         cursor: pointer;
         border: none;
-        transition: background 0.2s;
+        transition: background var(--time-s);
+        padding: var(--space-s);
+        font-size: var(--text-m);
     }
 
     .tab-btn.active {
@@ -137,7 +139,7 @@
 
     .tab-panel {
         display: none;
-        animation: fadeIn 0.25s ease;
+        animation: fadeIn var(--time-s) ease;
     }
 
     .tab-panel.active { 
@@ -152,15 +154,34 @@
         display: grid;
         grid-template-columns: 1fr 2fr;
         
-        padding: 2rem;
+        padding: var(--space-l);
+
+        img {
+            max-height: 16rem;
+        }
     }
 
     .item-info {
         display: flex;
         flex-direction: column;
 
-        > h2 {
+        > .title {
             align-self: center;
+            font-size: var(--text-xl);
+            margin: 0;
+        }
+
+        > .btn-go {
+            background: var(--color-bg);
+            width: fit-content;
+            padding: var(--space-s) var(--space-l);
+            border-radius: var(--round-s);
+            margin-top: auto;
+
+            > a {
+                text-decoration: none;
+                color: var(--color-text-dark);
+            }
         }
     }
 }
