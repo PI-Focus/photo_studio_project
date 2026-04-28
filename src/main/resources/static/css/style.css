@@ -50,7 +50,7 @@ html {
     --color-text-bright: var(--palette-text-bright);
     --color-text-dark: var(--palette-text-dark);
 
-    font-size: var(--text-m);
+    font-size: var(--font-base);
     background-color: var(--color-page);
 }
 
@@ -94,7 +94,7 @@ body {
 }
 
 .main-wrapper {
-    width: var(--max-width);
+    max-width: var(--max-width);
     margin: auto;
 
     > .data-block:nth-child(even) {

@@ -117,6 +117,23 @@
     .carousel-btn:hover:not(:disabled)::before {
         background-color: var(--color-accent);
     }
+
+    @media (max-width: 768px) {
+        .carousel-wrapper {
+            --cards: 2;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .carousel-wrapper {
+            --cards: 1;
+        }
+        
+        .carousel-btn {
+            width: var(--diameter-m);
+            height: var(--diameter-m);
+        }
+    }
 }
 
 .imaged-router-block {
@@ -164,6 +181,7 @@
     .item-info {
         display: flex;
         flex-direction: column;
+        margin-left: var(--space-s);
 
         > .title {
             align-self: center;

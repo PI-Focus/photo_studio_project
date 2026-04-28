@@ -1,42 +1,83 @@
 document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('.rent-rules-block').forEach(container => {
-        function getCardsToShow(element) {
-            const val = getComputedStyle(element).getPropertyValue('--cards').trim();
+        const carousel = container.querySelector('.carousel');
+        const cards = Array.from(container.querySelectorAll('.text-card'));
+        const prevBtn = container.querySelector('.carousel-btn--prev');
+        const nextBtn = container.querySelector('.carousel-btn--next');
+        
+        const wrapper = container.querySelector('.carousel-wrapper');
+
+        let currentIndex = 0;
+        let resizeTimer;
+
+        function getCardsToShow() {
+            const val = getComputedStyle(wrapper).getPropertyValue('--cards').trim();
             return parseInt(val, 10) || 3;
         }
 
-        const carousel = container.querySelector('.carousel');
-        const cards = container.querySelectorAll('.text-card');
-        const prevBtn = container.querySelector('.carousel-btn--prev');
-        const nextBtn = container.querySelector('.carousel-btn--next');
-
-        let currentIndex = 0;
-        const cardsToShow = getCardsToShow(carousel);
-        const totalCards = cards.length;
-        const maxIndex = Math.max(0, totalCards - cardsToShow);
-
-        function getStep() {
-            if (!cards.length) return 0;
-            const gap = parseFloat(getComputedStyle(carousel).gap);
-            return cards[0].offsetWidth + gap;
+        function getStepSize() {
+            if (cards.length === 0) return 0;
+            const cardStyle = getComputedStyle(cards[0]);
+            const cardWidth = cards[0].offsetWidth;
+            const gap = parseFloat(getComputedStyle(carousel).gap) || 0;
+            return cardWidth + gap;
         }
 
-        function updateCarousel() {
-            carousel.style.transform = `translateX(-${currentIndex * getStep()}px)`;
-            prevBtn.disabled = currentIndex === 0;
-            nextBtn.disabled = currentIndex >= maxIndex;
-            prevBtn.style.opacity = prevBtn.disabled ? 0.4 : 1;
-            nextBtn.style.opacity = nextBtn.disabled ? 0.4 : 1;
+        function updateCarouselState() {
+            const cardsToShow = getCardsToShow();
+            const totalCards = cards.length;
+            
+            const maxIndex = Math.max(0, totalCards - cardsToShow);
+
+            if (currentIndex > maxIndex) {
+                currentIndex = maxIndex;
+            }
+            
+            if (totalCards <= cardsToShow) {
+                currentIndex = 0;
+            }
+
+            const step = getStepSize();
+            carousel.style.transform = `translateX(-${currentIndex * step}px)`;
+
+            const isStart = currentIndex === 0;
+            const isEnd = currentIndex >= maxIndex && totalCards > cardsToShow;
+
+            prevBtn.disabled = isStart;
+            nextBtn.disabled = isEnd;
+            
+            prevBtn.style.opacity = isStart ? 0.4 : 1;
+            nextBtn.style.opacity = isEnd ? 0.4 : 1;
+            
+            prevBtn.style.cursor = isStart ? 'default' : 'pointer';
+            nextBtn.style.cursor = isEnd ? 'default' : 'pointer';
         }
 
         nextBtn.addEventListener('click', () => {
-            if (currentIndex < maxIndex) { currentIndex++; updateCarousel(); }
+            const cardsToShow = getCardsToShow();
+            const maxIndex = Math.max(0, cards.length - cardsToShow);
+            
+            if (currentIndex < maxIndex) {
+                currentIndex++;
+                updateCarouselState();
+            }
         });
 
         prevBtn.addEventListener('click', () => {
-            if (currentIndex > 0) { currentIndex--; updateCarousel(); }
+            if (currentIndex > 0) {
+                currentIndex--;
+                updateCarouselState();
+            }
         });
 
-        updateCarousel();
+        window.addEventListener('resize', () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(() => {
+                updateCarouselState();
+            }, 100);
+        });
+
+
+        setTimeout(updateCarouselState, 0);
     });
 });
