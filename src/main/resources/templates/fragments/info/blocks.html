@@ -1,4 +1,4 @@
-<div th:fragment="about" class="data-block-odd about-block">
+<div th:fragment="about" class="data-block about-block">
     <div class="logo-name">
         <img th:src="${info.aboutBlock.logo != null ? info.aboutBlock.logo : '/images/placeholder.png'}" alt="Логотип студии «Фокус»" />
         <p>ФОТОСТУДИЯ «ФОКУС»</p>
@@ -6,7 +6,7 @@
     <div th:text="${info.aboutBlock.description}" class="about-description"></div>
 </div>
 
-<div th:fragment="rent-rules" class="data-block-even rent-rules-block carousel-instance">
+<div th:fragment="rent-rules" class="data-block rent-rules-block carousel-instance">
     <p>ПРАВИЛА АРЕНДЫ</p>
     
     <div class="carousel-wrapper">
@@ -23,7 +23,7 @@
     </div>
 </div>
 
-<div th:fragment="imaged-router" class="data-block-odd imaged-router-block">
+<div th:fragment="imaged-router" class="data-block imaged-router-block">
     <nav class="tabs-nav" role="tablist">
         <button th:each="tab, iterStat : ${info.imagedTabs}"
                 class="tab-btn"
@@ -53,9 +53,11 @@
                         loading="lazy"/>
                 
                 <div class="item-info">
-                    <h2 th:text="${tab.title}">ЗАГОЛОВОК ВКЛАДКИ</h2>
+                    <p th:text="${tab.title}" class="title">ЗАГОЛОВОК ВКЛАДКИ</h2>
                     <p th:text="${tab.text}">Описание вкладки...</p>
-                    <a th:href="${tab.linkUrl}" class="btn-go">ПЕРЕЙТИ</a>
+                    <span class="btn-go">
+                        <a th:href="${tab.linkUrl}">Перейти</a>
+                    </span>
                 </div>
             </div>
         </div>
