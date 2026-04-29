@@ -4,13 +4,6 @@ on:
   pull_request: 
     branches:
       - develop
-    paths:
-      - '**.java'
-      - '**.xml'
-      - '**.kts'
-      - '**.kt'
-      - '/src/main/resources/**'
-      - '/src/test/resources/**'
   workflow_dispatch: 
 
 jobs:
