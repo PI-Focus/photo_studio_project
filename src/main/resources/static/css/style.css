@@ -98,12 +98,12 @@ body {
     margin: auto;
 
     > .data-block:nth-child(even) {
-        --color-bg: var(--palette-primary);
-        --color-primary: var(--palette-bg);
+        --color-secondary: var(--palette-primary);
+        --color-primary: var(--palette-secondary);
     }
 
     > .data-block {
-        background-color: var(--color-bg);
+        background-color: var(--color-secondary);
         padding: var(--space-xl);
     }
 }
