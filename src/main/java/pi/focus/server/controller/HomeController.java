@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import pi.focus.server.service.context.mocks.ExampleContextMock;
 import pi.focus.server.service.context.mocks.InfoContextMock;
+import pi.focus.server.service.context.mocks.PhotoroomsContextMock;
 
 
 @Controller
@@ -20,7 +21,7 @@ public class HomeController {
 
     @GetMapping("/photorooms")
     public String getPhotorooms(Model model) {
-        model.addAttribute("photorooms", new ExampleContextMock());
+        model.addAttribute("photorooms", new PhotoroomsContextMock());
         return "pages/photorooms";
     }
 

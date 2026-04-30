@@ -1,0 +1,22 @@
+<div th:fragment="imaged-items-list" class="imaged-items-list">
+    <div th:each="item : ${photorooms.items}" class="data-block">
+        <div class="item-card">
+                <img th:if="${item.imageUrl != null}"
+                        th:src="${item.imageUrl}"
+                        th:alt="${item.title}"
+                        loading="lazy"/>
+                <img th:unless="${item.imageUrl != null}"
+                        src="/images/placeholder.png"
+                        alt="Изображение недоступно"
+                        loading="lazy"/>
+                
+                <div class="item-info">
+                    <p th:text="${item.title}" class="title">ЗАГОЛОВОК ВКЛАДКИ</h2>
+                    <p th:text="${item.text}">Описание вкладки...</p>
+                    <span class="btn-go">
+                        <a th:href="${item.linkUrl}">Перейти</a>
+                    </span>
+                </div>
+            </div>
+    </div>
+</div>
