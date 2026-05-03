@@ -97,12 +97,12 @@ body {
     max-width: var(--max-width);
     margin: auto;
 
-    > .data-block:nth-child(even) {
+    .data-block:nth-child(even) {
         --color-primary: var(--palette-bg);
         --color-bg: var(--palette-primary);
     }
 
-    > .data-block {
+    .data-block {
         background-color: var(--color-bg);
         padding: var(--space-xl);
     }
