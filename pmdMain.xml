@@ -6,6 +6,7 @@
     <description>Rules</description>
     <rule ref="category/java/bestpractices.xml">
         <exclude name="RelianceOnDefaultCharset"/>
+        <exclude name="ImplicitFunctionalInterface"/>
     </rule>
 
     <rule ref="category/java/codestyle.xml">

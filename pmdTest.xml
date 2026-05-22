@@ -6,6 +6,7 @@
     <description>Rules</description>
     <rule ref="category/java/bestpractices.xml">
         <exclude name="AvoidPrintStackTrace"/>
+        <exclude name="ImplicitFunctionalInterface"/>
         <exclude name="LooseCoupling"/>
         <exclude name="PreserveStackTrace"/>
         <exclude name="RelianceOnDefaultCharset"/>
