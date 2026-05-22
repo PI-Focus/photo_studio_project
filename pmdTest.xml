@@ -19,6 +19,11 @@
         <exclude name="MethodArgumentCouldBeFinal"/>
         <exclude name="PrematureDeclaration"/>
     </rule>
+    <rule ref="category/java/codestyle.xml/ShortVariable">
+        <properties>
+            <property name="minimum" value="2"/>
+        </properties>
+    </rule>
 
     <rule ref="category/java/design.xml">
         <exclude name="DataClass"/>
