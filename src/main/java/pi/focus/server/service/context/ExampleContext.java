@@ -4,7 +4,6 @@ import java.util.List;
 
 import pi.focus.server.api.context.IExampleContext;
 
-@SuppressWarnings({"PMD.DataClass"})
 // Realization of context for example page
 
 public final class ExampleContext implements IExampleContext {
