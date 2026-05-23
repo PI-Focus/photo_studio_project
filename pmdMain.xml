@@ -6,6 +6,7 @@
     <description>Rules</description>
     <rule ref="category/java/bestpractices.xml">
         <exclude name="RelianceOnDefaultCharset"/>
+        <exclude name="ImplicitFunctionalInterface"/>
     </rule>
 
     <rule ref="category/java/codestyle.xml">
@@ -15,8 +16,14 @@
         <exclude name="MethodArgumentCouldBeFinal"/>
         <exclude name="OnlyOneReturn"/>
     </rule>
+    <rule ref="category/java/codestyle.xml/ShortVariable">
+        <properties>
+            <property name="minimum" value="2"/>
+        </properties>
+    </rule>
 
     <rule ref="category/java/design.xml">
+        <exclude name="DataClass"/>
         <exclude name="NPathComplexity"/>
         <exclude name="UseObjectForClearerAPI"/>
     </rule>
