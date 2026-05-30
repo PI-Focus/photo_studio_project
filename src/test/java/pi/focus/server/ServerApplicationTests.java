@@ -19,7 +19,7 @@ class ServerApplicationTests {
     static PostgreSQLContainer<?> postgres = initContainer();
 
     private static PostgreSQLContainer<?> initContainer() {
-        Dotenv env = Dotenv.load();
+        Dotenv env = Dotenv.configure().ignoreIfMissing().load();
         return new PostgreSQLContainer<>("postgres:latest")
                 .withDatabaseName(env.get("TEST_DB_NAME"))
                 .withUsername(env.get("TEST_DB_USER"))
