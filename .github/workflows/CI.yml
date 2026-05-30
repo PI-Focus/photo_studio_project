@@ -9,6 +9,10 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+    env:
+      TEST_DB_NAME: ${{ vars.TEST_DB_NAME }}
+      TEST_DB_USER: ${{ secrets.TEST_DB_USER }}
+      TEST_DB_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
     steps:
       - run: echo "Checking out code"
       - name: Checkout code
@@ -55,15 +59,14 @@ jobs:
       - run: ./gradlew jacocoTestReport
       - name: Generate JaCoCo report in GitHub
         uses: jjmrocha/jacoco-summary@v1.1.1
-        
-    env:
-      TEST_DB_NAME: ${{ vars.TEST_DB_NAME }}
-      TEST_DB_USER: ${{ secrets.TEST_DB_USER }}
-      TEST_DB_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
 
   pmd:
     runs-on: ubuntu-latest
     needs: test
+    env:
+      TEST_DB_NAME: ${{ vars.TEST_DB_NAME }}
+      TEST_DB_USER: ${{ secrets.TEST_DB_USER }}
+      TEST_DB_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
     steps:
       - run: echo "Checking out code"
       - name: Checkout code
@@ -93,8 +96,3 @@ jobs:
       - run: echo "Running PMD"
       - name: Run PMD
         run: ./gradlew pmdMain pmdTest
-    
-    env:
-      TEST_DB_NAME: ${{ vars.TEST_DB_NAME }}
-      TEST_DB_USER: ${{ secrets.TEST_DB_USER }}
-      TEST_DB_PASSWORD: ${{ secrets.TEST_DB_PASSWORD }}
