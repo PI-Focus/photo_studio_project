@@ -1,3 +1,5 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
 INSERT INTO rooms (id, title, description) VALUES
 	('8718f425-0ebe-48aa-9127-4541ed29524c', 'Зал 1', 'Очень крутое описание зала 1. Лучше зала просто не существует'),
 	('602109e2-f729-41f3-b93b-2f9a81878ed6', 'Зал 2', 'Очень крутое описание зала 2. Лучше зала просто не существует'),
@@ -44,17 +46,17 @@ INSERT INTO equipment (id, title, description, photo_path) VALUES
 	('554c0677-d149-4e82-8c56-355c139e6ee1', 'Хромакей', 'Описание хромакея', '/images/placeholder.png'),
 	('60cab21d-31e8-4589-a145-5556172aa439', 'Призма', 'Описание призмы', '/images/placeholder.png');
 
-INSERT INTO users (id, login, role) VALUES
-	('04070c17-74da-4074-892b-d9c4dedab9cf', 'login0', 'admin'),
-	('3e5f1ff2-7c6f-47ec-9aac-62d0f328b4bd', 'login1', 'user'),
-	('e4a507da-7b8b-4f4b-9957-9d592d474621', 'login2', 'user'),
-	('09db59da-56eb-480d-8886-88642450fc98', 'login3', 'user'),
-	('bc146acb-084c-472b-b3a3-f58ba2677c05', 'login4', 'user'),
-	('edec74be-5539-4d72-9537-03acf9e1c866', 'login5', 'user'),
-	('499af41b-fddb-4970-868b-201c2b5776bb', 'login6', 'user'),
-	('a92b31ca-8087-48b9-bd9d-a4c6e730f529', 'login7', 'user'),
-	('9400ca07-e888-488c-878b-c56743dc646e', 'login8', 'user'),
-	('af402408-fbdd-460d-8819-866cccda6a22', 'login9', 'user');
+INSERT INTO users (id, login, password, role) VALUES
+	('04070c17-74da-4074-892b-d9c4dedab9cf', 'login0', crypt('password0', gen_salt('bf')), 'ADMIN'),
+	('3e5f1ff2-7c6f-47ec-9aac-62d0f328b4bd', 'login1', crypt('password1', gen_salt('bf')), 'USER'),
+	('e4a507da-7b8b-4f4b-9957-9d592d474621', 'login2', crypt('password2', gen_salt('bf')), 'USER'),
+	('09db59da-56eb-480d-8886-88642450fc98', 'login3', crypt('password3', gen_salt('bf')), 'USER'),
+	('bc146acb-084c-472b-b3a3-f58ba2677c05', 'login4', crypt('password4', gen_salt('bf')), 'USER'),
+	('edec74be-5539-4d72-9537-03acf9e1c866', 'login5', crypt('password5', gen_salt('bf')), 'USER'),
+	('499af41b-fddb-4970-868b-201c2b5776bb', 'login6', crypt('password6', gen_salt('bf')), 'USER'),
+	('a92b31ca-8087-48b9-bd9d-a4c6e730f529', 'login7', crypt('password7', gen_salt('bf')), 'USER'),
+	('9400ca07-e888-488c-878b-c56743dc646e', 'login8', crypt('password8', gen_salt('bf')), 'USER'),
+	('af402408-fbdd-460d-8819-866cccda6a22', 'login9', crypt('password9', gen_salt('bf')), 'USER');
 
 INSERT INTO reservations (id, user_id, room_id, day, from_time, to_time) VALUES
     ('165b248a-9d78-4fa5-8b26-6151b8ee5e12', '3e5f1ff2-7c6f-47ec-9aac-62d0f328b4bd', '8718f425-0ebe-48aa-9127-4541ed29524c', '2026-05-18', 9, 13),

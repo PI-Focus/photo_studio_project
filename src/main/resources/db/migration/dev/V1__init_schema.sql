@@ -1,4 +1,4 @@
-CREATE TYPE user_role AS ENUM ('user', 'admin');
+CREATE TYPE user_role AS ENUM ('USER', 'ADMIN');
 
 CREATE TABLE rooms (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -32,6 +32,7 @@ CREATE TABLE equipment (
 CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     login VARCHAR(32) NOT NULL UNIQUE,
+    password TEXT NOT NULL,
     role user_role NOT NULL
 );
 

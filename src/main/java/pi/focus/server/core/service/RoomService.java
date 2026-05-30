@@ -10,7 +10,7 @@ import pi.focus.server.core.service.api.IRoomService;
 import java.util.List;
 
 @Service
-@Profile("prod")
+@Profile({"dev", "prod"})
 public class RoomService implements IRoomService {
     private final RoomRepository roomRepository;
 

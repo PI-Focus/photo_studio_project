@@ -8,7 +8,7 @@ import pi.focus.server.core.service.api.IRoomService;
 import java.util.List;
 
 @Service
-@Profile("dev")
+@Profile({"mock", "test"})
 public class RoomServiceMock implements IRoomService {
     @Override
     public List<Room> getAllRooms() {

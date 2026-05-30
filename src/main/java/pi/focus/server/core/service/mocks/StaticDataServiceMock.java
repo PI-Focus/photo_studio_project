@@ -7,7 +7,7 @@ import pi.focus.server.core.service.api.IStaticDataService;
 import pi.focus.server.service.context.mocks.InfoContextMock;
 
 @Service
-@Profile("dev")
+@Profile({"mock", "test"})
 public class StaticDataServiceMock implements IStaticDataService {
     @Override
     public IInfoContext getInfo() {

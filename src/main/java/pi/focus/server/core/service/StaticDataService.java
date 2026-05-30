@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Objects;
 
 @Service
-@Profile("prod")
+@Profile({"dev", "prod"})
 public class StaticDataService implements IStaticDataService {
     @Override
     public IInfoContext getInfo() {

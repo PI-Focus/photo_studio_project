@@ -15,12 +15,15 @@ import java.util.List;
 
 @Controller
 public class HomeController {
-    public IRoomService roomService;
     public IStaticDataService staticDataService;
+    public IRoomService roomService;
 
-    public HomeController(IRoomService roomService, IStaticDataService staticDataService) {
-        this.roomService = roomService;
+    public HomeController(
+            IStaticDataService staticDataService,
+            IRoomService roomService
+    ) {
         this.staticDataService = staticDataService;
+        this.roomService = roomService;
     }
 
     @GetMapping("/test-db")
@@ -63,5 +66,4 @@ public class HomeController {
         model.addAttribute("example", new ExampleContextMock());
         return "pages/example";
     }
-    
 }
