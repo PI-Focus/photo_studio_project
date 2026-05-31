@@ -1,13 +1,19 @@
 package pi.focus.server.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import pi.focus.server.core.domain.Room;
+import pi.focus.server.core.domain.User;
+import pi.focus.server.core.domain.UserRole;
 import pi.focus.server.core.service.api.IRoomService;
 import pi.focus.server.core.service.api.IStaticDataService;
+import pi.focus.server.core.service.api.IUserService;
 import pi.focus.server.service.context.mocks.ExampleContextMock;
 
 import java.util.List;
@@ -17,16 +23,22 @@ import java.util.List;
 public class HomeController {
     public IStaticDataService staticDataService;
     public IRoomService roomService;
+    public IUserService userService;
+    public PasswordEncoder passwordEncoder;
 
     public HomeController(
             IStaticDataService staticDataService,
-            IRoomService roomService
+            IRoomService roomService,
+            IUserService userService,
+            PasswordEncoder passwordEncoder
     ) {
         this.staticDataService = staticDataService;
         this.roomService = roomService;
+        this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @GetMapping("/test-db")
+    @GetMapping("/test-db") // TODO: delete this
     public ResponseEntity<List<Room>> getTest() {
         return ResponseEntity.ok(roomService.getAllRooms());
     }
@@ -59,6 +71,20 @@ public class HomeController {
     public String getLogin(Model model) {
         model.addAttribute("login", new ExampleContextMock());
         return "pages/login";
+    }
+
+    @GetMapping("/registration")
+    public String getSignup(Model model) {
+        model.addAttribute("login", new ExampleContextMock());
+        return "pages/login";
+    }
+
+    @PostMapping("/registration")
+    public String createUser(@RequestParam String login, @RequestParam String password) {
+        String encodedPassword = passwordEncoder.encode(password);
+        User user = new User(null, login, encodedPassword, UserRole.USER);
+        userService.createUser(user);
+        return "redirect:/";
     }
 
     @GetMapping("/example")
