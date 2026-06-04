@@ -1,4 +1,4 @@
-package pi.focus.server.service;
+package pi.focus.server.core.service;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -7,7 +7,6 @@ import org.mockito.Mockito;
 import pi.focus.server.api.context.IInfoContext;
 import pi.focus.server.core.exception.StaticDataLoadingException;
 import pi.focus.server.core.json.JsonMapper;
-import pi.focus.server.core.service.StaticDataService;
 
 import static org.mockito.ArgumentMatchers.any;
 
