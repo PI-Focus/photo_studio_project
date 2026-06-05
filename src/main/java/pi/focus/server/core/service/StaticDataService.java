@@ -49,7 +49,7 @@ public class StaticDataService implements IStaticDataService {
         } catch (IOException e) {
             throw new StaticDataLoadingException("File load error: rules.json", e);
         } catch (NullPointerException e) {
-            throw new StaticDataLoadingException("File not found: about.json", e);
+            throw new StaticDataLoadingException("File not found: rules.json", e);
         }
     }
 
@@ -61,7 +61,7 @@ public class StaticDataService implements IStaticDataService {
         } catch (IOException e) {
             throw new StaticDataLoadingException("File load error: preview.json", e);
         } catch (NullPointerException e) {
-            throw new StaticDataLoadingException("File not found: about.json", e);
+            throw new StaticDataLoadingException("File not found: preview.json", e);
         }
     }
 }
