@@ -2,11 +2,11 @@ package pi.focus.server.core.exception;
 
 import java.io.Serial;
 
-public class StaticDataLoadingException extends RuntimeException {
+public class AutoLoginException extends RuntimeException {
     @Serial
     private static final long serialVersionUID = 1;
 
-    public StaticDataLoadingException(String message, Throwable cause) {
+    public AutoLoginException(String message, Throwable cause) {
         super(message, cause);
     }
 }

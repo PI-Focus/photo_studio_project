@@ -1,5 +1,7 @@
 package pi.focus.server.controller;
 
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import pi.focus.server.core.domain.Room;
 import pi.focus.server.core.domain.User;
 import pi.focus.server.core.domain.UserRole;
+import pi.focus.server.core.exception.AutoLoginException;
 import pi.focus.server.core.service.api.IRoomService;
 import pi.focus.server.core.service.api.IStaticDataService;
 import pi.focus.server.core.service.api.IUserService;
@@ -80,10 +83,16 @@ public class HomeController {
     }
 
     @PostMapping("/registration")
-    public String createUser(@RequestParam String login, @RequestParam String password) {
+    public String createUser(@RequestParam String login, @RequestParam String password, HttpServletRequest request) {
         String encodedPassword = passwordEncoder.encode(password);
         User user = new User(null, login, encodedPassword, UserRole.USER);
         userService.createUser(user);
+
+        try {
+            request.login(login, password);
+        } catch (ServletException e) {
+            throw new AutoLoginException("Autologin failed", e);
+        }
         return "redirect:/";
     }
 
