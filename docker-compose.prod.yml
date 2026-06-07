@@ -1,15 +1,27 @@
 services:
+  redis:
+    image: redis:8.6
+    restart: unless-stopped
+    command: redis-server --requirepass ${PROD_REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: [ "CMD", "redis-cli", "-a", "${PROD_REDIS_PASSWORD}", "ping" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   db:
     image: postgres:16-alpine
     restart: unless-stopped
     environment:
-      - POSTGRES_DB=${DEV_DB_NAME}
-      - POSTGRES_USER=${DEV_DB_USER}
-      - POSTGRES_PASSWORD=${DEV_DB_PASSWORD}
+      - POSTGRES_DB=${PROD_DB_NAME}
+      - POSTGRES_USER=${PROD_DB_USER}
+      - POSTGRES_PASSWORD=${PROD_DB_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DEV_DB_USER} -d ${DEV_DB_NAME}"]
+      test: ["CMD-SHELL", "pg_isready -U ${PROD_DB_USER} -d ${PROD_DB_NAME}"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -20,9 +32,12 @@ services:
 
     environment:
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-prod}
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${DEV_DB_NAME}
-      - SPRING_DATASOURCE_USERNAME=${DEV_DB_USER}
-      - SPRING_DATASOURCE_PASSWORD=${DEV_DB_PASSWORD}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${PROD_DB_NAME}
+      - SPRING_DATASOURCE_USERNAME=${PROD_DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${PROD_DB_PASSWORD}
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_DATA_PASSWORD=${PROD_REDIS_PASSWORD}
 
     labels:
       - "traefik.enable=true"
@@ -40,6 +55,8 @@ services:
 
     depends_on:
       db:
+        condition: service_healthy
+      redis:
         condition: service_healthy
 
     healthcheck:
@@ -67,3 +84,4 @@ services:
 volumes:
   postgres_data:
   letsencrypt_data:
+  redis_data:
