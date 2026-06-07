@@ -72,6 +72,8 @@ services:
   traefik:
     image: traefik:v3.7
     restart: unless-stopped
+    environment:
+      - TRAEFIK_CERTIFICATESRESOLVERS_RESOLVER_ACME_EMAIL=${EMAIL_TO_NOTIFY}
     ports:
       - "80:80"
       - "443:443"

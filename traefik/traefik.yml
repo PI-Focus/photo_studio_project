@@ -20,7 +20,6 @@ providers:
 certificatesResolvers:
   resolver:
     acme:
-      email: ${EMAIL_TO_NOTIFY}
       storage: /letsencrypt/acme.json
       tlsChallenge: { }
 
