@@ -1,0 +1,17 @@
+# Системные и IDE файлы
+.git/
+.gitignore
+.idea/
+*.iml
+.vscode/
+
+# Кэш сборщика
+.gradle/
+build/classes/
+build/tmp/
+build/reports/
+
+# Логи и временные файлы
+*.log
+*.tmp
+.DS_Store
