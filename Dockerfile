@@ -1,4 +1,8 @@
-FROM ubuntu:latest
+FROM ubuntu/jre:21-24.04_stable
 LABEL authors="poerl"
 
-ENTRYPOINT ["top", "-b"]
+WORKDIR /app
+
+COPY build/libs/*.jar app.jar
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
