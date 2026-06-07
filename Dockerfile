@@ -1,4 +1,4 @@
-FROM ubuntu/jre:21-24.04_stable
+FROM ubuntu/jdk:21-24.04_stable
 LABEL authors="poerl"
 
 WORKDIR /app

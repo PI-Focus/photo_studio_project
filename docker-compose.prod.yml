@@ -1,7 +1,6 @@
 services:
   db:
     image: postgres:16-alpine
-    container_name: postgres-db
     restart: unless-stopped
     environment:
       - POSTGRES_DB=${DEV_DB_NAME}
@@ -16,14 +15,8 @@ services:
       retries: 5
 
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: spring-app
+    image: poer1/photostudio-app:latest
     restart: unless-stopped
-
-    ports:
-      - "8080:8080"
 
     environment:
       - SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE:-prod}
@@ -31,16 +24,46 @@ services:
       - SPRING_DATASOURCE_USERNAME=${DEV_DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DEV_DB_PASSWORD}
 
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.app-https.rule=Host(`${DOMAIN_NAME}`)"
+      - "traefik.http.routers.app-https.entrypoints=websecure"
+      - "traefik.http.routers.app-https.tls=true"
+      - "traefik.http.routers.app-https.tls.certresolver=resolver"
+      - "traefik.http.routers.app-https.service=app-service"
+
+      - "traefik.http.routers.app-http.rule=Host(`${DOMAIN_NAME}`)"
+      - "traefik.http.routers.app-http.entrypoints=web"
+      - "traefik.http.routers.app-http.service=app-service"
+
+      - "traefik.http.services.app-service.loadbalancer.server.port=8080"
+
     depends_on:
       db:
         condition: service_healthy
 
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
-      interval: 30s
+      interval: 10s
       timeout: 10s
       retries: 3
-      start_period: 40s
+      start_period: 20s
+
+    deploy:
+      replicas: 3
+
+  traefik:
+    image: traefik:v3.7
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - letsencrypt_data:/letsencrypt
+      - ./traefik/traefik.yml:/etc/traefik/traefik.yml:ro
 
 volumes:
   postgres_data:
+  letsencrypt_data:

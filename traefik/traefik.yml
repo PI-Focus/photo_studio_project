@@ -1,0 +1,29 @@
+api:
+  dashboard: true
+  insecure: false
+
+entryPoints:
+  web:
+    address: ":80"
+
+  websecure:
+    address: ":443"
+    http:
+      tls:
+        certResolver: resolver
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+
+certificatesResolvers:
+  resolver:
+    acme:
+      email: ${EMAIL_TO_NOTIFY}
+      storage: /letsencrypt/acme.json
+      tlsChallenge: { }
+
+log:
+  level: DEBUG
+  format: json
