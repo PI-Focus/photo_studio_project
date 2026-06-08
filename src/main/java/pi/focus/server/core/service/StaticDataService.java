@@ -36,6 +36,8 @@ public class StaticDataService implements IStaticDataService {
             return JsonMapper.getInstance().readValue(inputStream, AboutDataBlock.class);
         } catch (IOException e) {
             throw new StaticDataLoadingException("File load error: about.json", e);
+        } catch (NullPointerException e) {
+            throw new StaticDataLoadingException("File not found: about.json", e);
         }
     }
 
@@ -46,6 +48,8 @@ public class StaticDataService implements IStaticDataService {
             return response.cards().stream().map(card -> (ITextCard) card).toList();
         } catch (IOException e) {
             throw new StaticDataLoadingException("File load error: rules.json", e);
+        } catch (NullPointerException e) {
+            throw new StaticDataLoadingException("File not found: rules.json", e);
         }
     }
 
@@ -56,6 +60,8 @@ public class StaticDataService implements IStaticDataService {
             return response.imagedTabs().stream().map(imagedTab -> (IImagedTab) imagedTab).toList();
         } catch (IOException e) {
             throw new StaticDataLoadingException("File load error: preview.json", e);
+        } catch (NullPointerException e) {
+            throw new StaticDataLoadingException("File not found: preview.json", e);
         }
     }
 }
