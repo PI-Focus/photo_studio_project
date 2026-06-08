@@ -72,6 +72,12 @@ services:
   traefik:
     image: traefik:v3.7
     restart: unless-stopped
+    labels:
+      - "traefik.http.middlewares.traefik-dashboard-auth.basicauth.users=admin:${TRAEFIK_DASHBOARD_PASSWORD}"
+      - "traefik.http.routers.traefik-dashboard.rule=PathPrefix(`/dashboard`) || PathPrefix(`/api`)"
+      - "traefik.http.routers.traefik-dashboard.entrypoints=traefik"
+      - "traefik.http.routers.traefik-dashboard.service=api@internal"
+      - "traefik.http.routers.traefik-dashboard.middlewares=traefik-dashboard-auth"
     environment:
       - TRAEFIK_CERTIFICATESRESOLVERS_RESOLVER_ACME_EMAIL=${EMAIL_TO_NOTIFY}
     ports:

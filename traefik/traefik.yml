@@ -3,6 +3,9 @@ api:
   insecure: false
 
 entryPoints:
+  traefik:
+    addres: ":8080"
+
   web:
     address: ":80"
 
@@ -26,3 +29,5 @@ certificatesResolvers:
 log:
   level: DEBUG
   format: json
+
+
