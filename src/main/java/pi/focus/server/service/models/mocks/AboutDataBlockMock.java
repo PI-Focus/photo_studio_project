@@ -7,7 +7,7 @@ public class AboutDataBlockMock implements IAboutDataBlock {
 
     @Override
     public String getLogo() {
-        return "/images/placeholder.png";
+        return MocksDefines.TEST_IMAGE_PATH;
     }
 
     @Override
@@ -16,6 +16,11 @@ public class AboutDataBlockMock implements IAboutDataBlock {
             "описание фотостудии блаблабла описание.... фотостудии..." +
             "описание фотостудии блаблабла описание.... фотостудии..." +
             "описание фотостудии блаблабла описание.... фотостудии...";
+    }
+
+    @Override
+    public String getAboutImage() {
+        return MocksDefines.TEST_IMAGE_PATH;
     }
     
 }

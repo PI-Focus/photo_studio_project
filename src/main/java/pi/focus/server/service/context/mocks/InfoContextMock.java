@@ -4,15 +4,15 @@ import java.util.List;
 
 import pi.focus.server.api.context.IInfoContext;
 import pi.focus.server.api.models.IAboutDataBlock;
-import pi.focus.server.api.models.IImagedTab;
+import pi.focus.server.api.models.IDataTab;
 import pi.focus.server.api.models.ITextCard;
 import pi.focus.server.service.models.mocks.AboutDataBlockMock;
-import pi.focus.server.service.models.mocks.ImagedTabMock;
+import pi.focus.server.service.models.mocks.DataTabMock;
 import pi.focus.server.service.models.mocks.TextCardMock;
 
 public class InfoContextMock implements IInfoContext {
     private final List<ITextCard> rentRules;
-    private final List<IImagedTab> imagedTabs;
+    private final List<IDataTab> imagedTabs;
 
     public InfoContextMock() {
         rentRules = List.of(
@@ -27,9 +27,9 @@ public class InfoContextMock implements IInfoContext {
         );
 
         imagedTabs = List.of(
-            new ImagedTabMock("Залы", "У нас вы можете выбрать зал йоу", null, "ЗАЛЫ", "/photorooms"),
-            new ImagedTabMock("Оборудование", "У нас вы можете выбрать оборудование йоу", null, "ОБОРУДОВАНИЕ", "/equipment"),
-            new ImagedTabMock("Фотографы", "У нас вы можете выбрать фотографов йоу", null, "ФОТОГРАФЫ", "/photographers")
+            new DataTabMock("Залы", "У нас вы можете выбрать зал йоу", null, "ЗАЛЫ", "/photorooms"),
+            new DataTabMock("Оборудование", "У нас вы можете выбрать оборудование йоу", null, "ОБОРУДОВАНИЕ", "/equipment"),
+            new DataTabMock("Фотографы", "У нас вы можете выбрать фотографов йоу", null, "ФОТОГРАФЫ", "/photographers")
         );
     }
 
@@ -44,7 +44,7 @@ public class InfoContextMock implements IInfoContext {
     }
 
     @Override
-    public List<IImagedTab> getImagedTabs() {
+    public List<IDataTab> getImagedTabs() {
         return imagedTabs;
     }
     

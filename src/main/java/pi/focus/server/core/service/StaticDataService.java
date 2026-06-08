@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import pi.focus.server.api.context.IInfoContext;
 import pi.focus.server.api.models.IAboutDataBlock;
-import pi.focus.server.api.models.IImagedTab;
+import pi.focus.server.api.models.IDataTab;
 import pi.focus.server.api.models.ITextCard;
 import pi.focus.server.core.exception.StaticDataLoadingException;
 import pi.focus.server.core.json.JsonMapper;
@@ -53,11 +53,11 @@ public class StaticDataService implements IStaticDataService {
         }
     }
 
-    private List<IImagedTab> loadPreviewData() {
+    private List<IDataTab> loadPreviewData() {
         try (InputStream inputStream = Objects.requireNonNull(getClass().getResourceAsStream("/data/preview.json"))) {
             ImagedTabsDto response = JsonMapper.getInstance()
                     .readValue(inputStream, ImagedTabsDto.class);
-            return response.imagedTabs().stream().map(imagedTab -> (IImagedTab) imagedTab).toList();
+            return response.imagedTabs().stream().map(imagedTab -> (IDataTab) imagedTab).toList();
         } catch (IOException e) {
             throw new StaticDataLoadingException("File load error: preview.json", e);
         } catch (NullPointerException e) {
