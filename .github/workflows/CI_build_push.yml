@@ -1,0 +1,44 @@
+name: Build Dockerfile and push
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch: 
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    environment: CI_build
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v4.2.0
+        with:
+          username: ${{ secrets.DOCKER_HUB_USER }}
+          password: ${{ secrets.DOCKER_HUB_PUSH}}
+
+      - run: echo "Setting up Java"
+      - name: Setup Java JDK
+        uses: actions/setup-java@v5.2.0
+        with:
+          java-version: 21
+          distribution: 'oracle'
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Build artifacts
+        run: ./gradlew bootJar
+      
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: ${{ vars.DOCKER_APP_IMAGE }}:${{ github.sha }} ${{ vars.DOCKER_APP_IMAGE }}:latest

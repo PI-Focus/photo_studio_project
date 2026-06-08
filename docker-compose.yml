@@ -1,6 +1,6 @@
 services:
   postgres:
-    image: postgres:latest
+    image: postgres:16-alpine
     environment:
       POSTGRES_DB: ${DEV_DB_NAME}
       POSTGRES_USER: ${DEV_DB_USER}
