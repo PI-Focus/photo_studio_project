@@ -1,4 +1,4 @@
-package pi.focus.server.service.models.mocks;
+package pi.focus.server.service.context.mocks;
 
 public final class MocksDefines {
     public static final String TEST_IMAGE_PATH = "/images/placeholder.png";
