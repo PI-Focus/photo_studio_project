@@ -19,6 +19,7 @@
         <exclude name="LocalVariableCouldBeFinal"/>
         <exclude name="MethodArgumentCouldBeFinal"/>
         <exclude name="PrematureDeclaration"/>
+        <exclude name="TooManyStaticImports"/>
     </rule>
     <rule ref="category/java/codestyle.xml/ShortVariable">
         <properties>
