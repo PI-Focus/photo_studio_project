@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import pi.focus.server.core.domain.Room;
 import pi.focus.server.core.service.api.IRoomService;
 import pi.focus.server.core.service.api.IStaticDataService;
+import pi.focus.server.service.context.mocks.EquipmentContextMock;
 import pi.focus.server.service.context.mocks.ExampleContextMock;
 import pi.focus.server.service.context.mocks.PhotoroomsContextMock;
 
@@ -46,7 +47,7 @@ public class HomeController {
 
     @GetMapping("/equipment")
     public String getEquipment(Model model) {
-        model.addAttribute("equipment", new ExampleContextMock());
+        model.addAttribute("equipment", new EquipmentContextMock());
         return "pages/equipment";
     }
 

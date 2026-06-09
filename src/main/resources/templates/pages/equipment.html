@@ -8,6 +8,14 @@
 
     <div th:fragment="main-content">
         <h1>Добро пожаловать со страницы оборудования!</h1>
+
+        <div th:if="${equipment.equipment != null && !equipment.equipment.isEmpty()}">
+            <div th:each="item : ${equipment.equipment}">
+                <h3 th:text="|title: ${item.title ?: 'none'}|"></h3>
+                <p th:text="|text: ${item.text ?: 'none'}|"></p>
+                <div th:replace="~{fragments/components :: safe-img(${item.image}, 'Data tab pic', null)}"></div>
+            </div>
+        </div>
     </div>
 
 </body>
