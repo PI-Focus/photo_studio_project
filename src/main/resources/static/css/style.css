@@ -1,12 +1,51 @@
-:root {
-    --font-base: 20pt; 
+/* manrope-regular - cyrillic_latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/manrope-v20-cyrillic_latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
 
-    --font-xs:  0.7rem;  
-    --font-s:   0.85rem; 
-    --font-m:   1rem;    
-    --font-l:   1.5rem; 
-    --font-xl:  2rem; 
-    --font-xxl: 4rem;  
+/* manrope-700 - cyrillic_latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Manrope';
+  font-style: normal;
+  font-weight: 700;
+  src: url('../fonts/manrope-v20-cyrillic_latin-700.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+/* playfair-display-regular - cyrillic_latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 400;
+  src: url('../fonts/playfair-display-v40-cyrillic_latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+/* playfair-display-700 - cyrillic_latin */
+@font-face {
+  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+  font-family: 'Playfair Display';
+  font-style: normal;
+  font-weight: 700;
+  src: url('../fonts/playfair-display-v40-cyrillic_latin-700.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+}
+
+:root {
+    --base-font-size: 20pt; 
+
+    --font-main: 'Manrope', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    --font-accent: 'Playfair Display', Georgia, 'Times New Roman', Times, serif;
+
+    --text-xs:  0.7rem;  
+    --text-s:   0.85rem; 
+    --text-m:   1rem;    
+    --text-l:   1.5rem; 
+    --text-xl:  2rem; 
+    --text-xxl: 4rem;  
 
     --space-xs:  0.25rem; 
     --space-s:   0.5rem;  
@@ -56,7 +95,9 @@ html {
     --color-calendar-busy:     var(--palette-calendar-busy);
     --color-btn-disabled:      var(--palette-btn-disabled);
 
-    font-size: var(--font-base);
+    font-display: swap;
+    font-family: var(--font-main);
+    font-size: var(--base-font-size);
     background: var(--color-background);
     color: var(--color-text-dark);
 }
@@ -94,7 +135,7 @@ header {
             left: 50%;
             transform: translateX(-50%);
             
-            width: var(--font-s);            
+            width: var(--text-s);            
             height: 2px;           
             
             background-color: var(--color-text-accent); 
