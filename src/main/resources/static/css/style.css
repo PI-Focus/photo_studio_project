@@ -1,5 +1,5 @@
 :root {
-    --font-base: 20px; 
+    --font-base: 20pt; 
 
     --font-xs:  0.7rem;  
     --font-s:   0.85rem; 
@@ -33,11 +33,15 @@
     --palette-primary:           #9cab6d;
     --palette-secondary:         #c0cb9a;
     --palette-accent:            #AB253B;
+    --palette-text-dark:         #121809;
     --palette-text-menu:         #323D12;
     --palette-text-accent:       #821A21;
     --palette-text-calendar:     #748443;
     --palette-calendar-busy:     #EBF1D8;
     --palette-btn-disabled:      #C26A70;
+
+    --wrapper-width: 1400px;
+    --header-width: 1700px;
 }
 
 html {
@@ -45,12 +49,59 @@ html {
     --color-primary:           var(--palette-primary);
     --color-secondary:         var(--palette-secondary);
     --color-accent:            var(--palette-accent);
+    --color-text-dark:         var(--palette-text-dark);
     --color-text-menu:         var(--palette-text-menu);
-    --color-text-menu-active:  var(--palette-text-accent);
+    --color-text-accent:  var(--palette-text-accent);
     --color-text-calendar:     var(--palette-text-calendar);
     --color-calendar-busy:     var(--palette-calendar-busy);
     --color-btn-disabled:      var(--palette-btn-disabled);
 
     font-size: var(--font-base);
     background: var(--color-background);
+    color: var(--color-text-dark);
+}
+
+body {
+    margin: 0;
+}
+
+header {
+    background: var(--color-primary);
+
+    nav {
+        margin: 0 120px;
+        display: flex;
+        gap: var(--space-xl);
+
+        .nav-link {
+            margin: calc(var(--space-s) + 2px) 0;
+            text-decoration: none;
+            color: var(--color-text-dark);
+
+            position: relative;
+        }
+
+        .nav-link.active {
+            color: var(--color-text-accent);
+            margin: var(--space-s) 0;
+        }
+
+        .nav-link.active::after {
+            content: "";
+            position: absolute;
+            
+            bottom: 0;              
+            left: 50%;
+            transform: translateX(-50%);
+            
+            width: var(--font-s);            
+            height: 2px;           
+            
+            background-color: var(--color-text-accent); 
+        }
+    }
+
+    #header-btn-login {
+        margin-left: auto;
+    }
 }

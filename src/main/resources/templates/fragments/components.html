@@ -3,3 +3,31 @@
         th:alt="${alt}"
         th:src="${src != null && !src.isEmpty()} ? @{${src}} : @{/images/fallback.png}" 
         th:onerror="|this.onerror=null; this.src='@{/images/fallback.png}';|" />
+
+<nav th:fragment="header-nav">
+    <a th:href="@{/}" 
+       id="header-btn-info" 
+       class="nav-link" 
+       th:classappend="${currentURI == '/'} ? 'active'">ИНФОРМАЦИЯ</a>
+       
+    <a th:href="@{/photorooms}" 
+       id="header-btn-photorooms" 
+       class="nav-link" 
+       th:classappend="${currentURI != null && currentURI.startsWith('/photorooms')} ? 'active'">ЗАЛЫ</a>
+       
+    <a th:href="@{/equipment}" 
+       id="header-btn-equipment" 
+       class="nav-link" 
+       th:classappend="${currentURI != null && currentURI.startsWith('/equipment')} ? 'active'">ОБОРУДОВАНИЕ</a>
+       
+    <a th:href="@{/photographers}" 
+       id="header-btn-photographers" 
+       class="nav-link" 
+       th:classappend="${currentURI != null && currentURI.startsWith('/photographers')} ? 'active'">ФОТОГРАФЫ</a>
+       
+    <a th:href="@{/login}" 
+       id="header-btn-login" 
+       class="nav-link" 
+       th:classappend="${currentURI != null && currentURI.startsWith('/login')} ? 'active'">ВХОД</a>
+</nav>
+

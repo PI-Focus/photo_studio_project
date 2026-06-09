@@ -7,7 +7,7 @@
 <body>
 
     <div th:fragment="main-content">
-        <h1>Добро пожаловать в главную страницу!</h1>
+        <h1>Добро пожаловать на главную страницу!</h1>
         <h1>ABOUT:</h1>
         <p>logo:</p>
         <div th:replace="~{fragments/components :: safe-img(${info.aboutBlock.logo}, 'logo', null)}"></div>

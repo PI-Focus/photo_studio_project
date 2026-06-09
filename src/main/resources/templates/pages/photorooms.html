@@ -7,7 +7,7 @@
 <body>
 
     <div th:fragment="main-content">
-        <h1>Добро пожаловать в страницу залов!</h1>
+        <h1>Добро пожаловать на страницу залов!</h1>
 
         <div th:if="${photorooms.photorooms != null && !photorooms.photorooms.isEmpty()}">
             <div th:each="item : ${photorooms.photorooms}">
