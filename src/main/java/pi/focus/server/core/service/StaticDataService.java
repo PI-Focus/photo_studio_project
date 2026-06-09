@@ -14,6 +14,7 @@ import pi.focus.server.core.json.dto.ImagedTabsDto;
 import pi.focus.server.core.json.dto.TextCardDto;
 import pi.focus.server.core.service.api.IStaticDataService;
 import pi.focus.server.service.context.InfoContext;
+import pi.focus.server.service.context.mocks.BaseContextMock;
 import pi.focus.server.service.models.AboutDataBlock;
 
 import java.io.IOException;
@@ -69,7 +70,7 @@ public class StaticDataService implements IStaticDataService {
 
     @Override
     public IBaseContext getBaseContext() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getBaseContext'");
+        // TODO Replace with real service
+        return new BaseContextMock();
     }
 }
