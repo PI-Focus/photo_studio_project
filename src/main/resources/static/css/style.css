@@ -1,7 +1,56 @@
 :root {
-    --font-base: 16px; 
+    --font-base: 20px; 
+
+    --font-xs:  0.7rem;  
+    --font-s:   0.85rem; 
+    --font-m:   1rem;    
+    --font-l:   1.5rem; 
+    --font-xl:  2rem; 
+    --font-xxl: 4rem;  
+
+    --space-xs:  0.25rem; 
+    --space-s:   0.5rem;  
+    --space-m:   1rem;    
+    --space-l:   1.5rem;  
+    --space-xl:  2.5rem;  
+    --space-xxl: 4rem;    
+
+    --radius-xs:  0.15rem; 
+    --radius-s:   0.25rem; 
+    --radius-m:   0.5rem;  
+    --radius-l:   0.75rem; 
+    --radius-xl:  1.25rem; 
+    --radius-xxl: 2rem;    
+
+    --time-xs:  0.1s;
+    --time-s:   0.2s;
+    --time-m:   0.3s;
+    --time-l:   0.5s;
+    --time-xl:  0.8s;
+    --time-xxl: 1.2s;
+
+    --palette-background:        #f9fbf2;
+    --palette-primary:           #9cab6d;
+    --palette-secondary:         #c0cb9a;
+    --palette-accent:            #AB253B;
+    --palette-text-menu:         #323D12;
+    --palette-text-accent:       #821A21;
+    --palette-text-calendar:     #748443;
+    --palette-calendar-busy:     #EBF1D8;
+    --palette-btn-disabled:      #C26A70;
 }
 
 html {
+    --color-background:        var(--palette-background);
+    --color-primary:           var(--palette-primary);
+    --color-secondary:         var(--palette-secondary);
+    --color-accent:            var(--palette-accent);
+    --color-text-menu:         var(--palette-text-menu);
+    --color-text-menu-active:  var(--palette-text-accent);
+    --color-text-calendar:     var(--palette-text-calendar);
+    --color-calendar-busy:     var(--palette-calendar-busy);
+    --color-btn-disabled:      var(--palette-btn-disabled);
+
     font-size: var(--font-base);
+    background: var(--color-background);
 }
