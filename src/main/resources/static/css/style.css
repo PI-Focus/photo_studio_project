@@ -106,6 +106,17 @@ body {
     margin: 0;
 }
 
+img {
+    background: var(--color-calendar-busy);
+    aspect-ratio: 3 / 4;
+    object-fit: cover;
+    width: 100%;
+}
+
+img.horizontal {
+    aspect-ratio: 4 / 3;
+}
+
 header {
     background: var(--color-primary);
 
