@@ -24,6 +24,7 @@
 
     <rule ref="category/java/design.xml">
         <exclude name="DataClass"/>
+        <exclude name="LoosePackageCoupling"/>
         <exclude name="NPathComplexity"/>
         <exclude name="UseObjectForClearerAPI"/>
     </rule>

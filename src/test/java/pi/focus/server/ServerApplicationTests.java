@@ -16,7 +16,7 @@ class ServerApplicationTests {
 
     @Container
     @ServiceConnection
-    static PostgreSQLContainer<?> postgres = initContainer();
+    static final PostgreSQLContainer<?> POSTGRES = initContainer();
 
     private static PostgreSQLContainer<?> initContainer() {
         Dotenv env = Dotenv.configure().ignoreIfMissing().load();
