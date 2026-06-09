@@ -1,10 +1,10 @@
 package pi.focus.server.api.context;
 
 public interface IBaseContext {
-    String getINN();
-    String getOGRNIP();
+    String getInn();
+    String getOgrnip();
     String getCompanyName();
-    String getMail();
+    String getEmail();
     String getPhone();
     String getAddress();
 }

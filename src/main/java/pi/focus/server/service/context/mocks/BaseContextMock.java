@@ -5,12 +5,12 @@ import pi.focus.server.api.context.IBaseContext;
 public class BaseContextMock implements IBaseContext{
 
     @Override
-    public String getINN() {
+    public String getInn() {
         return "666666666666";
     }
 
     @Override
-    public String getOGRNIP() {
+    public String getOgrnip() {
         return "026766666666660";
     }
 
@@ -20,7 +20,7 @@ public class BaseContextMock implements IBaseContext{
     }
 
     @Override
-    public String getMail() {
+    public String getEmail() {
         return "pi_focus@yandex.ru";
     }
 
