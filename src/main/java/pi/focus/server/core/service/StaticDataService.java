@@ -2,6 +2,8 @@ package pi.focus.server.core.service;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
+
+import pi.focus.server.api.context.IBaseContext;
 import pi.focus.server.api.context.IInfoContext;
 import pi.focus.server.api.models.IAboutDataBlock;
 import pi.focus.server.api.models.IDataTab;
@@ -63,5 +65,11 @@ public class StaticDataService implements IStaticDataService {
         } catch (NullPointerException e) {
             throw new StaticDataLoadingException("File not found: preview.json", e);
         }
+    }
+
+    @Override
+    public IBaseContext getBaseContext() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getBaseContext'");
     }
 }

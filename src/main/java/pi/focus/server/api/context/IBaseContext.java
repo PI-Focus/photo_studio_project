@@ -1,8 +1,10 @@
 package pi.focus.server.api.context;
 
-import java.util.List;
-
 public interface IBaseContext {
-    List<String> getMails();
-    List<String> getPhones();
+    String getINN();
+    String getOGRNIP();
+    String getCompanyName();
+    String getMail();
+    String getPhone();
+    String getAddress();
 }
