@@ -1,109 +1,122 @@
 /* manrope-regular - cyrillic_latin */
 @font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: 'Manrope';
-  font-style: normal;
-  font-weight: 400;
-  src: url('../fonts/manrope-v20-cyrillic_latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+    font-display: swap;
+    /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/manrope-v20-cyrillic_latin-regular.woff2') format('woff2');
+    /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 
 /* manrope-700 - cyrillic_latin */
 @font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: 'Manrope';
-  font-style: normal;
-  font-weight: 700;
-  src: url('../fonts/manrope-v20-cyrillic_latin-700.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+    font-display: swap;
+    /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+    font-family: 'Manrope';
+    font-style: normal;
+    font-weight: 700;
+    src: url('../fonts/manrope-v20-cyrillic_latin-700.woff2') format('woff2');
+    /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 
 /* playfair-display-regular - cyrillic_latin */
 @font-face {
-  font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
-  font-family: 'Playfair Display';
-  font-style: normal;
-  font-weight: 400;
-  src: url('../fonts/playfair-display-v40-cyrillic_latin-regular.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+    font-display: swap;
+    /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
+    font-family: 'Playfair Display';
+    font-style: normal;
+    font-weight: 400;
+    src: url('../fonts/playfair-display-v40-cyrillic_latin-regular.woff2') format('woff2');
+    /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 
-/* playfair-display-700 - cyrillic_latin */
+/* playfair-display-600 - cyrillic_latin */
 @font-face {
   font-display: swap; /* Check https://developer.mozilla.org/en-US/docs/Web/CSS/@font-face/font-display for other options. */
   font-family: 'Playfair Display';
   font-style: normal;
-  font-weight: 700;
-  src: url('../fonts/playfair-display-v40-cyrillic_latin-700.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
+  font-weight: 600;
+  src: url('../fonts/playfair-display-v40-cyrillic_latin-600.woff2') format('woff2'); /* Chrome 36+, Opera 23+, Firefox 39+, Safari 12+, iOS 10+ */
 }
 
+
 :root {
-    --base-font-size: 20pt; 
+    --base-font-size: 20px;
 
     --font-main: 'Manrope', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     --font-accent: 'Playfair Display', Georgia, 'Times New Roman', Times, serif;
 
-    --text-xs:  0.7rem;  
-    --text-s:   0.85rem; 
-    --text-m:   1rem;    
-    --text-l:   1.5rem; 
-    --text-xl:  2rem; 
-    --text-xxl: 4rem;  
+    --text-xs: 0.7rem;
+    --text-s: 0.85rem;
+    --text-m: 1rem;
+    --text-l: 1.5rem;
+    --text-xl: 2rem;
+    --text-xxl: 4rem;
 
-    --space-xs:  0.25rem; 
-    --space-s:   0.5rem;  
-    --space-m:   1rem;    
-    --space-l:   1.5rem;  
-    --space-xl:  2.5rem;  
-    --space-xxl: 4rem;    
+    --space-xs: 0.25rem;
+    --space-s: 0.5rem;
+    --space-m: 1rem;
+    --space-l: 1.5rem;
+    --space-xl: 2.5rem;
+    --space-xxl: 4rem;
 
-    --radius-xs:  0.15rem; 
-    --radius-s:   0.25rem; 
-    --radius-m:   0.5rem;  
-    --radius-l:   0.75rem; 
-    --radius-xl:  1.25rem; 
-    --radius-xxl: 2rem;    
+    --radius-xs: 0.15rem;
+    --radius-s: 0.25rem;
+    --radius-m: 0.5rem;
+    --radius-l: 0.75rem;
+    --radius-xl: 1.25rem;
+    --radius-xxl: 2rem;
 
-    --time-xs:  0.1s;
-    --time-s:   0.2s;
-    --time-m:   0.3s;
-    --time-l:   0.5s;
-    --time-xl:  0.8s;
+    --time-xs: 0.1s;
+    --time-s: 0.2s;
+    --time-m: 0.3s;
+    --time-l: 0.5s;
+    --time-xl: 0.8s;
     --time-xxl: 1.2s;
 
-    --palette-background:        #f9fbf2;
-    --palette-primary:           #9cab6d;
-    --palette-secondary:         #c0cb9a;
-    --palette-accent:            #AB253B;
-    --palette-text-dark:         #121809;
-    --palette-text-menu:         #323D12;
-    --palette-text-accent:       #821A21;
-    --palette-text-calendar:     #748443;
-    --palette-calendar-busy:     #EBF1D8;
-    --palette-btn-disabled:      #C26A70;
+    --palette-background: #f9fbf2;
+    --palette-primary: #9cab6d;
+    --palette-secondary: #c0cb9a;
+    --palette-accent: #AB253B;
+    --palette-text-dark: #121809;
+    --palette-text-menu: #323D12;
+    --palette-text-accent: #821A21;
+    --palette-text-calendar: #748443;
+    --palette-calendar-busy: #EBF1D8;
+    --palette-btn-disabled: #C26A70;
 
     --wrapper-width: 1400px;
     --header-width: 1700px;
 }
 
 html {
-    --color-background:        var(--palette-background);
-    --color-primary:           var(--palette-primary);
-    --color-secondary:         var(--palette-secondary);
-    --color-accent:            var(--palette-accent);
-    --color-text-dark:         var(--palette-text-dark);
-    --color-text-menu:         var(--palette-text-menu);
-    --color-text-accent:  var(--palette-text-accent);
-    --color-text-calendar:     var(--palette-text-calendar);
-    --color-calendar-busy:     var(--palette-calendar-busy);
-    --color-btn-disabled:      var(--palette-btn-disabled);
+    --color-background: var(--palette-background);
+    --color-primary: var(--palette-primary);
+    --color-secondary: var(--palette-secondary);
+    --color-accent: var(--palette-accent);
+    --color-text-dark: var(--palette-text-dark);
+    --color-text-menu: var(--palette-text-menu);
+    --color-text-accent: var(--palette-text-accent);
+    --color-text-calendar: var(--palette-text-calendar);
+    --color-calendar-busy: var(--palette-calendar-busy);
+    --color-btn-disabled: var(--palette-btn-disabled);
 
     font-display: swap;
     font-family: var(--font-main);
     font-size: var(--base-font-size);
     background: var(--color-background);
     color: var(--color-text-dark);
+
+    height: 100%;
 }
 
 body {
+    height: 100%;
+
     margin: 0;
+    display: flex;
+    flex-direction: column;
 }
 
 img {
@@ -129,7 +142,7 @@ header {
             margin: calc(var(--space-s) + 2px) 0;
             text-decoration: none;
             color: var(--color-text-dark);
-
+            font-size: var(--text-l);
             position: relative;
         }
 
@@ -141,19 +154,62 @@ header {
         .nav-link.active::after {
             content: "";
             position: absolute;
-            
-            bottom: 0;              
+
+            bottom: 0;
             left: 50%;
             transform: translateX(-50%);
-            
-            width: var(--text-s);            
-            height: 2px;           
-            
-            background-color: var(--color-text-accent); 
+
+            width: var(--text-s);
+            height: 2px;
+
+            background-color: var(--color-text-accent);
         }
     }
 
     #header-btn-login {
         margin-left: auto;
+    }
+}
+
+footer {
+    margin-top: auto;
+    background: var(--color-primary);
+    padding: var(--space-l) 0;
+
+    .footer-info {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        justify-content: space-between;
+        margin: 0 120px;
+
+        >div {
+            display: flex;
+            flex-flow: column wrap;
+            align-items: flex-start;
+
+            h3 {
+                font-family: var(--font-accent);
+                margin-top: 0;
+                margin-bottom: var(--space-m);
+            }
+
+            p {
+                margin: var(--space-xs) 0;
+            }
+
+            a {
+                margin: var(--space-xs) 0;
+                text-decoration: none;
+                color: var(--color-text-dark);
+
+                will-change: color;
+                transition: color var(--time-s);
+            }
+
+            a:hover {
+                color: var(--color-text-accent);
+                text-decoration: underline;
+            }
+        }
     }
 }
