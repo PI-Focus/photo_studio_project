@@ -33,6 +33,7 @@
         <exclude name="CyclomaticComplexity"/>
         <exclude name="ExcessiveImports"/>
         <exclude name="ExcessiveParameterList"/>
+        <exclude name="LoosePackageCoupling"/>
         <exclude name="NPathComplexity"/>
         <exclude name="TooManyFields"/>
         <exclude name="UseObjectForClearerAPI"/>
