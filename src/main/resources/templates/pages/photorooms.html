@@ -7,7 +7,16 @@
 <body>
 
     <div th:fragment="main-content">
-        <h1>Добро пожаловать со страницы залов!</h1>
+        <h1>Добро пожаловать в страницу залов!</h1>
+
+        <div th:if="${photorooms.photorooms != null && !photorooms.photorooms.isEmpty()}">
+            <div th:each="item : ${photorooms.photorooms}">
+                <h3 th:text="|title: ${item.title ?: 'none'}|"></h3>
+                <p th:text="|text: ${item.text ?: 'none'}|"></p>
+                <p th:text="|linkUrl: ${item.linkUrl ?: 'none'}|"></p>
+                <div th:replace="~{fragments/components :: safe-img(${item.image}, 'Data tab pic', null)}"></div>
+            </div>
+        </div>
     </div>
 
 </body>
