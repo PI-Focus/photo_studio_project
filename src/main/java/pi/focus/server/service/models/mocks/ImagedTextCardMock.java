@@ -11,7 +11,7 @@ public class ImagedTextCardMock extends TextCardMock implements IImagedTextCard 
     }
 
     @Override
-    public String getImageUrl() {
+    public String getImage() {
         return imageUrl;
     }
 }

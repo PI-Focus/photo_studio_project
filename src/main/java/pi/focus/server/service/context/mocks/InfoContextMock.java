@@ -28,9 +28,9 @@ public class InfoContextMock implements IInfoContext {
         );
 
         imagedTabs = List.of(
-            new DataTabMock("Залы", "У нас вы можете выбрать зал йоу", MocksDefines.TEST_IMAGE_PATH, "ЗАЛЫ", "/photorooms"),
-            new DataTabMock("Оборудование", "У нас вы можете выбрать оборудование йоу", MocksDefines.TEST_IMAGE_PATH, "ОБОРУДОВАНИЕ", "/equipment"),
-            new DataTabMock("Фотографы", "У нас вы можете выбрать фотографов йоу", MocksDefines.TEST_IMAGE_PATH, "ФОТОГРАФЫ", "/photographers")
+            new DataTabMock("Залы", "У нас вы можете выбрать зал йоу", MocksDefines.TEST_IMAGE_PATH, "/photorooms", "ЗАЛЫ"),
+            new DataTabMock("Оборудование", "У нас вы можете выбрать оборудование йоу", MocksDefines.TEST_IMAGE_PATH, "/equipment", "ОБОРУДОВАНИЕ"),
+            new DataTabMock("Фотографы", "У нас вы можете выбрать фотографов йоу", MocksDefines.TEST_IMAGE_PATH, "/photographers", "ФОТОГРАФЫ")
         );
 
         aboutData = new AboutDataBlockMock(
@@ -54,7 +54,7 @@ public class InfoContextMock implements IInfoContext {
     }
 
     @Override
-    public List<IDataTab> getImagedTabs() {
+    public List<IDataTab> getDataTabs() {
         return imagedTabs;
     }
     
