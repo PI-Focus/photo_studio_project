@@ -2,15 +2,15 @@ package pi.focus.server.service.models;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import pi.focus.server.api.models.IImagedTab;
+import pi.focus.server.api.models.IDataTab;
 import pi.focus.server.service.models.mocks.ImagedTextCardMock;
 
-public class ImagedTab extends ImagedTextCardMock implements IImagedTab {
+public class DataTab extends ImagedTextCardMock implements IDataTab {
     private final String tabName;
     private final String linkUrl;
 
     @JsonCreator
-    public ImagedTab(
+    public DataTab(
             @JsonProperty("title") String title,
             @JsonProperty("text") String text,
             @JsonProperty("imageUrl") String imageUrl,

@@ -12,4 +12,10 @@ public record AboutDataBlock (String logo, String description) implements IAbout
     public String getDescription() {
         return description;
     }
+
+    @Override
+    public String getAboutImage() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAboutImage'");
+    }
 }
