@@ -10,6 +10,7 @@ import pi.focus.server.core.service.api.IRoomService;
 import pi.focus.server.core.service.api.IStaticDataService;
 import pi.focus.server.service.context.mocks.EquipmentContextMock;
 import pi.focus.server.service.context.mocks.ExampleContextMock;
+import pi.focus.server.service.context.mocks.PhotographersContextMock;
 import pi.focus.server.service.context.mocks.PhotoroomsContextMock;
 
 import java.util.List;
@@ -53,7 +54,7 @@ public class HomeController {
 
     @GetMapping("/photographers")
     public String getPhotographers(Model model) {
-        model.addAttribute("photographers", new ExampleContextMock());
+        model.addAttribute("photographers", new PhotographersContextMock());
         return "pages/photographers";
     }
 
