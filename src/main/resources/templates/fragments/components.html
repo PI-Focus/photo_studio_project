@@ -1,0 +1,5 @@
+<img th:fragment="safe-img(src, alt, class)"
+        th:class="${class}"
+        th:alt="${alt}"
+        th:src="${src != null && !src.isEmpty()} ? @{${src}} : @{/images/fallback.png}" 
+        th:onerror="|this.onerror=null; this.src='@{/images/fallback.png}';|" />

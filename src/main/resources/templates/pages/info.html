@@ -1,24 +1,40 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://thymeleaf.org" 
+      th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title})}">
 <head>
-    <meta charset="UTF-8">
-    <title>Message</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet" th:href="@{/css/info.css}">
-    <script th:src="@{/js/rules_carousel.js}" defer></script>
-    <script th:src="@{/js/imaged_router.js}" defer></script>
+    <title>Фотостудия «Фокус»</title>
 </head>
 <body>
-<div th:replace="~{fragments/header :: header}"></div>
 
-<div class="main-wrapper">
-    <div th:replace="~{fragments/info/blocks :: about}"></div>
+    <div th:fragment="main-content">
+        <h1>Добро пожаловать в главную страницу!</h1>
+        <h1>ABOUT:</h1>
+        <p>logo:</p>
+        <div th:replace="~{fragments/components :: safe-img(${info.aboutBlock.logo}, 'logo', null)}"></div>
+        <p>desc:</p>
+        <p th:text="${info.aboutBlock.description} ?: 'description'"></p>
+        <p>about image:</p>
+        <div th:replace="~{fragments/components :: safe-img(${info.aboutBlock.aboutImage}, 'aboutImage', null)}"></div>
 
-    <div th:replace="~{fragments/info/blocks :: rent-rules}"></div>
+        <h1>RENT RULES:</h1>
+        <div th:if="${info.rentRules != null && !info.rentRules.isEmpty()}">
+            <div th:each="item : ${info.rentRules}">
+                <h3 th:text="${item.title}?: 'title'"></h3>
+                <p th:text="${item.text}?: 'text'"></p>
+            </div>
+        </div>
 
-    <div th:replace="~{fragments/info/blocks :: imaged-router}"></div>
-</div>
+        <h1>DATA TABS:</h1>
+        <div th:if="${info.dataTabs != null && !info.dataTabs.isEmpty()}">
+            <div th:each="item : ${info.dataTabs}">
+                <h3 th:text="|tabName: ${item.tabName ?: 'none'}|"></h3>
+                <p th:text="|title: ${item.title ?: 'none'}|"></p>
+                <p th:text="|text: ${item.text ?: 'none'}|"></p>
+                <p th:text="|linkUrl: ${item.linkUrl ?: 'none'}|"></p>
+                <div th:replace="~{fragments/components :: safe-img(${item.image}, 'Data tab pic', null)}"></div>
+            </div>
+        </div>
+    </div>
 
-<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>

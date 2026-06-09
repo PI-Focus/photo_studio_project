@@ -31,7 +31,7 @@ class StaticDataServiceTest {
 
         assertThat(info).isNotNull();
         assertThat(info.getAboutBlock()).isNotNull();
-        assertThat(info.getImagedTabs()).isNotNull().isNotEmpty();
+        assertThat(info.getDataTabs()).isNotNull().isNotEmpty();
         assertThat(info.getRentRules()).isNotNull().isNotEmpty();
     }
 

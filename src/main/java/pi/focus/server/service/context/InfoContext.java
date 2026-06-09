@@ -23,7 +23,7 @@ public record InfoContext(
     }
 
     @Override
-    public List<IDataTab> getImagedTabs() {
+    public List<IDataTab> getDataTabs() {
         return imagedTabs;
     }
 }

@@ -9,5 +9,5 @@ import pi.focus.server.api.models.ITextCard;
 public interface IInfoContext {
     IAboutDataBlock getAboutBlock();
     List<ITextCard> getRentRules();
-    List<IDataTab> getImagedTabs();
+    List<IDataTab> getDataTabs();
 }

@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import pi.focus.server.core.domain.Room;
 import pi.focus.server.core.service.api.IRoomService;
 import pi.focus.server.core.service.api.IStaticDataService;
+import pi.focus.server.service.context.mocks.EquipmentContextMock;
 import pi.focus.server.service.context.mocks.ExampleContextMock;
+import pi.focus.server.service.context.mocks.PhotographersContextMock;
+import pi.focus.server.service.context.mocks.PhotoroomsContextMock;
 
 import java.util.List;
 
@@ -39,19 +42,19 @@ public class HomeController {
 
     @GetMapping("/photorooms")
     public String getPhotorooms(Model model) {
-        model.addAttribute("photorooms", new ExampleContextMock());
+        model.addAttribute("photorooms", new PhotoroomsContextMock());
         return "pages/photorooms";
     }
 
     @GetMapping("/equipment")
     public String getEquipment(Model model) {
-        model.addAttribute("equipment", new ExampleContextMock());
+        model.addAttribute("equipment", new EquipmentContextMock());
         return "pages/equipment";
     }
 
     @GetMapping("/photographers")
     public String getPhotographers(Model model) {
-        model.addAttribute("photographers", new ExampleContextMock());
+        model.addAttribute("photographers", new PhotographersContextMock());
         return "pages/photographers";
     }
 

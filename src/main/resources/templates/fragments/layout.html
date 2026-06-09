@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" th:fragment="main-layout(content, title)">
+<head>
+    <meta charset="UTF-8">
+    <title th:replace="${title}">PI-FOCUS</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+    <main>
+        <div th:replace="${content}">Content space</div>
+    </main>
+</body>
+</html>
