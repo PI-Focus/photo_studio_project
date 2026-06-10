@@ -132,6 +132,11 @@ img.horizontal {
     aspect-ratio: 4 / 3;
 }
 
+img.round {
+    aspect-ratio: 1 / 1;
+    border-radius: 100%;
+}
+
 p {
     white-space: pre-line;
 }
