@@ -3,12 +3,11 @@
       th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title}, ~{::#photorooms-css})}">
 <head>
     <th:block id="photorooms-css">
-        <link rel="stylesheet" th:href="@{/css/components.css}">
+        <link rel="stylesheet" th:href="@{/css/components.css}" blocking="render">
     </th:block>
     <title>Фотостудия «Фокус»</title>
 </head>
 <body>
-
     <div th:fragment="main-content">
         <th:block th:if="${photorooms.photorooms != null && !photorooms.photorooms.isEmpty()}">
             <th:block th:each="item : ${photorooms.photorooms}">

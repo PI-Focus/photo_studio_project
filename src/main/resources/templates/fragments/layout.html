@@ -2,12 +2,14 @@
 <html xmlns:th="http://thymeleaf.org" th:fragment="main-layout(content, title, pageStyles)">
 <head>
     <meta charset="UTF-8">
+    <meta name="color-scheme" content="light"> 
 
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}" blocking="render">
 
     <th:block th:replace="${pageStyles}"></th:block>
 
     <title th:replace="${title}">PI-FOCUS</title>
+    <script>let FF_FOUC_FIX;</script> 
 </head>
 <body>
     <header>

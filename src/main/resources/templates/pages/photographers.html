@@ -3,7 +3,7 @@
       th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title}, ~{::#photographers-css})}">
 <head>
     <th:block id="photographers-css">
-        <link rel="stylesheet" th:href="@{/css/components.css}">
+        <link rel="stylesheet" th:href="@{/css/components.css}" blocking="render">
     </th:block>
     <title>Фотостудия «Фокус»</title>
 </head>
