@@ -1,12 +1,13 @@
 package pi.focus.server.core.service;
 
+import org.glassfish.jaxb.core.v2.TODO;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import pi.focus.server.api.context.IBaseContext;
 import pi.focus.server.api.context.IInfoContext;
 import pi.focus.server.api.models.IAboutDataBlock;
-import pi.focus.server.api.models.IDataTab;
+import pi.focus.server.api.models.ITab;
 import pi.focus.server.api.models.ITextCard;
 import pi.focus.server.core.exception.StaticDataLoadingException;
 import pi.focus.server.core.json.JsonMapper;
@@ -15,6 +16,7 @@ import pi.focus.server.core.json.dto.TextCardDto;
 import pi.focus.server.core.service.api.IStaticDataService;
 import pi.focus.server.service.context.InfoContext;
 import pi.focus.server.service.context.mocks.BaseContextMock;
+import pi.focus.server.service.context.mocks.InfoContextMock;
 import pi.focus.server.service.models.AboutDataBlock;
 
 import java.io.IOException;
@@ -27,11 +29,13 @@ import java.util.Objects;
 public class StaticDataService implements IStaticDataService {
     @Override
     public IInfoContext getInfo() {
-        return new InfoContext(
-                loadAboutData(),
-                loadRulesData(),
-                loadPreviewData()
-        );
+        // TODO: fix this
+        return new InfoContextMock();
+        // return new InfoContext(
+        //         loadAboutData(),
+        //         loadRulesData(),
+        //         loadPreviewData()
+        // );
     }
 
     private IAboutDataBlock loadAboutData() {
@@ -56,11 +60,11 @@ public class StaticDataService implements IStaticDataService {
         }
     }
 
-    private List<IDataTab> loadPreviewData() {
+    private List<ITab> loadPreviewData() {
         try (InputStream inputStream = Objects.requireNonNull(getClass().getResourceAsStream("/data/preview.json"))) {
             ImagedTabsDto response = JsonMapper.getInstance()
                     .readValue(inputStream, ImagedTabsDto.class);
-            return response.imagedTabs().stream().map(imagedTab -> (IDataTab) imagedTab).toList();
+            return response.imagedTabs().stream().map(imagedTab -> (ITab) imagedTab).toList();
         } catch (IOException e) {
             throw new StaticDataLoadingException("File load error: preview.json", e);
         } catch (NullPointerException e) {

@@ -2,7 +2,8 @@ package pi.focus.server.service.context;
 
 import pi.focus.server.api.context.IInfoContext;
 import pi.focus.server.api.models.IAboutDataBlock;
-import pi.focus.server.api.models.IDataTab;
+import pi.focus.server.api.models.IDataCard;
+import pi.focus.server.api.models.ITab;
 import pi.focus.server.api.models.ITextCard;
 
 import java.util.List;
@@ -10,8 +11,10 @@ import java.util.List;
 public record InfoContext(
         IAboutDataBlock aboutDataBlock,
         List<ITextCard> rentRules,
-        List<IDataTab> imagedTabs
+        List<ITab<IDataCard>> imagedTabs
 ) implements IInfoContext {
+    // TODO: delete this
+
     @Override
     public IAboutDataBlock getAboutBlock() {
         return aboutDataBlock;
@@ -23,7 +26,10 @@ public record InfoContext(
     }
 
     @Override
-    public List<IDataTab> getDataTabs() {
-        return imagedTabs;
+    public List<ITab<IDataCard>> getDataTabs() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getDataTabs'");
     }
+
+
 }

@@ -4,15 +4,17 @@ import java.util.List;
 
 import pi.focus.server.api.context.IInfoContext;
 import pi.focus.server.api.models.IAboutDataBlock;
-import pi.focus.server.api.models.IDataTab;
+import pi.focus.server.api.models.IDataCard;
+import pi.focus.server.api.models.ITab;
 import pi.focus.server.api.models.ITextCard;
 import pi.focus.server.service.models.mocks.AboutDataBlockMock;
-import pi.focus.server.service.models.mocks.DataTabMock;
+import pi.focus.server.service.models.mocks.DataCardMock;
+import pi.focus.server.service.models.mocks.TabMock;
 import pi.focus.server.service.models.mocks.TextCardMock;
 
 public class InfoContextMock implements IInfoContext {
     private final List<ITextCard> rentRules;
-    private final List<IDataTab> imagedTabs;
+    private final List<ITab<IDataCard>> imagedTabs;
     private final AboutDataBlockMock aboutData;
 
     public InfoContextMock() {
@@ -28,9 +30,9 @@ public class InfoContextMock implements IInfoContext {
         );
 
         imagedTabs = List.of(
-            new DataTabMock("Залы", "У нас вы можете выбрать зал йоу", MocksDefines.TEST_IMAGE_PATH, "/photorooms", "ЗАЛЫ"),
-            new DataTabMock("Оборудование", "У нас вы можете выбрать оборудование йоу", MocksDefines.TEST_IMAGE_PATH, "/equipment", "ОБОРУДОВАНИЕ"),
-            new DataTabMock("Фотографы", "У нас вы можете выбрать фотографов йоу", MocksDefines.TEST_IMAGE_PATH, "/photographers", "ФОТОГРАФЫ")
+            new TabMock<IDataCard>("Залы", new DataCardMock("У нас вы можете выбрать зал йоу", MocksDefines.TEST_IMAGE_PATH, "/photorooms", "ЗАЛЫ")),
+            new TabMock<IDataCard>("Оборудование", new DataCardMock("У нас вы можете выбрать оборудование йоу", MocksDefines.TEST_IMAGE_PATH, "/equipment", "ОБОРУДОВАНИЕ")),
+            new TabMock<IDataCard>("Фотографы", new DataCardMock("У нас вы можете выбрать фотографов йоу", MocksDefines.TEST_IMAGE_PATH, "/photographers", "ФОТОГРАФЫ"))
         );
 
         aboutData = new AboutDataBlockMock(
@@ -54,7 +56,7 @@ public class InfoContextMock implements IInfoContext {
     }
 
     @Override
-    public List<IDataTab> getDataTabs() {
+    public List<ITab<IDataCard>> getDataTabs() {
         return imagedTabs;
     }
     

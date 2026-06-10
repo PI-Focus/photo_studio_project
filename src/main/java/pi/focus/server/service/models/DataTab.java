@@ -2,10 +2,13 @@ package pi.focus.server.service.models;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import pi.focus.server.api.models.IDataTab;
+
+import pi.focus.server.api.models.IDataCard;
+import pi.focus.server.api.models.ITab;
 import pi.focus.server.service.models.mocks.ImagedTextCardMock;
 
-public class DataTab extends ImagedTextCardMock implements IDataTab {
+public class DataTab extends ImagedTextCardMock implements ITab<IDataCard> {
+    // TODO: delete this
     private final String tabName;
     private final String linkUrl;
 
@@ -28,7 +31,8 @@ public class DataTab extends ImagedTextCardMock implements IDataTab {
     }
 
     @Override
-    public String getLinkUrl() {
-        return linkUrl;
+    public IDataCard getData() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getData'");
     }
 }
