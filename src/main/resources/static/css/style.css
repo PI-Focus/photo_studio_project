@@ -130,6 +130,11 @@ img.horizontal {
     aspect-ratio: 4 / 3;
 }
 
+.main-wrapper {
+    max-width: var(--wrapper-width);
+    margin: 0 auto;
+}
+
 header {
     background: var(--color-primary);
 

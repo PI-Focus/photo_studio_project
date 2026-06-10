@@ -12,7 +12,9 @@
         <nav th:replace="~{fragments/components :: header-nav}"></nav>
     </header>
     <main>
-        <div th:replace="${content}">Content space</div>
+        <div class="main-wrapper">
+            <div th:replace="${content}">Content space</div>
+        </div>
     </main>
     <footer>
         <div th:replace="~{fragments/components :: footer-info}"></div>
