@@ -133,6 +133,10 @@ img.horizontal {
     aspect-ratio: 4 / 3;
 }
 
+img.square {
+    aspect-ratio: 1 / 1;
+}
+
 img.round {
     aspect-ratio: 1 / 1;
     border-radius: 100%;

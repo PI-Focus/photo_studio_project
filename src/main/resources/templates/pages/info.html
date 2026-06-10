@@ -3,6 +3,7 @@
       th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title}, ~{::#info-css})}">
 <head>
     <th:block id="info-css">
+        <link rel="stylesheet" th:href="@{/css/info.css}" blocking="render">
     </th:block>
 
     <title>Фотостудия «Фокус»</title>
@@ -10,7 +11,22 @@
 <body>
 
     <div th:fragment="main-content">
-        <h1>Добро пожаловать на главную страницу!</h1>
+        <div class="about-block">
+            <div class="logo-block">
+                <div th:replace="~{fragments/basic-components :: safe-img(${info.aboutBlock.logo}, 'logo', 'square')}"></div>
+                <h1>Фотостудия «Фокус»</h1>
+            </div>
+
+            <div class="description-block">
+                <div class="text-description">
+                    <p th:text="${info.aboutBlock.description} ?: 'Тут должно быть описание студии, но оно куда-то убежало :('"></p>
+                    <p class="cool-phrase">Теперь у вас есть место, где идеи становятся кадрами.</p>
+                </div>
+                <div th:replace="~{fragments/basic-components :: safe-img(${info.aboutBlock.aboutImage}, 'aboutImage', 'horizontal')}"></div>
+            </div>
+        </div>
+
+        
         <h1>ABOUT:</h1>
         <p>logo:</p>
         <div th:replace="~{fragments/basic-components :: safe-img(${info.aboutBlock.logo}, 'logo', null)}"></div>

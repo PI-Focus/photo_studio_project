@@ -1,0 +1,42 @@
+.about-block {
+    .logo-block {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: var(--space-m);
+        margin: var(--space-xxl) 0;
+
+        img {
+            background: transparent;
+            width: 10rem;
+        }
+
+        h1 {
+            display: block;
+            margin: 0;
+        }
+    }
+
+    .description-block {
+        display: grid;
+        grid-template-columns: 3fr 2fr;
+        column-gap: var(--space-xxl);
+ 
+        .text-description {
+            display: flex;
+            flex-flow: column wrap;
+            align-items: flex-start;
+
+            p {
+                margin: 0;
+                text-align: justify;
+                text-justify: inter-word;
+            }
+
+            .cool-phrase {
+                font-size: var(--text-l);
+                margin-top: var(--space-xl);
+            }
+        }
+    }
+}
