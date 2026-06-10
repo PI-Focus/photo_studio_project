@@ -149,6 +149,8 @@ header {
             color: var(--color-text-dark);
             font-size: var(--text-l);
             position: relative;
+            will-change: color;
+            transition: color var(--time-s);
         }
 
         .nav-link.active {
@@ -168,6 +170,10 @@ header {
             height: 2px;
 
             background-color: var(--color-text-accent);
+        }
+
+        .nav-link:hover {
+            color: var(--color-accent);
         }
     }
 
