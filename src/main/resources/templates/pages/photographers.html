@@ -12,7 +12,7 @@
     <div th:fragment="main-content">        
         <th:block th:if="${photographers.photographers != null && !photographers.photographers.isEmpty()}">
             <th:block th:each="item : ${photographers.photographers}">
-                <th:block th:replace="~{fragments/components :: imaged-text-card(${item}, 'round', null)}"></th:block>
+                <th:block th:replace="~{fragments/components :: imaged-text-card(${item}, 'round', 'underlined')}"></th:block>
             </th:block>
         </th:block>
     </div>

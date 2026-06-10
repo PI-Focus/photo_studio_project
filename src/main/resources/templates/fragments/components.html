@@ -1,5 +1,5 @@
 <div th:fragment="imaged-text-card(imagedTextCard, imageClass, class)"
-   th:class="|imaged-text-card ${class}|">
+   th:class="|data-card ${class}|">
    <div class="image-wrapper">
       <div th:replace="~{fragments/basic-components :: safe-img(${imagedTextCard.image}, 'изображение', ${imageClass})}"></div>
    </div>
@@ -8,5 +8,20 @@
          <h3 th:text="${imagedTextCard.title}"></h3>
          <p th:text="${imagedTextCard.text}"></p>
       </div>
+   </div>
+</div>
+
+<div th:fragment="data-card(dataCard, btnGoText, imageClass, class)"
+   th:class="|data-card ${class}|">
+   <div class="image-wrapper">
+      <div th:replace="~{fragments/basic-components :: safe-img(${dataCard.image}, 'изображение', ${imageClass})}"></div>
+   </div>
+   <div class="text-wrapper">
+      <div class="text-block">
+         <h2 th:text="${dataCard.title}"></h2>
+         <p th:text="${dataCard.text}"></p>
+      </div>
+         <a th:href="${dataCard.linkUrl}"
+            th:text="${btnGoText}"></a>
    </div>
 </div>

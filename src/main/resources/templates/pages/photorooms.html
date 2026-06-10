@@ -3,22 +3,18 @@
       th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title}, ~{::#photorooms-css})}">
 <head>
     <th:block id="photorooms-css">
+        <link rel="stylesheet" th:href="@{/css/components.css}">
     </th:block>
     <title>Фотостудия «Фокус»</title>
 </head>
 <body>
 
     <div th:fragment="main-content">
-        <h1>Добро пожаловать на страницу залов!</h1>
-
-        <div th:if="${photorooms.photorooms != null && !photorooms.photorooms.isEmpty()}">
-            <div th:each="item : ${photorooms.photorooms}">
-                <h3 th:text="|title: ${item.title ?: 'none'}|"></h3>
-                <p th:text="|text: ${item.text ?: 'none'}|"></p>
-                <p th:text="|linkUrl: ${item.linkUrl ?: 'none'}|"></p>
-                <div th:replace="~{fragments/basic-components :: safe-img(${item.image}, 'Data tab pic', null)}"></div>
-            </div>
-        </div>
+        <th:block th:if="${photorooms.photorooms != null && !photorooms.photorooms.isEmpty()}">
+            <th:block th:each="item : ${photorooms.photorooms}">
+                <th:block th:replace="~{fragments/components :: data-card(${item}, 'Забронировать', '', 'underlined switching')}"></th:block>
+            </th:block>
+        </th:block>
     </div>
 
 </body>
