@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org" 
-      th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title})}">
+      th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title}, ~{::#info-css})}">
 <head>
+    <th:block id="info-css">
+    </th:block>
+
     <title>Фотостудия «Фокус»</title>
 </head>
 <body>
@@ -10,11 +13,11 @@
         <h1>Добро пожаловать на главную страницу!</h1>
         <h1>ABOUT:</h1>
         <p>logo:</p>
-        <div th:replace="~{fragments/components :: safe-img(${info.aboutBlock.logo}, 'logo', null)}"></div>
+        <div th:replace="~{fragments/basic-components :: safe-img(${info.aboutBlock.logo}, 'logo', null)}"></div>
         <p>desc:</p>
         <p th:text="${info.aboutBlock.description} ?: 'description'"></p>
         <p>about image:</p>
-        <div th:replace="~{fragments/components :: safe-img(${info.aboutBlock.aboutImage}, 'aboutImage', null)}"></div>
+        <div th:replace="~{fragments/basic-components :: safe-img(${info.aboutBlock.aboutImage}, 'aboutImage', null)}"></div>
 
         <h1>RENT RULES:</h1>
         <div th:if="${info.rentRules != null && !info.rentRules.isEmpty()}">
@@ -31,7 +34,7 @@
                 <p th:text="|title: ${item.title ?: 'none'}|"></p>
                 <p th:text="|text: ${item.text ?: 'none'}|"></p>
                 <p th:text="|linkUrl: ${item.linkUrl ?: 'none'}|"></p>
-                <div th:replace="~{fragments/components :: safe-img(${item.image}, 'Data tab pic', null)}"></div>
+                <div th:replace="~{fragments/basic-components :: safe-img(${item.image}, 'Data tab pic', null)}"></div>
             </div>
         </div>
     </div>

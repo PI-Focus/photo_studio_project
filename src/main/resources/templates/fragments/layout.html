@@ -1,15 +1,17 @@
 <!DOCTYPE html>
-<html xmlns:th="http://thymeleaf.org" th:fragment="main-layout(content, title)">
+<html xmlns:th="http://thymeleaf.org" th:fragment="main-layout(content, title, pageStyles)">
 <head>
     <meta charset="UTF-8">
 
     <link rel="stylesheet" th:href="@{/css/style.css}">
 
+    <th:block th:replace="${pageStyles}"></th:block>
+
     <title th:replace="${title}">PI-FOCUS</title>
 </head>
 <body>
     <header>
-        <nav th:replace="~{fragments/components :: header-nav}"></nav>
+        <nav th:replace="~{fragments/basic-components :: header-nav}"></nav>
     </header>
     <main>
         <div class="main-wrapper">
@@ -17,7 +19,7 @@
         </div>
     </main>
     <footer>
-        <div th:replace="~{fragments/components :: footer-info}"></div>
+        <div th:replace="~{fragments/basic-components :: footer-info}"></div>
     </footer>
 </body>
 </html>

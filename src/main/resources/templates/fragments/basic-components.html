@@ -1,0 +1,46 @@
+<img th:fragment="safe-img(src, alt, class)" th:class="${class}" th:alt="${alt}"
+   th:src="${src != null && !src.isEmpty()} ? @{${src}} : @{/images/fallback.png}"
+   th:onerror="|this.onerror=null; this.src='@{/images/fallback.png}';|" />
+
+<nav th:fragment="header-nav">
+   <a th:href="@{/}" id="header-btn-info" class="nav-link"
+      th:classappend="${currentURI == '/'} ? 'active'">ИНФОРМАЦИЯ</a>
+
+   <a th:href="@{/photorooms}" id="header-btn-photorooms" class="nav-link"
+      th:classappend="${currentURI != null && currentURI.startsWith('/photorooms')} ? 'active'">ЗАЛЫ</a>
+
+   <a th:href="@{/equipment}" id="header-btn-equipment" class="nav-link"
+      th:classappend="${currentURI != null && currentURI.startsWith('/equipment')} ? 'active'">ОБОРУДОВАНИЕ</a>
+
+   <a th:href="@{/photographers}" id="header-btn-photographers" class="nav-link"
+      th:classappend="${currentURI != null && currentURI.startsWith('/photographers')} ? 'active'">ФОТОГРАФЫ</a>
+
+   <a th:href="@{/login}" id="header-btn-login" class="nav-link"
+      th:classappend="${currentURI != null && currentURI.startsWith('/login')} ? 'active'">ВХОД</a>
+</nav>
+
+<div th:fragment="footer-info" th:class="footer-info">
+   <div>
+      <h3>СТУДИЯ «ФОКУС»</h3>
+      <p th:text="|ИНН ${base.inn?: 'не указан'}|"></p>
+      <p th:text="|ОГРНИП ${base.ogrnip?: 'не указан'}|"></p>
+      <p th:text="${base.companyName?: 'Компания не указана'}"></p>
+   </div>
+   <div>
+      <h3>ИНФОРМАЦИЯ</h3>
+      <a th:href="@{/docs/privacy.pdf}" target="_blank" class="footer-link">Политика конфиденциальности</a>
+      <a th:href="@{/docs/agreement.pdf}" target="_blank" class="footer-link">Пользовательское соглашение</a>
+      <a th:href="@{/docs/offer.pdf}" target="_blank" class="footer-link">Публичная оферта</a>
+   </div>
+   <div>
+      <h3>КОНТАКТЫ</h3>
+      <a th:href="|tel:${base.phone}|" class="footer-link">
+         Телефон: <span th:text="${base.phone}">8-666-666-66-66</span>
+      </a>
+      <a th:href="|mailto:${base.email}|" class="footer-link">
+         Почта: <span th:text="${base.email}">pi_focus@yandex.ru</span>
+      </a>
+
+      <p th:text="|Адрес: ${base.address}|">г. Ярославль, ул. Союзная, 144</p>
+   </div>
+</div>

@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org" 
-      th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title})}">
+      th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title}, ~{::#photorooms-css})}">
 <head>
+    <th:block id="photorooms-css">
+    </th:block>
     <title>Фотостудия «Фокус»</title>
 </head>
 <body>
@@ -14,7 +16,7 @@
                 <h3 th:text="|title: ${item.title ?: 'none'}|"></h3>
                 <p th:text="|text: ${item.text ?: 'none'}|"></p>
                 <p th:text="|linkUrl: ${item.linkUrl ?: 'none'}|"></p>
-                <div th:replace="~{fragments/components :: safe-img(${item.image}, 'Data tab pic', null)}"></div>
+                <div th:replace="~{fragments/basic-components :: safe-img(${item.image}, 'Data tab pic', null)}"></div>
             </div>
         </div>
     </div>

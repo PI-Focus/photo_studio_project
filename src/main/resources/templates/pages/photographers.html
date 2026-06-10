@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org" 
-      th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title})}">
+      th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title}, ~{::#photographers-css})}">
 <head>
+    <th:block id="photographers-css">
+        <link rel="stylesheet" th:href="@{/css/components.css}">
+    </th:block>
     <title>Фотостудия «Фокус»</title>
 </head>
 <body>
@@ -11,9 +14,7 @@
         
         <div th:if="${photographers.photographers != null && !photographers.photographers.isEmpty()}">
             <div th:each="item : ${photographers.photographers}">
-                <h3 th:text="|title: ${item.title ?: 'none'}|"></h3>
-                <p th:text="|text: ${item.text ?: 'none'}|"></p>
-                <div th:replace="~{fragments/components :: safe-img(${item.image}, 'Data tab pic', null)}"></div>
+                <div th:replace="~{fragments/components :: imaged-text-card(${item}, null, null)}"></div>
             </div>
         </div>
     </div>

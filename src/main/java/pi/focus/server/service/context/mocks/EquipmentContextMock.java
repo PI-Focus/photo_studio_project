@@ -12,7 +12,17 @@ public class EquipmentContextMock implements IEquipmentContext{
     public EquipmentContextMock() {
         equipment = List.of(
             new ImagedTextCardMock("Оборудованя 1", "Штучка для фоторграфирования 1", MocksDefines.TEST_IMAGE_PATH),
-            new ImagedTextCardMock("Оборудованя 2", "Штучка для фоторграфированя 2", MocksDefines.TEST_IMAGE_PATH),
+            new ImagedTextCardMock("Оборудованя 2", "Штучка для фоторграфированя 2" +
+            "\n\n ой а знаете почему бы не добавить сюда какой-нибудб длинющий текст чтобы узнать как оно себя поведет." +
+            " Ведь реально интересно надо будет наверное в мок дефайнс запихать парочку супер длинных строк чтобы посмотреть " + 
+            "насколько печально с этим справится моя вёрстка. Ну наверное на пока хватит, там уже гляну норм не норм кайф не кайф." +
+            "\n\nНо как оказалось текст этот недостатоточно длинный так что Lorem ipsum, dolor sit amet consectetur adipisicing elit." + 
+            " Ut neque at, reprehenderit dolor aperiam, debitis delectus qui asperiores error veritatis nisi aliquam saepe quo itaque" + 
+            " deleniti excepturi distinctio, numquam veniam! Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia minus incidunt," + 
+            " harum porro magni inventore, doloremque libero quam, ullam necessitatibus iusto at omnis quisquam saepe voluptate adipisci" +
+            " eaque in vitae? Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis architecto suscipit impedit dolorum nihil," + 
+            " est vitae at molestias, dignissimos fugit consectetur! Doloremque rerum dolores itaque assumenda id sunt soluta architecto!", 
+            MocksDefines.TEST_IMAGE_PATH),
             new ImagedTextCardMock("Оборудованя 3", "Штучка для нефотогрофированя 3", MocksDefines.TEST_IMAGE_PATH)
         );
     }

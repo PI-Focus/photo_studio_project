@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org" 
-      th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title})}">
+      th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title}, ~{::#equipment-css})}">
 <head>
     <title>Фотостудия «Фокус»</title>
+
+    <th:block id="equipment-css">
+        <link rel="stylesheet" th:href="@{/css/components.css}">
+    </th:block>
 </head>
 <body>
 
     <div th:fragment="main-content">
-        <h1>Добро пожаловать на страницу оборудования!</h1>
-
-        <div th:if="${equipment.equipment != null && !equipment.equipment.isEmpty()}">
-            <div th:each="item : ${equipment.equipment}">
-                <h3 th:text="|title: ${item.title ?: 'none'}|"></h3>
-                <p th:text="|text: ${item.text ?: 'none'}|"></p>
-                <div th:replace="~{fragments/components :: safe-img(${item.image}, 'Data tab pic', null)}"></div>
-            </div>
-        </div>
+        <th:block th:if="${equipment.equipment != null && !equipment.equipment.isEmpty()}">
+            <th:block th:each="item : ${equipment.equipment}">
+                <th:block th:replace="~{fragments/components :: imaged-text-card(${item}, 'horizontal', null)}"></th:block>
+            </th:block>
+        </th:block>
     </div>
 
 </body>

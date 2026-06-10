@@ -1,0 +1,43 @@
+.imaged-text-card {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    position: relative;
+    
+    .image-wrapper {
+        padding: var(--space-xl)
+    }
+
+    .text-wrapper {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: var(--space-xl) 0;
+
+        .text-block {
+            display: flex;
+            flex-flow: column wrap;
+            align-items: flex-start;
+            justify-content: center;
+
+            h3 {
+                margin-top: 0;
+            }
+
+            p {
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+.imaged-text-card:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+
+    width: 85%; 
+    height: 3px;
+    background: radial-gradient(ellipse at center, var(--color-text-menu) 0%, transparent 70%);
+}

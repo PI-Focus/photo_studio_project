@@ -51,8 +51,9 @@
     --text-s: 0.85rem;
     --text-m: 1rem;
     --text-l: 1.5rem;
-    --text-xl: 2rem;
-    --text-xxl: 4rem;
+    --text-xl: 1.75rem;
+    --text-xxl: 2.5rem;
+    --text-logo: 4rem;
 
     --space-xs: 0.25rem;
     --space-s: 0.5rem;
@@ -124,10 +125,34 @@ img {
     aspect-ratio: 3 / 4;
     object-fit: cover;
     width: 100%;
+    border-radius: 1px;
 }
 
 img.horizontal {
     aspect-ratio: 4 / 3;
+}
+
+p {
+    white-space: pre-line;
+}
+
+h1, h2, h3 {
+    font-family: var(--font-accent);
+    white-space: pre-line;
+}
+
+h1 {
+    font-size: var(--text-logo);
+}
+
+h2 {
+    font-size: var(--text-xxl);
+    font-weight: 400;
+}
+
+h3 {
+    font-size: var(--text-xl);
+    font-weight: 400;
 }
 
 .main-wrapper {
@@ -199,7 +224,6 @@ footer {
             align-items: flex-start;
 
             h3 {
-                font-family: var(--font-accent);
                 margin-top: 0;
                 margin-bottom: var(--space-m);
             }
