@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org" 
-      th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title}, ~{::#info-css})}">
+      th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title}, ~{::#info-css}, ~{::#info-scripts})}">
 <head>
     <th:block id="info-css">
+        <link rel="stylesheet" th:href="@{/css/components.css}" blocking="render">
         <link rel="stylesheet" th:href="@{/css/info.css}" blocking="render">
     </th:block>
 
@@ -26,21 +27,23 @@
             </div>
         </div>
 
-        
-        <h1>ABOUT:</h1>
-        <p>logo:</p>
-        <div th:replace="~{fragments/basic-components :: safe-img(${info.aboutBlock.logo}, 'logo', null)}"></div>
-        <p>desc:</p>
-        <p th:text="${info.aboutBlock.description} ?: 'description'"></p>
-        <p>about image:</p>
-        <div th:replace="~{fragments/basic-components :: safe-img(${info.aboutBlock.aboutImage}, 'aboutImage', null)}"></div>
-
-        <h1>RENT RULES:</h1>
-        <div th:if="${info.rentRules != null && !info.rentRules.isEmpty()}">
-            <div th:each="item : ${info.rentRules}">
-                <h3 th:text="${item.title}?: 'title'"></h3>
-                <p th:text="${item.text}?: 'text'"></p>
-            </div>
+        <div class="rent-rules-block">
+            <h2>Правила аренды</h2>
+            <th:block th:if="${info.rentRules != null && !info.rentRules.isEmpty()}">
+                <div th:replace="~{fragments/components :: carousel(
+                    items=${info.rentRules},
+                    slideFragment='fragments/carousel-cards :: titled-text-card',
+                    visibleSlides=3,
+                    duration='0.4s',
+                    autoplayInterval='5s',
+                    autoplay=true,
+                    showArrows=false,
+                    showDots=true,
+                    carouselClass='',
+                    carouselId='rentrules-carousel',
+                    slideClass=''
+                )}"></div>
+            </th:block>
         </div>
 
         <h1>DATA TABS:</h1>
@@ -55,5 +58,8 @@
         </div>
     </div>
 
+    <th:block id="info-scripts">
+        <script th:src="@{/js/carousel.js}" defer></script>
+    </th:block>
 </body>
 </html>

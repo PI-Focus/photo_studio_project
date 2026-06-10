@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org" 
-      th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title}, ~{::#photographers-css})}">
+      th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title}, ~{::#photographers-css}, ~{})}">
 <head>
     <th:block id="photographers-css">
         <link rel="stylesheet" th:href="@{/css/components.css}" blocking="render">

@@ -25,3 +25,40 @@
             th:text="${btnGoText}"></a>
    </div>
 </div>
+
+<div th:fragment="carousel(items, slideFragment, visibleSlides, duration, autoplayInterval, autoplay, showArrows, showDots, carouselClass, carouselId, slideClass)"
+     class="carousel"
+     th:classappend="${carouselClass}"
+     th:id="${carouselId}"
+     th:style="${'--visible-slides: ' + visibleSlides + '; --transition-duration: ' + duration + '; --autoplay-interval: ' + autoplayInterval + '; --autoplay-enabled: ' + (autoplay ? 1 : 0) + ';'}">
+
+    <div class="carousel-arrow-wrap">
+        <button class="carousel-btn carousel-btn--prev" type="button" aria-label="Предыдущий слайд"
+                th:if="${showArrows and #lists.size(items) > visibleSlides}">←</button>
+
+        <div class="carousel-viewport">
+            <div class="carousel-track">
+                <div th:each="item, stat : ${items}" class="carousel-slide" th:classappend="${slideClass}">
+                    <th:block th:insert="~{__${slideFragment}__(item=${item})}"></th:block>
+                </div>
+                <div class="carousel-slide" th:if="${#lists.isEmpty(items)}">Нет данных</div>
+            </div>
+        </div>
+
+        <button class="carousel-btn carousel-btn--next" type="button" aria-label="Следующий слайд"
+                th:if="${showArrows and #lists.size(items) > visibleSlides}">→</button>
+    </div>
+
+    <div class="carousel-dots"
+         th:if="${showDots and #lists.size(items) > visibleSlides}"
+         th:with="maxIdx=${#lists.size(items) - visibleSlides}">
+        <button th:each="item, stat : ${items}"
+                th:if="${stat.index &lt;= maxIdx}"
+                class="carousel-dot"
+                th:classappend="${stat.first ? 'carousel-dot--active' : ''}"
+                type="button"
+                th:attr="data-index=${stat.index}"
+                th:aria-label="${'Перейти к слайду ' + stat.count}">
+        </button>
+    </div>
+</div>

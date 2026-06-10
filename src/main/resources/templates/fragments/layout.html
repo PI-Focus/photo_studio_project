@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://thymeleaf.org" th:fragment="main-layout(content, title, pageStyles)">
+<html xmlns:th="http://thymeleaf.org" th:fragment="main-layout(content, title, pageStyles, scripts)">
 <head>
     <meta charset="UTF-8">
     <meta name="color-scheme" content="light"> 
@@ -23,5 +23,6 @@
     <footer>
         <div th:replace="~{fragments/basic-components :: footer-info}"></div>
     </footer>
+    <th:block th:replace="${scripts}"></th:block>
 </body>
 </html>
