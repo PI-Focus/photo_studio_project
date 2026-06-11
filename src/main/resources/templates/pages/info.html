@@ -46,20 +46,21 @@
             </th:block>
         </div>
 
-        <h1>DATA TABS:</h1>
-        <div th:if="${info.dataTabs != null && !info.dataTabs.isEmpty()}">
-            <div th:each="item : ${info.dataTabs}">
-                <h3 th:text="|tabName: ${item.tabName ?: 'none'}|"></h3>
-                <p th:text="|title: ${item.title ?: 'none'}|"></p>
-                <p th:text="|text: ${item.text ?: 'none'}|"></p>
-                <p th:text="|linkUrl: ${item.linkUrl ?: 'none'}|"></p>
-                <div th:replace="~{fragments/basic-components :: safe-img(${item.image}, 'Data tab pic', null)}"></div>
-            </div>
+        <div class="imaged-router">
+            <th:block th:if="${info.dataTabs != null && !info.dataTabs.isEmpty()}">
+                <div th:replace="~{fragments/components :: tabs(
+                    items=${info.dataTabs},
+                    slideFragment='fragments/tab-adapters :: data-card-adapter',
+                    routerId='tab-router',
+                    class='')}">
+                </div>
+            </th:block>
         </div>
     </div>
 
     <th:block id="info-scripts">
         <script th:src="@{/js/carousel.js}" defer></script>
+        <script th:src="@{/js/tabs.js}" defer></script>
     </th:block>
 </body>
 </html>

@@ -62,3 +62,32 @@
         </button>
     </div>
 </div>
+
+<div th:fragment="tabs(items, slideFragment, routerId, class)"
+     th:id="${routerId}"
+     th:class="|tabs-router ${class}|"
+     th:data-active-tab="${0}">
+    
+    <nav class="tabs-nav" role="tablist" th:aria-label="'Tabs for ' + ${routerId}">
+        <button th:each="item, iterStat : ${items}"
+                class="tab-btn"
+                th:classappend="${iterStat.first} ? 'active'"
+                th:data-tab="${iterStat.index}"
+                th:aria-selected="${iterStat.first} ? 'true' : 'false'"
+                th:text="${item.tabName}"
+                type="button"
+                role="tab">
+        </button>
+    </nav>
+
+    <div class="tabs-content">
+        <div th:each="item, iterStat : ${items}"
+             class="tab-panel"
+             th:id="${routerId + '-panel-' + iterStat.index}"
+             th:classappend="${iterStat.first} ? 'active'"
+             role="tabpanel">
+            
+            <th:block th:insert="~{__${slideFragment}__(item=${item})}"></th:block>
+        </div>
+    </div>
+</div>

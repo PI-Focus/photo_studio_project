@@ -195,3 +195,65 @@
         cursor: default;
     }
 }
+
+.imaged-router {
+    margin: var(--space-xxl) 0;
+    .tabs-router {
+        .tabs-nav {
+            display: flex;
+        }
+
+        .tab-btn {
+            background: var(--color-secondary);
+            border: none;
+            position: relative;
+            padding: var(--space-s) var(--space-l) 4px var(--space-l);
+            font-size: var(--text-l);
+
+            will-change: color;
+            transition: color var(--time-m) ease;
+
+            &:first-child {
+                border-top-left-radius: var(--radius-l);
+            }
+
+            &:last-child {
+                border-top-right-radius: var(--radius-l);
+            }
+
+            &.active {
+                color: var(--color-text-accent);
+            }
+
+            &:hover {
+                color: var(--color-accent);
+            }
+        }
+
+        .tab-btn.active::after {
+            content: "";
+            position: absolute;
+
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+
+            width: var(--text-s);
+            height: 4px;
+            border-radius: 4px;
+
+            background-color: var(--color-text-accent);
+        }
+
+        .tab-panel {
+            display: none;
+            background: var(--color-secondary);
+
+            border-radius: 0 var(--radius-l) var(--radius-l) var(--radius-l);
+            
+            &.active {
+                display: block;
+            }
+        }
+    }
+}

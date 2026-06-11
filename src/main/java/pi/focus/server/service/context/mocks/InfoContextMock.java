@@ -30,9 +30,9 @@ public class InfoContextMock implements IInfoContext {
         );
 
         imagedTabs = List.of(
-            new TabMock<IDataCard>("Залы", new DataCardMock("У нас вы можете выбрать зал йоу", MocksDefines.TEST_IMAGE_PATH, "/photorooms", "ЗАЛЫ")),
-            new TabMock<IDataCard>("Оборудование", new DataCardMock("У нас вы можете выбрать оборудование йоу", MocksDefines.TEST_IMAGE_PATH, "/equipment", "ОБОРУДОВАНИЕ")),
-            new TabMock<IDataCard>("Фотографы", new DataCardMock("У нас вы можете выбрать фотографов йоу", MocksDefines.TEST_IMAGE_PATH, "/photographers", "ФОТОГРАФЫ"))
+            new TabMock<IDataCard>("ЗАЛЫ", new DataCardMock("Залы", "У нас вы можете выбрать зал йоу", MocksDefines.TEST_IMAGE_PATH, "/photorooms")),
+            new TabMock<IDataCard>("ОБОРУДОВАНИЕ", new DataCardMock("Оборудование", "У нас вы можете выбрать оборудование йоу", MocksDefines.TEST_IMAGE_PATH, "/equipment")),
+            new TabMock<IDataCard>("ФОТОГРАФЫ", new DataCardMock("Фотографы", "У нас вы можете выбрать фотографов йоу", MocksDefines.TEST_IMAGE_PATH, "/photographers"))
         );
 
         aboutData = new AboutDataBlockMock(
