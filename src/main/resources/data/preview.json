@@ -1,23 +1,29 @@
 [
   {
-    "title": "Залы",
-    "text": "У нас вы можете выбрать зал йоу",
-    "imageUrl": "/images/placeholder.png",
     "tabName": "ЗАЛЫ",
-    "linkUrl": "/photorooms"
+    "data": {
+      "title": "Залы",
+      "text": "У нас вы можете выбрать зал йоу",
+      "imageUrl": "/images/placeholder.png",
+      "linkUrl": "/photorooms"
+    }
   },
   {
-    "title": "Оборудование",
-    "text": "У нас вы можете выбрать оборудование йоу",
-    "imageUrl": "/images/placeholder.png",
     "tabName": "ОБОРУДОВАНИЕ",
-    "linkUrl": "/equipment"
+    "data": {
+      "title": "Оборудование",
+      "text": "У нас вы можете выбрать оборудование йоу",
+      "imageUrl": "/images/placeholder.png",
+      "linkUrl": "/equipment"
+    }
   },
   {
-    "title": "Фотографы",
-    "text": "У нас вы можете выбрать фотографов йоу",
-    "imageUrl": "/images/placeholder.png",
     "tabName": "ФОТОГРАФЫ",
-    "linkUrl": "/photographers"
+    "data": {
+      "title": "Фотографы",
+      "text": "У нас вы можете выбрать фотографов йоу",
+      "imageUrl": "/images/placeholder.png",
+      "linkUrl": "/photographers"
+    }
   }
 ]

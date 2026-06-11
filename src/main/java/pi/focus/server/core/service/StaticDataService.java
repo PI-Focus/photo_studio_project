@@ -44,7 +44,7 @@ public class StaticDataService implements IStaticDataService {
     }
 
     private IAboutDataBlock loadAboutDataBlock() {
-        InputStream inputStream = getClass().getResourceAsStream("/data/rules.json");
+        InputStream inputStream = getClass().getResourceAsStream("/data/about.json");
 
         if (inputStream == null) {
             throw new StaticDataLoadingException("File not found: rules.json");
