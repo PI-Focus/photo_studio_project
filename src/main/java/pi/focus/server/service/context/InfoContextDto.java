@@ -3,7 +3,7 @@ package pi.focus.server.service.context;
 import pi.focus.server.api.context.IInfoContext;
 import pi.focus.server.api.models.IAboutDataBlock;
 import pi.focus.server.api.models.IDataCard;
-import pi.focus.server.api.models.ITab;
+import pi.focus.server.api.models.INamedData;
 import pi.focus.server.api.models.ITextCard;
 
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
 public record InfoContextDto(
     IAboutDataBlock aboutBlock,
     List<ITextCard> rentRules,
-    List<ITab<IDataCard>> dataTabs
+    List<INamedData<IDataCard>> dataTabs
 ) implements IInfoContext {
 
     @Override
@@ -25,7 +25,7 @@ public record InfoContextDto(
     }
 
     @Override
-    public List<ITab<IDataCard>> getDataTabs() {
+    public List<INamedData<IDataCard>> getDataTabs() {
         return dataTabs;
     }
 }

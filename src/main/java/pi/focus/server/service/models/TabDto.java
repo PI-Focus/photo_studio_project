@@ -1,8 +1,8 @@
 package pi.focus.server.service.models;
 
-import pi.focus.server.api.models.ITab;
+import pi.focus.server.api.models.INamedData;
 
-public record TabDto<T>(String tabName, T data) implements ITab<T> {
+public record TabDto<T>(String tabName, T data) implements INamedData<T> {
 
     @Override
     public String getTabName() {

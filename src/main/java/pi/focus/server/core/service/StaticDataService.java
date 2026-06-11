@@ -13,7 +13,7 @@ import pi.focus.server.api.context.IBaseContext;
 import pi.focus.server.api.context.IInfoContext;
 import pi.focus.server.api.models.IAboutDataBlock;
 import pi.focus.server.api.models.IDataCard;
-import pi.focus.server.api.models.ITab;
+import pi.focus.server.api.models.INamedData;
 import pi.focus.server.api.models.ITextCard;
 import pi.focus.server.core.exception.StaticDataLoadingException;
 import pi.focus.server.core.json.JsonMapper;
@@ -44,50 +44,49 @@ public class StaticDataService implements IStaticDataService {
     }
 
     private IAboutDataBlock loadAboutDataBlock() {
-        InputStream inputStream = getClass().getResourceAsStream("/data/about.json");
-
-        if (inputStream == null) {
-            throw new StaticDataLoadingException("File not found: rules.json");
-        }
-
-        try (inputStream) { 
+        try (InputStream inputStream = getClass().getResourceAsStream("/data/about.json")) {
+            
+            if (inputStream == null) {
+                throw new StaticDataLoadingException("File not found: about.json"); 
+            }
             return JsonMapper.getInstance().readValue(inputStream, AboutDataBlockDto.class);
+            
         } catch (IOException e) {
-            throw new StaticDataLoadingException("File load or parsing error: rules.json", e);
+            throw new StaticDataLoadingException("File load or parsing error: about.json", e);
         }
     }
 
     private List<ITextCard> loadRulesData() {
-        InputStream inputStream = getClass().getResourceAsStream("/data/rules.json");
-        if (inputStream == null) throw new StaticDataLoadingException("File not found: rules.json");
-
-        try (inputStream) {
+        try (InputStream inputStream = getClass().getResourceAsStream("/data/rules.json")) {
+            
+            if (inputStream == null) {
+                throw new StaticDataLoadingException("File not found: rules.json");
+            }
             List<TextCardDto> dtos = JsonMapper.getInstance().readValue(
                 inputStream, 
-                new TypeReference<List<TextCardDto>>() {}
+                new TypeReference<>() {}
             );
-            
             return List.copyOf(dtos); 
+            
         } catch (IOException e) {
             throw new StaticDataLoadingException("File load or parsing error: rules.json", e);
         }
     }
 
-    private List<ITab<IDataCard>> loadPreviewData() {
-        InputStream inputStream = getClass().getResourceAsStream("/data/preview.json");
-        if (inputStream == null) {
-            throw new StaticDataLoadingException("File not found: preview.json");
-        }
-
-        try (inputStream) {
+    private List<INamedData<IDataCard>> loadPreviewData() {
+        try (InputStream inputStream = getClass().getResourceAsStream("/data/preview.json")) {
+            
+            if (inputStream == null) {
+                throw new StaticDataLoadingException("File not found: preview.json");
+            }
             List<TabDto<DataCardDto>> dtos = JsonMapper.getInstance().readValue(
                 inputStream, 
-                new TypeReference<List<TabDto<DataCardDto>>>() {}
+                new TypeReference<>() {}
             );
             
             return dtos.stream()
                        .map(tab -> new TabDto<IDataCard>(tab.tabName(), tab.data()))
-                       .map(tab -> (ITab<IDataCard>) tab)
+                       .map(tab -> (INamedData<IDataCard>) tab)
                        .toList();
                        
         } catch (IOException e) {
@@ -96,16 +95,16 @@ public class StaticDataService implements IStaticDataService {
     }
 
     private IBaseContext loadBaseData() {
-        InputStream inputStream = getClass().getResourceAsStream("/data/base.json");
-        
-        if (inputStream == null) {
-            throw new StaticDataLoadingException("File not found: base.json");
-        }
-
-        try (inputStream) {
+        try (InputStream inputStream = getClass().getResourceAsStream("/data/base.json")) {
+            
+            if (inputStream == null) {
+                throw new StaticDataLoadingException("File not found: base.json");
+            }
             return JsonMapper.getInstance().readValue(inputStream, BaseContextDto.class);
+            
         } catch (IOException e) {
             throw new StaticDataLoadingException("File load or parsing error: base.json", e);
         }
     }
+
 }

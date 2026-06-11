@@ -5,7 +5,7 @@ import java.util.List;
 import pi.focus.server.api.context.IInfoContext;
 import pi.focus.server.api.models.IAboutDataBlock;
 import pi.focus.server.api.models.IDataCard;
-import pi.focus.server.api.models.ITab;
+import pi.focus.server.api.models.INamedData;
 import pi.focus.server.api.models.ITextCard;
 import pi.focus.server.service.models.AboutDataBlockDto;
 import pi.focus.server.service.models.DataCardDto;
@@ -14,7 +14,7 @@ import pi.focus.server.service.models.TextCardDto;
 
 public class InfoContextMock implements IInfoContext {
     private final List<ITextCard> rentRules;
-    private final List<ITab<IDataCard>> imagedTabs;
+    private final List<INamedData<IDataCard>> imagedTabs;
     private final AboutDataBlockDto aboutData;
 
     public InfoContextMock() {
@@ -30,9 +30,9 @@ public class InfoContextMock implements IInfoContext {
         );
 
         imagedTabs = List.of(
-            new TabDto<IDataCard>("ЗАЛЫ", new DataCardDto("Залы", "У нас вы можете выбрать зал йоу", MocksDefines.TEST_IMAGE_PATH, "/photorooms")),
-            new TabDto<IDataCard>("ОБОРУДОВАНИЕ", new DataCardDto("Оборудование", "У нас вы можете выбрать оборудование йоу", MocksDefines.TEST_IMAGE_PATH, "/equipment")),
-            new TabDto<IDataCard>("ФОТОГРАФЫ", new DataCardDto("Фотографы", "У нас вы можете выбрать фотографов йоу", MocksDefines.TEST_IMAGE_PATH, "/photographers"))
+            new TabDto<>("ЗАЛЫ", new DataCardDto("Залы", "У нас вы можете выбрать зал йоу", MocksDefines.TEST_IMAGE_PATH, "/photorooms")),
+            new TabDto<>("ОБОРУДОВАНИЕ", new DataCardDto("Оборудование", "У нас вы можете выбрать оборудование йоу", MocksDefines.TEST_IMAGE_PATH, "/equipment")),
+            new TabDto<>("ФОТОГРАФЫ", new DataCardDto("Фотографы", "У нас вы можете выбрать фотографов йоу", MocksDefines.TEST_IMAGE_PATH, "/photographers"))
         );
 
         aboutData = new AboutDataBlockDto(
@@ -56,7 +56,7 @@ public class InfoContextMock implements IInfoContext {
     }
 
     @Override
-    public List<ITab<IDataCard>> getDataTabs() {
+    public List<INamedData<IDataCard>> getDataTabs() {
         return imagedTabs;
     }
     
