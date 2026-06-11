@@ -209,6 +209,7 @@
             position: relative;
             padding: var(--space-s) var(--space-l) 4px var(--space-l);
             font-size: var(--text-l);
+            cursor: pointer;
 
             will-change: color;
             transition: color var(--time-m) ease;
@@ -245,14 +246,27 @@
             background-color: var(--color-text-accent);
         }
 
-        .tab-panel {
-            display: none;
+        .tabs-content {
+            position: relative;
             background: var(--color-secondary);
-
             border-radius: 0 var(--radius-l) var(--radius-l) var(--radius-l);
-            
+        }
+
+        .tab-panel {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity var(--time-s) ease, visibility 0s linear var(--time-s);
+
             &.active {
-                display: block;
+                position: relative;
+                opacity: 1;
+                visibility: visible;
+                transition: opacity var(--time-m) ease, visibility 0s linear 0s;
             }
         }
     }

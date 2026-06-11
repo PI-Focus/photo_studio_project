@@ -20,8 +20,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (targetPanel) {
                     targetPanel.classList.add('active');
                 }
-
-                router.dataset.activeTab = targetIndex;
             });
         });
     });
