@@ -49,7 +49,7 @@ class StaticDataServiceTest {
 
             assertThatThrownBy(service::getInfo)
                     .isInstanceOf(StaticDataLoadingException.class)
-                    .hasMessageContaining("File load error");
+                    .hasMessageContaining("File load or parsing error");
         }
     }
 
