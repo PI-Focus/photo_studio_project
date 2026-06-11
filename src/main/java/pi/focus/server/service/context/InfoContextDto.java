@@ -8,16 +8,15 @@ import pi.focus.server.api.models.ITextCard;
 
 import java.util.List;
 
-public record InfoContext(
-        IAboutDataBlock aboutDataBlock,
-        List<ITextCard> rentRules,
-        List<ITab<IDataCard>> imagedTabs
+public record InfoContextDto(
+    IAboutDataBlock aboutBlock,
+    List<ITextCard> rentRules,
+    List<ITab<IDataCard>> dataTabs
 ) implements IInfoContext {
-    // TODO: delete this
 
     @Override
     public IAboutDataBlock getAboutBlock() {
-        return aboutDataBlock;
+        return aboutBlock;
     }
 
     @Override
@@ -27,9 +26,6 @@ public record InfoContext(
 
     @Override
     public List<ITab<IDataCard>> getDataTabs() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getDataTabs'");
+        return dataTabs;
     }
-
-
 }
