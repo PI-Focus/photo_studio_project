@@ -2,7 +2,12 @@ package pi.focus.server.service.models;
 
 import pi.focus.server.api.models.IAboutDataBlock;
 
-public record AboutDataBlock (String logo, String description) implements IAboutDataBlock {
+public record AboutDataBlockDto(
+    String logo, 
+    String description, 
+    String aboutImage
+) implements IAboutDataBlock {
+
     @Override
     public String getLogo() {
         return logo;
@@ -15,7 +20,6 @@ public record AboutDataBlock (String logo, String description) implements IAbout
 
     @Override
     public String getAboutImage() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAboutImage'");
+        return aboutImage;
     }
 }
