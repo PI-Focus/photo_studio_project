@@ -131,7 +131,7 @@ img {
     aspect-ratio: 3 / 4;
     object-fit: cover;
     width: 100%;
-    border-radius: 1px;
+    border-radius: var(--radius-s);
     display: block;
 }
 
