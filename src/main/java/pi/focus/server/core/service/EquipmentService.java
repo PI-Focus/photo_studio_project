@@ -32,6 +32,4 @@ public class EquipmentService implements IEquipmentService {
                ).toList()
         );
     }
-
-
 }
