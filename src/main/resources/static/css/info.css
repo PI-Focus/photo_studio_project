@@ -58,5 +58,9 @@
         flex-flow: column wrap;
         align-items: center;
         padding: var(--space-s);
+
+        p {
+            text-align: center;
+        }
     }
 }
