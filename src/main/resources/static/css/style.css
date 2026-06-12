@@ -80,12 +80,27 @@
     --palette-primary: #9cab6d;
     --palette-secondary: #c0cb9a;
     --palette-accent: #AB253B;
-    --palette-text-dark: #121809;
     --palette-text-menu: #323D12;
     --palette-text-accent: #821A21;
     --palette-text-calendar: #748443;
     --palette-calendar-busy: #EBF1D8;
     --palette-btn-disabled: #C26A70;
+
+    --palette-text-main: #121809;
+    --palette-text-title: #323D12;
+
+    --palette-dark-background: #081B1B;
+    --palette-dark-primary: #203B37;
+    --palette-dark-secondary: #376159;
+    --palette-dark-accent: #FBB24C;
+    --palette-dark-text-menu: #EEE8B2;
+    --palette-dark-text-accent: #F19C2D;
+    --palette-dark-text-calendar: #579387;
+    --palette-dark-calendar-busy: #0F2929;
+    --palette-dark-btn-disabled: #7D5B23;
+
+    --palette-dark-text-main: #F4F2DC;
+    --palette-dark-text-title: #EEE8B2;
 
     --wrapper-width: 1400px;
     --header-width: 1700px;
@@ -96,20 +111,54 @@ html {
     --color-primary: var(--palette-primary);
     --color-secondary: var(--palette-secondary);
     --color-accent: var(--palette-accent);
-    --color-text-dark: var(--palette-text-dark);
     --color-text-menu: var(--palette-text-menu);
     --color-text-accent: var(--palette-text-accent);
     --color-text-calendar: var(--palette-text-calendar);
     --color-calendar-busy: var(--palette-calendar-busy);
     --color-btn-disabled: var(--palette-btn-disabled);
 
+    --color-text-main: var(--palette-text-main);
+    --color-text-title: var(--palette-text-title);
+
     font-display: swap;
     font-family: var(--font-main);
     font-size: var(--base-font-size);
     background: var(--color-background);
-    color: var(--color-text-dark);
+    color: var(--color-text-main);
 
     height: 100%;
+}
+
+@media (prefers-color-scheme: dark) {
+    html:not([data-theme="light"]) {
+        --color-background: var(--palette-dark-background);
+        --color-primary: var(--palette-dark-primary);
+        --color-secondary: var(--palette-dark-secondary);
+        --color-accent: var(--palette-dark-accent);
+        --color-text-menu: var(--palette-dark-text-menu);
+        --color-text-accent: var(--palette-dark-text-accent);
+        --color-text-calendar: var(--palette-dark-text-calendar);
+        --color-calendar-busy: var(--palette-dark-calendar-busy);
+        --color-btn-disabled: var(--palette-dark-btn-disabled);
+
+        --color-text-main: var(--palette-dark-text-main);
+        --color-text-title: var(--palette-dark-text-title);
+    }
+}
+
+html[data-theme="dark"] {
+    --color-background: var(--palette-dark-background);
+    --color-primary: var(--palette-dark-primary);
+    --color-secondary: var(--palette-dark-secondary);
+    --color-accent: var(--palette-dark-accent);
+    --color-text-menu: var(--palette-dark-text-menu);
+    --color-text-accent: var(--palette-dark-text-accent);
+    --color-text-calendar: var(--palette-dark-text-calendar);
+    --color-calendar-busy: var(--palette-dark-calendar-busy);
+    --color-btn-disabled: var(--palette-dark-btn-disabled);
+
+    --color-text-main: var(--palette-dark-text-main);
+    --color-text-title: var(--palette-dark-text-title);
 }
 
 body {
@@ -149,6 +198,7 @@ p {
 h1, h2, h3 {
     font-family: var(--font-accent);
     white-space: pre-line;
+    color: var(--color-text-title);
 }
 
 h1 {
@@ -181,7 +231,7 @@ header {
         .nav-link {
             margin: calc(var(--space-s) + 2px) 0;
             text-decoration: none;
-            color: var(--color-text-dark);
+            color: var(--color-text-main);
             font-size: var(--text-l);
             position: relative;
             will-change: color;
@@ -245,7 +295,7 @@ footer {
             a {
                 margin: var(--space-xs) 0;
                 text-decoration: none;
-                color: var(--color-text-dark);
+                color: var(--color-text-main);
 
                 will-change: color;
                 transition: color var(--time-s);

@@ -210,6 +210,7 @@
             padding: var(--space-s) var(--space-l) 4px var(--space-l);
             font-size: var(--text-l);
             cursor: pointer;
+            color: var(--color-text-main);
 
             will-change: color;
             transition: color var(--time-m) ease;
