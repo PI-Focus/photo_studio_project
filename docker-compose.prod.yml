@@ -35,8 +35,8 @@ services:
       - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/${PROD_DB_NAME}
       - SPRING_DATASOURCE_USERNAME=${PROD_DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${PROD_DB_PASSWORD}
-      - SPRING_DATA_REDIS_HOST=redis
-      - SPRING_DATA_REDIS_PORT=6379
+      - SPRING_DATA_REDIS_HOST=${PROD_REDIS_NAME}
+      - SPRING_DATA_REDIS_PORT=${PROD_REDIS_PORT}
       - SPRING_DATA_PASSWORD=${PROD_REDIS_PASSWORD}
 
     labels:
@@ -67,7 +67,7 @@ services:
       start_period: 20s
 
     deploy:
-      replicas: 3
+      replicas: 2
 
   traefik:
     image: traefik:v3.7

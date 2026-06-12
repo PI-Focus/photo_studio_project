@@ -1,24 +1,66 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://thymeleaf.org" 
+      th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title}, ~{::#info-css}, ~{::#info-scripts})}">
 <head>
-    <meta charset="UTF-8">
-    <title>Message</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
-    <link rel="stylesheet" th:href="@{/css/info.css}">
-    <script th:src="@{/js/rules_carousel.js}" defer></script>
-    <script th:src="@{/js/imaged_router.js}" defer></script>
+    <th:block id="info-css">
+        <link rel="stylesheet" th:href="@{/css/components.css}" blocking="render">
+        <link rel="stylesheet" th:href="@{/css/info.css}" blocking="render">
+    </th:block>
+
+    <title>Фотостудия «Фокус»</title>
 </head>
 <body>
-<div th:replace="~{fragments/header :: header}"></div>
 
-<div class="main-wrapper">
-    <div th:replace="~{fragments/info/blocks :: about}"></div>
+    <th:block th:fragment="main-content">
+        <div class="about-block">
+            <div class="logo-block">
+                <div th:replace="~{fragments/basic-components :: safe-img(${info.aboutBlock.logo}, '', 'square')}"></div>
+                <h1>Фотостудия «Фокус»</h1>
+            </div>
 
-    <div th:replace="~{fragments/info/blocks :: rent-rules}"></div>
+            <div class="description-block">
+                <div class="text-description">
+                    <p th:text="${info.aboutBlock.description} ?: 'Тут должно быть описание студии, но оно куда-то убежало :('"></p>
+                    <p class="cool-phrase">Теперь у вас есть место, где идеи становятся кадрами.</p>
+                </div>
+                <div th:replace="~{fragments/basic-components :: safe-img(${info.aboutBlock.aboutImage}, '', 'horizontal')}"></div>
+            </div>
+        </div>
 
-    <div th:replace="~{fragments/info/blocks :: imaged-router}"></div>
-</div>
+        <div class="rent-rules-block">
+            <h2>Правила аренды</h2>
+            <th:block th:if="${info.rentRules != null && !info.rentRules.isEmpty()}">
+                <div th:replace="~{fragments/components :: carousel(
+                    items=${info.rentRules},
+                    slideFragment='fragments/carousel-cards :: titled-text-card',
+                    visibleSlides=3,
+                    duration='0.4s',
+                    autoplayInterval='5s',
+                    autoplay=true,
+                    showArrows=true,
+                    showDots=false,
+                    carouselClass='',
+                    carouselId='rentrules-carousel',
+                    slideClass=''
+                )}"></div>
+            </th:block>
+        </div>
 
-<div th:replace="~{fragments/footer :: footer}"></div>
+        <div class="imaged-router">
+            <th:block th:if="${info.dataTabs != null && !info.dataTabs.isEmpty()}">
+                <div th:replace="~{fragments/components :: tabs(
+                    items=${info.dataTabs},
+                    slideFragment='fragments/tab-adapters :: data-card-adapter',
+                    routerId='tab-router',
+                    class='')}">
+                </div>
+            </th:block>
+        </div>
+    </th:block>
+
+    <th:block id="info-scripts">
+        <script th:src="@{/js/carousel.js}" defer></script>
+        <script th:src="@{/js/tabs.js}" defer></script>
+    </th:block>
 </body>
 </html>

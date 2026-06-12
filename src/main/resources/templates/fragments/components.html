@@ -1,0 +1,93 @@
+<div th:fragment="imaged-text-card(imagedTextCard, imageClass, class)"
+   th:class="|data-card ${class}|">
+   <div class="image-wrapper">
+      <div th:replace="~{fragments/basic-components :: safe-img(${imagedTextCard.image}, '', ${imageClass})}"></div>
+   </div>
+   <div class="text-wrapper">
+      <div class="text-block">
+         <h3 th:text="${imagedTextCard.title}"></h3>
+         <p th:text="${imagedTextCard.text}"></p>
+      </div>
+   </div>
+</div>
+
+<div th:fragment="data-card(dataCard, btnGoText, imageClass, class)"
+   th:class="|data-card ${class}|">
+   <div class="image-wrapper">
+      <div th:replace="~{fragments/basic-components :: safe-img(${dataCard.image}, '', ${imageClass})}"></div>
+   </div>
+   <div class="text-wrapper">
+      <div class="text-block">
+         <h2 th:text="${dataCard.title}"></h2>
+         <p th:text="${dataCard.text}"></p>
+      </div>
+         <a th:href="${dataCard.linkUrl}"
+            th:text="${btnGoText}"></a>
+   </div>
+</div>
+
+<div th:fragment="carousel(items, slideFragment, visibleSlides, duration, autoplayInterval, autoplay, showArrows, showDots, carouselClass, carouselId, slideClass)"
+     class="carousel"
+     th:classappend="${carouselClass}"
+     th:id="${carouselId}"
+     th:style="${'--visible-slides: ' + visibleSlides + '; --transition-duration: ' + duration + '; --autoplay-interval: ' + autoplayInterval + '; --autoplay-enabled: ' + (autoplay ? 1 : 0) + ';'}">
+
+    <div class="carousel-arrow-wrap">
+        <button class="carousel-btn carousel-btn--prev" type="button" aria-label="Предыдущий слайд"
+                th:if="${showArrows and #lists.size(items) > visibleSlides}">←</button>
+
+        <div class="carousel-viewport">
+            <div class="carousel-track">
+                <div th:each="item, stat : ${items}" class="carousel-slide" th:classappend="${slideClass}">
+                    <th:block th:insert="~{__${slideFragment}__(item=${item})}"></th:block>
+                </div>
+                <div class="carousel-slide" th:if="${#lists.isEmpty(items)}">Нет данных</div>
+            </div>
+        </div>
+
+        <button class="carousel-btn carousel-btn--next" type="button" aria-label="Следующий слайд"
+                th:if="${showArrows and #lists.size(items) > visibleSlides}">→</button>
+    </div>
+
+    <div class="carousel-dots"
+         th:if="${showDots and #lists.size(items) > visibleSlides}"
+         th:with="maxIdx=${#lists.size(items) - visibleSlides}">
+        <button th:each="item, stat : ${items}"
+                th:if="${stat.index &lt;= maxIdx}"
+                class="carousel-dot"
+                th:classappend="${stat.first ? 'carousel-dot--active' : ''}"
+                type="button"
+                th:attr="data-index=${stat.index}"
+                th:aria-label="${'Перейти к слайду ' + stat.count}">
+        </button>
+    </div>
+</div>
+
+<div th:fragment="tabs(items, slideFragment, routerId, class)"
+     th:id="${routerId}"
+     th:class="|tabs-router ${class}|"
+     th:data-active-tab="${0}">
+    
+    <nav class="tabs-nav" role="tablist" th:aria-label="'Tabs for ' + ${routerId}">
+        <button th:each="item, iterStat : ${items}"
+                class="tab-btn"
+                th:classappend="${iterStat.first} ? 'active'"
+                th:data-tab="${iterStat.index}"
+                th:aria-selected="${iterStat.first} ? 'true' : 'false'"
+                th:text="${item.tabName}"
+                type="button"
+                role="tab">
+        </button>
+    </nav>
+
+    <div class="tabs-content">
+        <div th:each="item, iterStat : ${items}"
+             class="tab-panel"
+             th:id="${routerId + '-panel-' + iterStat.index}"
+             th:classappend="${iterStat.first} ? 'active'"
+             role="tabpanel">
+            
+            <th:block th:insert="~{__${slideFragment}__(item=${item})}"></th:block>
+        </div>
+    </div>
+</div>

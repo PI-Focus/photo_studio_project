@@ -1,0 +1,8 @@
+<div th:fragment="data-card-adapter(item)" 
+     th:replace="~{fragments/components :: data-card(
+        dataCard=${item.data},
+        btnGoText='Перейти',
+        imageClass='',
+        class=''
+    )}">
+</div>
