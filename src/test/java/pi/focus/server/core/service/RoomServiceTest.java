@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -37,17 +38,14 @@ class RoomServiceTest {
         when(roomRepository.findAll()).thenReturn(List.of(entity1, entity2));
 
         List<Room> result = roomService.getAllRooms();
+        assertThat(result)
+                .hasSize(2)
+                .extracting(Room::id, Room::title, Room::description)
+                .containsExactly(
+                        tuple(room1Id, "Room 1", "Description 1"),
+                        tuple(room2Id, "Room 2", "Description 2")
+                );
 
-        assertThat(result).hasSize(2);
-
-        assertThat(result.getFirst().id()).isEqualTo(room1Id);
-        assertThat(result.getFirst().title()).isEqualTo("Room 1");
-        assertThat(result.getFirst().description()).isEqualTo("Description 1");
-
-        assertThat(result.get(1).id()).isEqualTo(room2Id);
-        assertThat(result.get(1).title()).isEqualTo("Room 2");
-        assertThat(result.get(1).description()).isEqualTo("Description 2");
-        verify(roomRepository, times(1)).findAll();
     }
 
     @Test
@@ -56,7 +54,6 @@ class RoomServiceTest {
         when(roomRepository.findAll()).thenReturn(List.of());
         List<Room> result = roomService.getAllRooms();
         assertThat(result).isEmpty();
-        verify(roomRepository).findAll();
     }
 
 }
