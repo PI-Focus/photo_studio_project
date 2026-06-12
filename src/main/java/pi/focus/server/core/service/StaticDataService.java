@@ -30,6 +30,7 @@ import pi.focus.server.service.models.TextCardDto;
 @Service
 @Profile({"dev", "prod", "test"})
 public class StaticDataService implements IStaticDataService {
+    private static final String ERROR_STRING = "File load or parsing error: ";
     private final IInfoContext infoContext;
     private final IBaseContext baseContext;
 
@@ -60,7 +61,7 @@ public class StaticDataService implements IStaticDataService {
         try (InputStream inputStream = resource.getInputStream()) {
             return JsonMapper.getInstance().readValue(inputStream, AboutDataBlockDto.class);
         } catch (IOException e) {
-            throw new StaticDataLoadingException("File load or parsing error: " + resource.getDescription(), e);
+            throw new StaticDataLoadingException(ERROR_STRING + resource.getDescription(), e);
         }
     }
 
@@ -69,7 +70,7 @@ public class StaticDataService implements IStaticDataService {
             List<TextCardDto> dtos = JsonMapper.getInstance().readValue(inputStream, new TypeReference<>() {});
             return List.copyOf(dtos); 
         } catch (IOException e) {
-            throw new StaticDataLoadingException("File load or parsing error: " + resource.getDescription(), e);
+            throw new StaticDataLoadingException(ERROR_STRING + resource.getDescription(), e);
         }
     }
 
@@ -81,7 +82,7 @@ public class StaticDataService implements IStaticDataService {
                        .map(tab -> (INamedData<IDataCard>) tab)
                        .toList();
         } catch (IOException e) {
-            throw new StaticDataLoadingException("File load or parsing error: " + resource.getDescription(), e);
+            throw new StaticDataLoadingException(ERROR_STRING + resource.getDescription(), e);
         }
     }
 
@@ -89,7 +90,7 @@ public class StaticDataService implements IStaticDataService {
         try (InputStream inputStream = resource.getInputStream()) {
             return JsonMapper.getInstance().readValue(inputStream, BaseContextDto.class);
         } catch (IOException e) {
-            throw new StaticDataLoadingException("File load or parsing error: " + resource.getDescription(), e);
+            throw new StaticDataLoadingException(ERROR_STRING + resource.getDescription(), e);
         }
     }
 
