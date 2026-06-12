@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" 
+      th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title}, ~{::#login-css}, ~{})}">
+<head>
+    <th:block id="login-css">
+    </th:block>
+    <title>Фотостудия «Фокус»</title>
+</head>
+<body>
+
+    <div th:fragment="main-content">
+        <h1>Добро пожаловать! Это страница авторизации и я пока не уверен должна ли она встраиваться в базовый шаблон</h1>
+        <p>В любом случае, большое ей спасибо! Только с помощью нее я смог нормально протестить футер)</p>
+    </div>
+
+</body>
+</html>
