@@ -28,19 +28,26 @@ import pi.focus.server.service.models.TextCardDto;
 @Service
 @Profile({"dev", "prod"})
 public class StaticDataService implements IStaticDataService {
+    private final IInfoContext infoContext;
+    private final IBaseContext baseContext;
 
-    @Override
-    public IInfoContext getInfo() {
-        return new InfoContextDto(
+    public StaticDataService() {
+        this.infoContext = new InfoContextDto(
             loadAboutDataBlock(),
             loadRulesData(),
             loadPreviewData()
         );
+        this.baseContext = loadBaseData();
+    }
+
+    @Override
+    public IInfoContext getInfo() {
+        return infoContext;
     }
 
     @Override
     public IBaseContext getBaseContext() {
-        return loadBaseData();
+        return baseContext;
     }
 
     private IAboutDataBlock loadAboutDataBlock() {
