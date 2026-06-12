@@ -167,7 +167,9 @@ h3 {
 
 .main-wrapper {
     max-width: var(--wrapper-width);
-    margin: 0 auto;
+    margin: var(--space-xxl) auto;
+    display: flex;
+    flex-direction: column;
 }
 
 header {

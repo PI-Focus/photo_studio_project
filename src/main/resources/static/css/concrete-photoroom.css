@@ -5,6 +5,7 @@
     
     h2 {
         align-self: center;
-        margin-top: var(--space-xxl);
+        margin: 0;
+        margin-bottom: var(--space-xxl);
     }
 }
