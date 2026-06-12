@@ -240,7 +240,7 @@ header {
         .nav-link {
             margin: calc(var(--space-s) + 2px) 0;
             text-decoration: none;
-            color: var(--color-text-main);
+            color: var(--color-text-title);
             font-size: var(--text-l);
             position: relative;
             will-change: color;
@@ -287,7 +287,7 @@ header {
             width: 2rem;
             height: 2rem;
 
-            color: var(--color-text-main); 
+            color: var(--color-text-title); 
             transform: rotate(40deg);
         }
 
@@ -300,7 +300,7 @@ header {
 html[data-theme="light"] {
     #theme-toggle {
         svg {
-            color: var(--color-text-main);
+            color: var(--color-text-title);
             transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), color var(--time-m) ease;
             transform: rotate(0deg);
         }
@@ -311,12 +311,12 @@ html[data-theme="light"] {
     }
     
     #mask-dark-shadow {
-        cx: 22px !important;
-        cy: 4px !important;
+        cx: 22px;
+        cy: 4px;
     }
 
     #center-body {
-        r: 9px !important;
+        r: 9px;
     }
 
     #sun-rays-group {
