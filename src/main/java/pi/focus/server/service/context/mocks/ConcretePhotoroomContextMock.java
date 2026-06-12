@@ -11,11 +11,11 @@ public class ConcretePhotoroomContextMock implements IConcretePhotoroomContext {
     private final List<String> images;
 
     public ConcretePhotoroomContextMock(String id) {
-        textData = new TextCardDto(String.format("Зал %s", id), String.format("Хахахаха прикинь это зад %s. Очень крутой и название интересное))", id));
-        images = List.of("/imges/placeholder.png",
-            "/imges/placeholder.png",
-            "/imges/placeholder.png",
-            "/imges/placeholder.png"
+        textData = new TextCardDto(String.format("ЗAЛ %s", id), String.format("Хахахаха прикинь это зал %s. Очень крутой и название интересное))", id));
+        images = List.of("/images/placeholder.png",
+            "/images/placeholder.png",
+            "/images/placeholder.png",
+            "/images/placeholder.png"
         );
     }
 

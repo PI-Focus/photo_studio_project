@@ -1,17 +1,40 @@
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org" 
-      th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title}, ~{::#login-css}, ~{})}">
+      th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title}, ~{::#login-css}, ~{::#photoroom-scripts})}">
 <head>
     <th:block id="login-css">
+        <link rel="stylesheet" th:href="@{/css/components.css}" blocking="render">
+        <link rel="stylesheet" th:href="@{/css/concrete-photoroom.css}" blocking="render">
     </th:block>
     <title>Фотостудия «Фокус»</title>
 </head>
 <body>
 
     <div th:fragment="main-content">
-        <h1>Добро пожаловать! Это страница авторизации и я пока не уверен должна ли она встраиваться в базовый шаблон</h1>
-        <p>В любом случае, большое ей спасибо! Только с помощью нее я смог нормально протестить футер)</p>
+        <div class="photoroom-info">
+            <h2 th:text="${photoroom.textData.title}"></h2>
+            <th:block th:if="${photoroom.images != null && !photoroom.images.isEmpty()}">
+                <div th:replace="~{fragments/components :: carousel(
+                    items=${photoroom.images},
+                    slideFragment='fragments/carousel-cards :: image-card',
+                    visibleSlides=3,
+                    duration='0.4s',
+                    autoplayInterval='5s',
+                    autoplay=false,
+                    showArrows=true,
+                    showDots=false,
+                    carouselClass='',
+                    carouselId='rentrules-carousel',
+                    slideClass='')}">
+                </div>
+            </th:block>
+            <p th:text="${photoroom.textData.text}"></p>
+        </div>
     </div>
 
+    <th:block id="photoroom-scripts">
+        <script th:src="@{/js/carousel.js}" defer></script>
+        <script th:src="@{/js/tabs.js}" defer></script>
+    </th:block>
 </body>
 </html>

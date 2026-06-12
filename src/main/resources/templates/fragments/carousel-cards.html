@@ -2,3 +2,7 @@
     <h3 th:text="${item.title}">Название</h3>
     <p th:text="${item.text}">Описание</p>
 </div>
+
+<div th:fragment="image-card(item)" class="image-card">
+    <div th:replace="~{fragments/basic-components :: safe-img(${item}, '', '')}"></div>
+</div>

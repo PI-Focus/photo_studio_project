@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import pi.focus.server.core.domain.Room;
 import pi.focus.server.core.service.api.IRoomService;
 import pi.focus.server.core.service.api.IStaticDataService;
+import pi.focus.server.service.context.mocks.ConcretePhotoroomContextMock;
 import pi.focus.server.service.context.mocks.EquipmentContextMock;
 import pi.focus.server.service.context.mocks.ExampleContextMock;
 import pi.focus.server.service.context.mocks.PhotographersContextMock;
@@ -50,6 +51,7 @@ public class HomeController {
 
     @GetMapping("/photorooms/{id}")
     public String getPhotoroom(Model model, @PathVariable UUID id) {
+        model.addAttribute("photoroom", new ConcretePhotoroomContextMock(id.toString().substring(0, 8)));
         return "pages/concrete-photoroom";
     }
 
