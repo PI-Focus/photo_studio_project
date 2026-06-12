@@ -15,6 +15,10 @@
    <a th:href="@{/photographers}" id="header-btn-photographers" class="nav-link"
       th:classappend="${currentURI != null && currentURI.startsWith('/photographers')} ? 'active'">ФОТОГРАФЫ</a>
 
+   <button type="button" id="theme-toggle" aria-label="Переключить тему">
+      <th:block th:replace="~{fragments/icons :: theme-switch}"></th:block>
+   </button>
+
    <a th:href="@{/login}" id="header-btn-login" class="nav-link"
       th:classappend="${currentURI != null && currentURI.startsWith('/login')} ? 'active'">ВХОД</a>
 </nav>

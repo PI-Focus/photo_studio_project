@@ -50,7 +50,7 @@
     .carousel-slide {
         border-radius: var(--round-m, 1rem);
         padding: var(--space-s, .25rem);
-        box-shadow: 0 4px 6px var(--color-text-menu);
+        box-shadow: 0 4px 6px color-mix(in srgb, var(--color-text-menu) 50%, transparent);
     }
 
     .titled-text-card {

@@ -262,8 +262,57 @@ header {
         }
     }
 
-    #header-btn-login {
+    #theme-toggle {
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        outline: none;
         margin-left: auto;
+        align-self: center;
+
+        svg {
+            width: 2rem;
+            height: 2rem;
+
+            color: var(--color-text-main); 
+            transform: rotate(40deg);
+        }
+
+        &:hover svg {
+            color: var(--color-accent);
+        }
+    }
+}
+
+html[data-theme="light"] {
+    #theme-toggle {
+        svg {
+            color: var(--color-text-main);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s ease;
+            transform: rotate(0deg);
+        }
+
+        &:hover svg {
+            color: var(--color-accent);
+        }
+    }
+    
+    #mask-dark-shadow {
+        cx: 22px !important;
+        cy: 4px !important;
+    }
+
+    #center-body {
+        r: 9px !important;
+    }
+
+    #sun-rays-group {
+        transform: scale(0);
+        opacity: 0;
     }
 }
 
