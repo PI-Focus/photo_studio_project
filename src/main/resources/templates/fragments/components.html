@@ -1,7 +1,7 @@
 <div th:fragment="imaged-text-card(imagedTextCard, imageClass, class)"
    th:class="|data-card ${class}|">
    <div class="image-wrapper">
-      <div th:replace="~{fragments/basic-components :: safe-img(${imagedTextCard.image}, 'изображение', ${imageClass})}"></div>
+      <div th:replace="~{fragments/basic-components :: safe-img(${imagedTextCard.image}, '', ${imageClass})}"></div>
    </div>
    <div class="text-wrapper">
       <div class="text-block">
@@ -14,7 +14,7 @@
 <div th:fragment="data-card(dataCard, btnGoText, imageClass, class)"
    th:class="|data-card ${class}|">
    <div class="image-wrapper">
-      <div th:replace="~{fragments/basic-components :: safe-img(${dataCard.image}, 'изображение', ${imageClass})}"></div>
+      <div th:replace="~{fragments/basic-components :: safe-img(${dataCard.image}, '', ${imageClass})}"></div>
    </div>
    <div class="text-wrapper">
       <div class="text-block">

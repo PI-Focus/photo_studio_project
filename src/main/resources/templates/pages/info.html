@@ -14,7 +14,7 @@
     <div th:fragment="main-content">
         <div class="about-block">
             <div class="logo-block">
-                <div th:replace="~{fragments/basic-components :: safe-img(${info.aboutBlock.logo}, 'logo', 'square')}"></div>
+                <div th:replace="~{fragments/basic-components :: safe-img(${info.aboutBlock.logo}, '', 'square')}"></div>
                 <h1>Фотостудия «Фокус»</h1>
             </div>
 
@@ -23,7 +23,7 @@
                     <p th:text="${info.aboutBlock.description} ?: 'Тут должно быть описание студии, но оно куда-то убежало :('"></p>
                     <p class="cool-phrase">Теперь у вас есть место, где идеи становятся кадрами.</p>
                 </div>
-                <div th:replace="~{fragments/basic-components :: safe-img(${info.aboutBlock.aboutImage}, 'aboutImage', 'horizontal')}"></div>
+                <div th:replace="~{fragments/basic-components :: safe-img(${info.aboutBlock.aboutImage}, '', 'horizontal')}"></div>
             </div>
         </div>
 
