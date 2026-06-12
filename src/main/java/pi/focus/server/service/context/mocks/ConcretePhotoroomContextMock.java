@@ -6,6 +6,7 @@ import pi.focus.server.api.context.IConcretePhotoroomContext;
 import pi.focus.server.api.models.ITextCard;
 import pi.focus.server.service.models.TextCardDto;
 
+@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 public class ConcretePhotoroomContextMock implements IConcretePhotoroomContext {
     private final ITextCard textData;
     private final List<String> images;
