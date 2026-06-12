@@ -43,6 +43,9 @@
 
 :root {
     --base-font-size: 20px;
+    --header-horizontal-margin: 6rem;
+    --wrapper-width: 1400px;
+    --header-width: 1700px;
 
     --font-main: 'Manrope', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     --font-accent: 'Playfair Display', Georgia, 'Times New Roman', Times, serif;
@@ -101,14 +104,12 @@
 
     --palette-dark-text-main: #F4F2DC;
     --palette-dark-text-title: #EEE8B2;
-
-    --wrapper-width: 1400px;
-    --header-width: 1700px;
 }
 
 @media (max-width: 1024px) {
     :root {
         --base-font-size: 16px;
+        --header-horizontal-margin: 1rem;
     }
 }
 
@@ -233,7 +234,7 @@ header {
     background: var(--color-primary);
 
     nav {
-        margin: 0 120px;
+        margin: 0 var(--header-horizontal-margin);
         display: flex;
         gap: var(--space-xl);
 
@@ -335,7 +336,7 @@ footer {
         grid-template-columns: repeat(3, 1fr);
         column-gap: var(--space-m);
         justify-content: space-between;
-        margin: 0 120px;
+        margin: 0 var(--header-horizontal-margin);
 
         >div {
             display: flex;
