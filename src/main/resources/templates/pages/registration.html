@@ -3,14 +3,32 @@
       th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title}, ~{::#login-css}, ~{})}">
 <head>
     <th:block id="login-css">
+        <link rel="stylesheet" th:href="@{/css/auth.css}" blocking="render">
     </th:block>
     <title>Фотостудия «Фокус»</title>
 </head>
 <body>
 
     <th:block th:fragment="main-content">
-        <h1>Добро пожаловать! Это страница регистрации</h1>
-        <p>Содержимое убило...</p>
+        <div class="auth-block">
+            <h3>Регистрация</h3>
+
+            <form th:action="@{/registration}" method="POST">
+                <label for="login">Email / логин / телефон</label>
+                <input type="text" id="login" name="login" placeholder="" required>
+
+                <label for="password">Пароль</label>
+                <input type="password" id="password" name="password" placeholder="" required>
+
+                <label for="password-confirm">Повторите пароль</label>
+                <input type="password" id="password-confirm" name="confirmPassword" placeholder="" required>
+
+                <div class="submit-block">
+                    <button type="submit" class="btn-submit">ЗАРЕГИСТРИРОВАТЬСЯ</button>
+                    <a th:href="@{/login}" class="btn-switch-log-reg">ВОЙТИ</a>
+                </div>
+            </form>
+        </div>
     </th:block>
 
 </body>
