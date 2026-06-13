@@ -9,13 +9,11 @@ function initRegistrationValidation() {
     if (!form || !loginInput || !passwordInput || !confirmInput || !submitBtn || !errorElement) return;
 
     const loginRegex = /^[a-z0-9_-]+$/;
+    const hasLetterRegex = /[a-z]/;
     
-    // Флаг: была ли страница загружена с ошибкой от бэкенда (Thymeleaf)
     let hasServerError = errorElement.textContent.trim().length > 0;
 
     function validateForm(event) {
-        // Если пользователь что-то вводит, мы сбрасываем флаг серверной ошибки,
-        // так как он пытается исправить неверные данные
         if (event && event.type === 'input') {
             hasServerError = false;
         }
@@ -31,6 +29,8 @@ function initRegistrationValidation() {
                 clientErrorMessage = "Логин должен быть не короче 4 символов.";
             } else if (!loginRegex.test(loginValue)) {
                 clientErrorMessage = "Логин может содержать только строчные латинские буквы, цифры, символы нижнего подчеркивания и дефиса.";
+            } else if (!hasLetterRegex.test(loginValue)) {
+                clientErrorMessage = "Логин должен содержать хотя бы одну латинскую букву.";
             }
         }
 
@@ -46,7 +46,8 @@ function initRegistrationValidation() {
             errorElement.textContent = clientErrorMessage;
         }
 
-        const allFilled = loginValue.length >= 4 && passwordValue.length >= 8 && confirmValue.length > 0;
+        const isLoginValid = loginValue.length >= 4 && loginRegex.test(loginValue) && hasLetterRegex.test(loginValue);
+        const allFilled = isLoginValid && passwordValue.length >= 8 && confirmValue.length > 0;
         
         if (!clientErrorMessage && !hasServerError && allFilled) {
             submitBtn.removeAttribute('disabled');
