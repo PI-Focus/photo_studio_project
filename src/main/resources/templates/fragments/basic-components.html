@@ -19,8 +19,14 @@
       <th:block th:replace="~{fragments/icons :: theme-switch}"></th:block>
    </button>
 
+   <th:block sec:authorize="isAnonymous()">
    <a th:href="@{/login}" id="header-btn-login" class="nav-link"
       th:classappend="${currentURI != null && currentURI.startsWith('/login')} ? 'active'">ВХОД</a>
+   </th:block>
+
+   <th:block sec:authorize="isAuthenticated()">
+      
+   </th:block>
 </nav>
 
 <div th:fragment="footer-info" th:class="footer-info">
