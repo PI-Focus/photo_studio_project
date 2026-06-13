@@ -7,6 +7,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<UserEntity, UUID> {
-    Optional<UserEntity> findByLoginIgnoreCase(String login);
+    Optional<UserEntity> findByLogin(String login);
+    Optional<UserEntity> findByPhoneNumber(String phoneNumber);
+    Optional<UserEntity> findByEmail(String email);
     Boolean existsByLogin(String login);
 }
