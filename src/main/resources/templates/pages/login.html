@@ -1,17 +1,37 @@
 <!DOCTYPE html>
 <html xmlns:th="http://thymeleaf.org" 
-      th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title}, ~{::#login-css}, ~{})}">
+      th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title}, ~{::#login-css}, ~{::#login-scripts})}">
 <head>
     <th:block id="login-css">
+        <link rel="stylesheet" th:href="@{/css/auth.css}" blocking="render">
     </th:block>
     <title>Фотостудия «Фокус»</title>
 </head>
 <body>
 
     <th:block th:fragment="main-content">
-        <h1>Добро пожаловать! Это страница авторизации и я пока не уверен должна ли она встраиваться в базовый шаблон</h1>
-        <p>В любом случае, большое ей спасибо! Только с помощью нее я смог нормально протестить футер)</p>
+        <div class="auth-block">
+            <h3>Авторизация</h3>
+
+            <form th:action="@{/login}" method="POST" id="login-form">
+                <label for="login">Email / логин / телефон</label>
+                <input type="text" id="login" name="login" placeholder="" required>
+
+                <label for="password">Пароль</label>
+                <input type="password" id="password" name="password" placeholder="" required>
+
+                <div class="submit-block">
+                    <button type="submit" class="btn-submit" id="submit-btn">ВОЙТИ</button>
+                    <a th:href="@{/registration}" class="btn-switch-log-reg">ЗАРЕГИСТРИРОВАТЬСЯ</a>
+                </div>
+            </form>
+
+            <p id="error-msg" class="error-msg" th:text="${error}"></p>
+        </div>
     </th:block>
 
+    <th:block id="login-scripts">
+        <script th:src="@{/js/login.js}" defer></script>
+    </th:block>
 </body>
 </html>

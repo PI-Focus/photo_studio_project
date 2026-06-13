@@ -88,6 +88,9 @@ public class HomeController {
     }
 
     @GetMapping("/registration")
+    public String getRegistration(Model model) {
+        return "pages/registration";
+    }
     public String getSignup(Model model) {
         return "pages/login";
     }

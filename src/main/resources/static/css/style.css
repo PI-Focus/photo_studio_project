@@ -88,6 +88,7 @@
     --palette-text-calendar: #748443;
     --palette-calendar-busy: #EBF1D8;
     --palette-btn-disabled: #C26A70;
+    --palette-error: #7D5B23;
 
     --palette-text-main: #121809;
     --palette-text-title: #323D12;
@@ -101,6 +102,7 @@
     --palette-dark-text-calendar: #579387;
     --palette-dark-calendar-busy: #0F2929;
     --palette-dark-btn-disabled: #7D5B23;
+    --palette-dark-error: #fa8072;
 
     --palette-dark-text-main: #F4F2DC;
     --palette-dark-text-title: #EEE8B2;
@@ -123,6 +125,7 @@ html {
     --color-text-calendar: var(--palette-text-calendar);
     --color-calendar-busy: var(--palette-calendar-busy);
     --color-btn-disabled: var(--palette-btn-disabled);
+    --color-error: var(--palette-error);
 
     --color-text-main: var(--palette-text-main);
     --color-text-title: var(--palette-text-title);
@@ -147,6 +150,7 @@ html {
         --color-text-calendar: var(--palette-dark-text-calendar);
         --color-calendar-busy: var(--palette-dark-calendar-busy);
         --color-btn-disabled: var(--palette-dark-btn-disabled);
+        --color-error: var(--palette-dark-error);
 
         --color-text-main: var(--palette-dark-text-main);
         --color-text-title: var(--palette-dark-text-title);
@@ -163,6 +167,7 @@ html[data-theme="dark"] {
     --color-text-calendar: var(--palette-dark-text-calendar);
     --color-calendar-busy: var(--palette-dark-calendar-busy);
     --color-btn-disabled: var(--palette-dark-btn-disabled);
+    --color-error: var(--palette-dark-error);
 
     --color-text-main: var(--palette-dark-text-main);
     --color-text-title: var(--palette-dark-text-title);

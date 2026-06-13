@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" 
+      th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title}, ~{::#login-css}, ~{::#register-scripts})}">
+<head>
+    <th:block id="login-css">
+        <link rel="stylesheet" th:href="@{/css/auth.css}" blocking="render">
+    </th:block>
+    <title>Фотостудия «Фокус»</title>
+</head>
+<body>
+
+    <th:block th:fragment="main-content">
+        <div class="auth-block">
+            <h3>Регистрация</h3>
+
+            <form th:action="@{/registration}" method="POST" id="reg-form">
+                <label for="login">Логин</label>
+                <input type="text" id="login" name="login" pattern="^[a-z0-9_-]+$" placeholder="" required>
+
+                <label for="password">Пароль</label>
+                <input type="password" id="password" name="password" minlength="8" placeholder="" required>
+
+                <label for="password-confirm">Повторите пароль</label>
+                <input type="password" id="password-confirm" name="confirmPassword" placeholder="" required>
+
+                <div class="submit-block">
+                    <button type="submit" class="btn-submit" id="submit-btn">ЗАРЕГИСТРИРОВАТЬСЯ</button>
+                    <a th:href="@{/login}" class="btn-switch-log-reg">ВОЙТИ</a>
+                </div>
+            </form>
+
+            <p id="error-msg" class="error-msg" th:text="${error}"></p>
+        </div>
+    </th:block>
+
+    <th:block id="register-scripts">
+        <script th:src="@{/js/register.js}" defer></script>
+    </th:block>
+</body>
+</html>
