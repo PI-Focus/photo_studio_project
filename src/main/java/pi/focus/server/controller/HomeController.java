@@ -67,6 +67,11 @@ public class HomeController {
         return "pages/login";
     }
 
+    @GetMapping("/registration")
+    public String getRegistration(Model model) {
+        return "pages/registration";
+    }
+
     @GetMapping("/example")
     public String getExample(Model model) {
         return "pages/example";
