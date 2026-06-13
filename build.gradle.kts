@@ -34,6 +34,7 @@ dependencies {
     implementation("io.github.cdimascio:dotenv-java:3.2.0")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-session-data-redis")
+    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.5.RELEASE")
 
     runtimeOnly("org.postgresql:postgresql")
 
