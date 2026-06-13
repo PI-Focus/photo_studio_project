@@ -5,6 +5,26 @@ import pi.focus.server.api.context.IBaseContext;
 public class BaseContextMock implements IBaseContext{
 
     @Override
+    public String getLogoBright() {
+        return MocksDefines.LOGO_BRIGHT_PATH;
+    }
+
+    @Override
+    public String getLogoDark() {
+        return MocksDefines.LOGO_DARK_PATH;
+    }
+
+    @Override
+    public String getProfileBright() {
+        return MocksDefines.PROFILE_BRIGHT_PATH;
+    }
+
+    @Override
+    public String getProfileDark() {
+        return MocksDefines.PROFILE_DARK_PATH;
+    }
+
+    @Override
     public String getInn() {
         return "666666666666";
     }
