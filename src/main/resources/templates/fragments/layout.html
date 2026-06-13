@@ -1,8 +1,12 @@
 <!DOCTYPE html>
-<html xmlns:th="http://thymeleaf.org" th:fragment="main-layout(content, title, pageStyles, scripts)">
+<html xmlns:th="http://thymeleaf.org" 
+    xmlns:sec="http://thymeleaf.org/extras/spring-security"
+    th:fragment="main-layout(content, title, pageStyles, scripts)">
 <head>
     <meta charset="UTF-8">
     <meta name="color-scheme" content="light"> 
+
+    <script th:src="@{/js/theme-switch.js}" defer></script>
 
     <link rel="stylesheet" th:href="@{/css/style.css}" blocking="render">
 
@@ -23,7 +27,7 @@
     <footer>
         <div th:replace="~{fragments/basic-components :: footer-info}"></div>
     </footer>
+    <script th:src="@{/js/user-menu.js}" defer></script>
     <th:block th:replace="${scripts}"></th:block>
-    <script th:src="@{/js/theme-switch.js}" defer></script>
 </body>
 </html>

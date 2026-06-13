@@ -19,8 +19,23 @@
       <th:block th:replace="~{fragments/icons :: theme-switch}"></th:block>
    </button>
 
+   <th:block sec:authorize="isAnonymous()">
    <a th:href="@{/login}" id="header-btn-login" class="nav-link"
       th:classappend="${currentURI != null && currentURI.startsWith('/login')} ? 'active'">ВХОД</a>
+   </th:block>
+
+   <th:block sec:authorize="isAuthenticated()">
+      <div class="user-menu-wrap">
+         <button type="button" id="btn-user-menu">
+            <th:block th:replace="~{fragments/basic-components :: safe-img(${base.profileBright}, '', 'square theme-bright')}" />
+            <th:block th:replace="~{fragments/basic-components :: safe-img(${base.profileDark}, '', 'square theme-dark')}" />
+         </button>
+         <div id="user-dropdown-menu" class="user-dropdown">
+            <a th:href="@{/profile}">Профиль</a>
+            <a th:href="@{/logout}">Выход</a>
+         </div>
+      </div>
+   </th:block>
 </nav>
 
 <div th:fragment="footer-info" th:class="footer-info">
@@ -44,7 +59,7 @@
       <a th:href="|mailto:${base.email}|" class="footer-link">
          Почта: <span th:text="${base.email}">pi_focus@yandex.ru</span>
       </a>
-
+      
       <p th:text="|Адрес: ${base.address}|">г. Ярославль, ул. Союзная, 144</p>
    </div>
 </div>
