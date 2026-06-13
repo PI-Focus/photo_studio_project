@@ -1,0 +1,86 @@
+.auth-block {
+    background: var(--color-secondary);
+    padding: var(--space-xxl);
+    display: flex;
+    align-self: center;
+    flex-direction: column;
+    align-items: flex-start;
+    box-sizing: border-box;
+    max-width: 40rem;
+    width: 100%;
+    border-radius: var(--space-l);
+
+    h3 {
+        margin-top: 0;
+        margin-bottom: var(--space-xl);
+        align-self: center;
+    }
+
+    form {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-s);
+        width: 100%;
+
+        label {
+            color: var(--color-text-menu);
+        }
+
+        input {
+            box-sizing: border-box;
+            display: block;
+            height: var(--space-xxl);
+            width: 100%;
+            margin-bottom: var(--space-m);
+            font-size: 1.25rem;
+            border-radius: var(--radius-l);
+            border: none;
+            background: var(--color-background);
+            color: var(--color-text-main);
+            padding: var(--space-m);
+        }
+
+        .submit-block {
+            width: 100%;
+            display: flex;
+
+            .btn-submit {
+                border: none;
+                background: var(--color-text-accent);
+                font-size: var(--text-m);
+                padding: var(--space-s) var(--space-m);
+                border-radius: var(--space-l);
+                color: var(--color-background);
+
+                will-change: background;
+                transition: background var(--time-m) ease;
+                
+                &:hover {
+                    background: var(--color-accent);
+                }
+            }
+
+            .btn-register {
+                margin-left: auto;
+                font-size: var(--text-m);
+                text-decoration: none;
+                color: var(--color-text-accent);
+                background: transparent;
+                border: 3px solid var(--color-text-accent);
+                display: flex;
+                align-items: center;
+                padding: 0 var(--space-m);
+                border-radius: var(--space-l);
+
+                will-change: color border;
+                transition: color var(--time-m) ease, border-color var(--time-m) ease;
+
+                &:hover {
+                    color: var(--color-accent);
+                    border-color: var(--color-accent);;
+                }
+            }
+        }
+    }
+}

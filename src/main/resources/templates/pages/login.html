@@ -3,14 +3,29 @@
       th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title}, ~{::#login-css}, ~{})}">
 <head>
     <th:block id="login-css">
+        <link rel="stylesheet" th:href="@{/css/auth.css}" blocking="render">
     </th:block>
     <title>Фотостудия «Фокус»</title>
 </head>
 <body>
 
     <th:block th:fragment="main-content">
-        <h1>Добро пожаловать! Это страница авторизации и я пока не уверен должна ли она встраиваться в базовый шаблон</h1>
-        <p>В любом случае, большое ей спасибо! Только с помощью нее я смог нормально протестить футер)</p>
+        <div class="auth-block">
+            <h3>Авторизация</h3>
+
+            <form th:action="@{/login}" method="POST">
+                <label for="login">Email / логин / телефон</label>
+                <input type="text" id="login" name="login" placeholder="" required>
+
+                <label for="password">Пароль</label>
+                <input type="password" id="password" name="password" placeholder="" required>
+
+                <div class="submit-block">
+                    <button type="submit" class="btn-submit">ВОЙТИ</button>
+                    <a th:href="@{/registration}" class="btn-register">ЗАРЕГИСТРИРОВАТЬСЯ</a>
+                </div>
+            </form>
+        </div>
     </th:block>
 
 </body>
