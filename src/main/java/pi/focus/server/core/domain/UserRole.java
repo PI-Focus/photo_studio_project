@@ -9,4 +9,13 @@ public enum UserRole {
     public SimpleGrantedAuthority toAuthority() {
         return new SimpleGrantedAuthority("ROLE_" + name());
     }
+
+    public static UserRole toUserRole(String authority) {
+        if (authority.equals("ROLE_USER")) {
+            return UserRole.USER;
+        } else if (authority.equals("ROLE_ADMIN")) {
+            return UserRole.ADMIN;
+        }
+        return null;
+    }
 }

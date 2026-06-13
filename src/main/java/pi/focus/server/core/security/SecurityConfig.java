@@ -39,7 +39,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/css/**", "/images/**", "/js/**", "/fonts/**", "/docs/**").permitAll()
                 .requestMatchers("/", "/photorooms", "/equipment", "/photographers", "/registration").permitAll()
-                .requestMatchers("/photorooms/{id}").hasRole(UserRole.USER.name())
+                .requestMatchers("/photorooms/{id}").hasRole(UserRole.USER.name()) // TODO: unlock for all
                 .anyRequest().authenticated()
             ).formLogin(form -> form
                 .loginPage("/login").permitAll()
