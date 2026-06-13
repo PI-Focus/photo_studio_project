@@ -26,6 +26,10 @@
                 </div>
             </form>
         </div>
+
+        <th:block th:if="${error}">
+            <p th:text="${error}" class="error-msg"></p>
+        </th:block>
     </th:block>
 
 </body>

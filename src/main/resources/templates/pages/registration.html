@@ -14,7 +14,7 @@
             <h3>Регистрация</h3>
 
             <form th:action="@{/registration}" method="POST">
-                <label for="login">Email / логин / телефон</label>
+                <label for="login">Логин</label>
                 <input type="text" id="login" name="login" placeholder="" required>
 
                 <label for="password">Пароль</label>
@@ -28,6 +28,10 @@
                     <a th:href="@{/login}" class="btn-switch-log-reg">ВОЙТИ</a>
                 </div>
             </form>
+
+            <th:block th:if="${error}">
+                <p th:text="${error}" class="error-msg"></p>
+            </th:block>
         </div>
     </th:block>
 
