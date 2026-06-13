@@ -108,7 +108,14 @@
     --palette-dark-text-title: #EEE8B2;
 }
 
-@media (max-width: 1024px) {
+@media (max-width: 1300px) {
+    :root {
+        --base-font-size: 18px;
+        --header-horizontal-margin: 3rem;
+    }
+}
+
+@media (max-width: 1080px) {
     :root {
         --base-font-size: 16px;
         --header-horizontal-margin: 1rem;
