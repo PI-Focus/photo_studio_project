@@ -31,7 +31,7 @@ public class SecurityConfig {
         http
             .csrf(AbstractHttpConfigurer::disable) // TODO: delete this row
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/css/**", "/images/**", "/js/**", "/fonts/**").permitAll()
+                .requestMatchers("/css/**", "/images/**", "/js/**", "/fonts/**", "/docs/**").permitAll()
                 .requestMatchers("/", "/photorooms", "/equipment", "/photographers", "/registration").permitAll()
                 .anyRequest().authenticated()
             ).formLogin(form -> form
