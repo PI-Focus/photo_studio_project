@@ -1,0 +1,69 @@
+package pi.focus.server.core.service;
+
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import pi.focus.server.AbstractIntegrationTest;
+import pi.focus.server.api.context.IEquipmentContext;
+import pi.focus.server.api.models.IImagedTextCard;
+import pi.focus.server.core.repository.EquipmentRepository;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
+
+@Transactional
+@SuppressWarnings("PMD.LawOfDemeter")
+class EquipmentServiceIntegrationTest extends AbstractIntegrationTest {
+
+    @Autowired
+    private EquipmentService eqService;
+
+    @Autowired
+    private EquipmentRepository eqRepository;
+
+    @Test
+    @DisplayName("Должен вернуть все 3 записи оборудования из БД")
+    void shouldReturnAllEquipmentRecords() {
+        IEquipmentContext context = eqService.getEquipmentContext();
+
+        assertSoftly(softly -> {
+            softly.assertThat(context).isNotNull();
+            softly.assertThat(context.getEquipment()).hasSize(3);
+        });
+    }
+
+    @Test
+    @DisplayName("Должен корректно мапить все поля из Entity в DTO")
+    void shouldMapAllFieldsCorrectly() {
+        IEquipmentContext context = eqService.getEquipmentContext();
+        List<? extends IImagedTextCard> cards = context.getEquipment();
+
+        assertSoftly(softly -> {
+            softly.assertThat(cards).hasSize(3);
+
+            cards.forEach(card -> {
+                softly.assertThat(card.getTitle())
+                        .as("Title не должен быть null")
+                        .isNotNull();
+                softly.assertThat(card.getText())
+                        .as("Text не должен быть null")
+                        .isNotNull();
+                softly.assertThat(card.getImage())
+                        .as("Image не должен быть null")
+                        .isNotNull();
+            });
+        });
+    }
+
+    @Test
+    @DisplayName("Должен вернуть пустой список после очистки таблицы")
+    void shouldReturnEmptyListAfterCleanup() {
+        eqRepository.deleteAll();
+        IEquipmentContext context = eqService.getEquipmentContext();
+        assertThat(context.getEquipment()).isEmpty();
+    }
+
+}

@@ -10,7 +10,7 @@ import pi.focus.server.service.context.PhotographersContextDto;
 import pi.focus.server.service.models.ImagedTextCardDto;
 
 @Service
-@Profile({"dev", "prod"})
+@Profile({"dev", "prod", "test"})
 public class PhotographerService implements IPhotographerService {
     private final PhotographerRepository photographerRepository;
 

@@ -12,7 +12,7 @@ import pi.focus.server.service.models.ImagedTextCardDto;
 
 
 @Service
-@Profile({"dev", "prod"})
+@Profile({"dev", "prod", "test"})
 public class EquipmentService implements IEquipmentService {
     private final EquipmentRepository equipmentRepository;
 
