@@ -43,6 +43,9 @@
 
 :root {
     --base-font-size: 20px;
+    --header-horizontal-margin: 6rem;
+    --wrapper-width: 1400px;
+    --header-width: 1700px;
 
     --font-main: 'Manrope', 'Helvetica Neue', Helvetica, Arial, sans-serif;
     --font-accent: 'Playfair Display', Georgia, 'Times New Roman', Times, serif;
@@ -80,15 +83,36 @@
     --palette-primary: #9cab6d;
     --palette-secondary: #c0cb9a;
     --palette-accent: #AB253B;
-    --palette-text-dark: #121809;
     --palette-text-menu: #323D12;
     --palette-text-accent: #821A21;
     --palette-text-calendar: #748443;
     --palette-calendar-busy: #EBF1D8;
     --palette-btn-disabled: #C26A70;
+    --palette-error: #7D5B23;
 
-    --wrapper-width: 1400px;
-    --header-width: 1700px;
+    --palette-text-main: #121809;
+    --palette-text-title: #323D12;
+
+    --palette-dark-background: #081B1B;
+    --palette-dark-primary: #172b28;
+    --palette-dark-secondary: #25413c;
+    --palette-dark-accent: #ee9d2b;
+    --palette-dark-text-menu: #EEE8B2;
+    --palette-dark-text-accent: #c37d22;
+    --palette-dark-text-calendar: #579387;
+    --palette-dark-calendar-busy: #0F2929;
+    --palette-dark-btn-disabled: #7D5B23;
+    --palette-dark-error: #fa8072;
+
+    --palette-dark-text-main: #F4F2DC;
+    --palette-dark-text-title: #EEE8B2;
+}
+
+@media (max-width: 1024px) {
+    :root {
+        --base-font-size: 16px;
+        --header-horizontal-margin: 1rem;
+    }
 }
 
 html {
@@ -96,20 +120,57 @@ html {
     --color-primary: var(--palette-primary);
     --color-secondary: var(--palette-secondary);
     --color-accent: var(--palette-accent);
-    --color-text-dark: var(--palette-text-dark);
     --color-text-menu: var(--palette-text-menu);
     --color-text-accent: var(--palette-text-accent);
     --color-text-calendar: var(--palette-text-calendar);
     --color-calendar-busy: var(--palette-calendar-busy);
     --color-btn-disabled: var(--palette-btn-disabled);
+    --color-error: var(--palette-error);
+
+    --color-text-main: var(--palette-text-main);
+    --color-text-title: var(--palette-text-title);
 
     font-display: swap;
     font-family: var(--font-main);
     font-size: var(--base-font-size);
     background: var(--color-background);
-    color: var(--color-text-dark);
+    color: var(--color-text-main);
 
     height: 100%;
+}
+
+@media (prefers-color-scheme: dark) {
+    html:not([data-theme="light"]) {
+        --color-background: var(--palette-dark-background);
+        --color-primary: var(--palette-dark-primary);
+        --color-secondary: var(--palette-dark-secondary);
+        --color-accent: var(--palette-dark-accent);
+        --color-text-menu: var(--palette-dark-text-menu);
+        --color-text-accent: var(--palette-dark-text-accent);
+        --color-text-calendar: var(--palette-dark-text-calendar);
+        --color-calendar-busy: var(--palette-dark-calendar-busy);
+        --color-btn-disabled: var(--palette-dark-btn-disabled);
+        --color-error: var(--palette-dark-error);
+
+        --color-text-main: var(--palette-dark-text-main);
+        --color-text-title: var(--palette-dark-text-title);
+    }
+}
+
+html[data-theme="dark"] {
+    --color-background: var(--palette-dark-background);
+    --color-primary: var(--palette-dark-primary);
+    --color-secondary: var(--palette-dark-secondary);
+    --color-accent: var(--palette-dark-accent);
+    --color-text-menu: var(--palette-dark-text-menu);
+    --color-text-accent: var(--palette-dark-text-accent);
+    --color-text-calendar: var(--palette-dark-text-calendar);
+    --color-calendar-busy: var(--palette-dark-calendar-busy);
+    --color-btn-disabled: var(--palette-dark-btn-disabled);
+    --color-error: var(--palette-dark-error);
+
+    --color-text-main: var(--palette-dark-text-main);
+    --color-text-title: var(--palette-dark-text-title);
 }
 
 body {
@@ -125,7 +186,7 @@ img {
     aspect-ratio: 3 / 4;
     object-fit: cover;
     width: 100%;
-    border-radius: 1px;
+    border-radius: var(--radius-s);
     display: block;
 }
 
@@ -149,6 +210,7 @@ p {
 h1, h2, h3 {
     font-family: var(--font-accent);
     white-space: pre-line;
+    color: var(--color-text-title);
 }
 
 h1 {
@@ -167,21 +229,24 @@ h3 {
 
 .main-wrapper {
     max-width: var(--wrapper-width);
-    margin: 0 auto;
+    margin: var(--space-xxl) auto;
+    display: flex;
+    flex-direction: column;
+    padding: 0 var(--space-xxl);
 }
 
 header {
     background: var(--color-primary);
 
     nav {
-        margin: 0 120px;
+        margin: 0 var(--header-horizontal-margin);
         display: flex;
         gap: var(--space-xl);
 
         .nav-link {
             margin: calc(var(--space-s) + 2px) 0;
             text-decoration: none;
-            color: var(--color-text-dark);
+            color: var(--color-text-title);
             font-size: var(--text-l);
             position: relative;
             will-change: color;
@@ -212,8 +277,57 @@ header {
         }
     }
 
-    #header-btn-login {
+    #theme-toggle {
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        outline: none;
         margin-left: auto;
+        align-self: center;
+
+        svg {
+            width: 2rem;
+            height: 2rem;
+
+            color: var(--color-text-title); 
+            transform: rotate(40deg);
+        }
+
+        &:hover svg {
+            color: var(--color-accent);
+        }
+    }
+}
+
+html[data-theme="light"] {
+    #theme-toggle {
+        svg {
+            color: var(--color-text-title);
+            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), color var(--time-m) ease;
+            transform: rotate(0deg);
+        }
+
+        &:hover svg {
+            color: var(--color-accent);
+        }
+    }
+    
+    #mask-dark-shadow {
+        cx: 22px;
+        cy: 4px;
+    }
+
+    #center-body {
+        r: 9px;
+    }
+
+    #sun-rays-group {
+        transform: scale(0);
+        opacity: 0;
     }
 }
 
@@ -225,8 +339,9 @@ footer {
     .footer-info {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
+        column-gap: var(--space-m);
         justify-content: space-between;
-        margin: 0 120px;
+        margin: 0 var(--header-horizontal-margin);
 
         >div {
             display: flex;
@@ -245,7 +360,7 @@ footer {
             a {
                 margin: var(--space-xs) 0;
                 text-decoration: none;
-                color: var(--color-text-dark);
+                color: var(--color-text-main);
 
                 will-change: color;
                 transition: color var(--time-s);

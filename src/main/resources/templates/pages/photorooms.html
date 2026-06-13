@@ -8,13 +8,13 @@
     <title>Фотостудия «Фокус»</title>
 </head>
 <body>
-    <div th:fragment="main-content">
+    <th:block th:fragment="main-content">
         <th:block th:if="${photorooms.photorooms != null && !photorooms.photorooms.isEmpty()}">
             <th:block th:each="item : ${photorooms.photorooms}">
                 <th:block th:replace="~{fragments/components :: data-card(${item}, 'Забронировать', '', 'underlined switching')}"></th:block>
             </th:block>
         </th:block>
-    </div>
+    </th:block>
 
 </body>
 </html>
