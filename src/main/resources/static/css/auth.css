@@ -56,8 +56,12 @@
                 will-change: background;
                 transition: background var(--time-m) ease;
                 
-                &:hover {
+                &:not(:disabled):hover {
                     background: var(--color-accent);
+                }
+
+                &:disabled {
+                    opacity: .3;
                 }
             }
 
@@ -72,6 +76,7 @@
                 align-items: center;
                 padding: 0 var(--space-m);
                 border-radius: var(--space-l);
+                box-sizing: border-box;
 
                 will-change: color border;
                 transition: color var(--time-m) ease, border-color var(--time-m) ease;
@@ -93,5 +98,9 @@
         padding: var(--space-l);
         margin-top: var(--space-l);
         margin-bottom: 0;
+
+        &:empty {
+            display: none;
+        }
     }
 }
