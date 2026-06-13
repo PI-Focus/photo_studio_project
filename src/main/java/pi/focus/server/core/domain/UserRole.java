@@ -2,6 +2,7 @@ package pi.focus.server.core.domain;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+@SuppressWarnings({"PMD.AvoidLiteralsInIfCondition"})
 public enum UserRole {
     USER,
     ADMIN;
@@ -11,10 +12,10 @@ public enum UserRole {
     }
 
     public static UserRole toUserRole(String authority) {
-        if (authority.equals("ROLE_USER")) {
-            return UserRole.USER;
-        } else if (authority.equals("ROLE_ADMIN")) {
-            return UserRole.ADMIN;
+        if ("ROLE_USER".equals(authority)) {
+            return USER;
+        } else if ("ROLE_ADMIN".equals(authority)) {
+            return ADMIN;
         }
         return null;
     }
