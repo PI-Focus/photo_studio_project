@@ -1,9 +1,9 @@
-<svg width="222" height="208" viewBox="0 0 222 208" fill="none" xmlns="http://www.w3.org/2000/svg">
-<ellipse cx="111.5" cy="147.5" rx="105" ry="45" fill="#9CAB6D"/>
-<path d="M58.5 27.5C58.5 27.5 90.437 37.5 111.5 37.5C132.563 37.5 164.5 27.5 164.5 27.5L154.5 137.5C154.5 137.5 132.563 147.5 111.5 147.5C90.437 147.5 68.5 137.5 68.5 137.5L58.5 27.5Z" fill="#C0CB9A"/>
-<ellipse cx="111.5" cy="27.5" rx="53" ry="21" fill="#9CAB6D"/>
-<path d="M3.5 43.5V3.5H53.5" stroke="#AB253B" stroke-width="7"/>
-<path d="M218.5 43.5V3.5H168.5" stroke="#AB253B" stroke-width="7"/>
-<path d="M3.5 164.5V204.5H53.5" stroke="#AB253B" stroke-width="7"/>
-<path d="M218.5 164.5V204.5H168.5" stroke="#AB253B" stroke-width="7"/>
+<svg width="223" height="223" viewBox="0 0 223 223" fill="none" xmlns="http://www.w3.org/2000/svg">
+<ellipse cx="112" cy="155" rx="105" ry="45" fill="#9CAB6D"/>
+<path d="M59 35C59 35 90.937 45 112 45C133.063 45 165 35 165 35L155 145C155 145 133.063 155 112 155C90.937 155 69 145 69 145L59 35Z" fill="#C0CB9A"/>
+<ellipse cx="112" cy="35" rx="53" ry="21" fill="#9CAB6D"/>
+<path d="M4 51V11H54" stroke="#AB253B" stroke-width="7"/>
+<path d="M219 51V11H169" stroke="#AB253B" stroke-width="7"/>
+<path d="M4 172V212H54" stroke="#AB253B" stroke-width="7"/>
+<path d="M219 172V212H169" stroke="#AB253B" stroke-width="7"/>
 </svg>
