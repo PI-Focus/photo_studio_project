@@ -25,10 +25,16 @@
    </th:block>
 
    <th:block sec:authorize="isAuthenticated()">
-      <button type="button" id="btn-user-menu">
-         <th:block th:replace="~{fragments/basic-components :: safe-img(${base.profileBright}, '', 'square theme-bright')}" />
-         <th:block th:replace="~{fragments/basic-components :: safe-img(${base.profileDark}, '', 'square theme-dark')}" />
-      </button>
+      <div class="user-menu-wrap">
+         <button type="button" id="btn-user-menu">
+            <th:block th:replace="~{fragments/basic-components :: safe-img(${base.profileBright}, '', 'square theme-bright')}" />
+            <th:block th:replace="~{fragments/basic-components :: safe-img(${base.profileDark}, '', 'square theme-dark')}" />
+         </button>
+         <div id="user-dropdown-menu" class="user-dropdown">
+            <a th:href="@{/profile}">Профиль</a>
+            <a th:href="@{/logout}">Выход</a>
+         </div>
+      </div>
    </th:block>
 </nav>
 
