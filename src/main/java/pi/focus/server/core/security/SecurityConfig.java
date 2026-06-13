@@ -22,6 +22,8 @@ import java.util.List;
 public class SecurityConfig {
     private final UserRepository userRepository;
 
+    private static final int MIN_LOGIN_LENGTH = 4;
+
     public SecurityConfig(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
@@ -38,7 +40,6 @@ public class SecurityConfig {
                 .loginPage("/login").permitAll()
                 .usernameParameter("login")
                 .successHandler(authenticationSuccessHandler())
-                .defaultSuccessUrl("/")
             ).logout(logout -> logout
                 .logoutUrl("/logout").permitAll()
                 .deleteCookies("JSESSIONID")
@@ -53,9 +54,21 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> {
-            UserEntity user = userRepository.findByLoginIgnoreCase(username)
-                    .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));
+        return login -> {
+            UserEntity user;
+            if (login.matches("^8\\d{10}$")) {
+                user = userRepository.findByPhoneNumber(login)
+                        .orElseThrow(() -> new UsernameNotFoundException("Пользователь с таким номером телефона не найден: " + login));
+            } else if (login.matches("^[^@]+@[^@]+$")) {
+                user = userRepository.findByEmail(login)
+                        .orElseThrow(() -> new UsernameNotFoundException("Пользователь с такой email не найден: " + login));
+            } else if (login.matches("^[a-z0-9_-]+$") && login.matches(".*[a-z].*")
+                    && login.length() >= MIN_LOGIN_LENGTH) {
+                user = userRepository.findByLogin(login)
+                        .orElseThrow(() -> new UsernameNotFoundException("Пользователь с таким login не найден: " + login));
+            } else {
+                throw new UsernameNotFoundException("Неверный логин или пароль");
+            }
             List<SimpleGrantedAuthority> roles = List.of(user.getRole().toAuthority());
             return new User(
                 user.getLogin(),

@@ -25,6 +25,12 @@ public class UserEntity {
     @Column(name = "login", nullable = false, length = 32, unique = true)
     private String login;
 
+    @Column(name = "phone_number", length = 11, unique = true)
+    String phoneNumber;
+
+    @Column(name = "email", unique = true)
+    String email;
+
     @Column(name = "password", nullable = false)
     private String password;
 
@@ -36,9 +42,30 @@ public class UserEntity {
     public UserEntity() {
     }
 
-    public UserEntity(UUID id, String login, String password, UserRole role) {
+    public UserEntity(
+        UUID id,
+        String login,
+        String password,
+        UserRole role
+    ) {
         this.id = id;
         this.login = login;
+        this.password = password;
+        this.role = role;
+    }
+
+    public UserEntity(
+        UUID id,
+        String login,
+        String phoneNumber,
+        String email,
+        String password,
+        UserRole role
+    ) {
+        this.id = id;
+        this.login = login;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
         this.password = password;
         this.role = role;
     }
@@ -57,6 +84,22 @@ public class UserEntity {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {

@@ -32,6 +32,8 @@ CREATE TABLE equipment (
 CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     login VARCHAR(32) NOT NULL UNIQUE,
+    phone_number VARCHAR(11),
+    email TEXT,
     password TEXT NOT NULL,
     role user_role NOT NULL
 );
