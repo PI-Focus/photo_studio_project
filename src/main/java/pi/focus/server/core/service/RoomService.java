@@ -15,7 +15,7 @@ import java.util.List;
 
 
 @Service
-@Profile({"dev", "prod"})
+@Profile({"dev", "prod", "test"})
 public class RoomService implements IRoomService {
     private final RoomRepository roomRepository;
 

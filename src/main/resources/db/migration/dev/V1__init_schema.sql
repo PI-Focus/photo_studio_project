@@ -52,7 +52,7 @@ CREATE TABLE reservations (
 CREATE TABLE reserved_equipment (
 	reserved_equipment_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     reservation_id UUID NOT NULL,
-    equipment_id UUID NOT NULL,
+    equipment_id UUID,
     FOREIGN KEY (reservation_id) REFERENCES reservations (id)
     ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (equipment_id) REFERENCES equipment (id)
