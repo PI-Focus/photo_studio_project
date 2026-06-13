@@ -19,13 +19,16 @@
       <th:block th:replace="~{fragments/icons :: theme-switch}"></th:block>
    </button>
 
-   <th:block sec:authorize="isAuthenticated()">
+   <th:block sec:authorize="isAnonimous()">
    <a th:href="@{/login}" id="header-btn-login" class="nav-link"
       th:classappend="${currentURI != null && currentURI.startsWith('/login')} ? 'active'">ВХОД</a>
    </th:block>
 
-   <th:block sec:authorize="isAnonimous()">
-      куку
+   <th:block sec:authorize="isAuthenticated()">
+      <button type="button" id="btn-user-menu">
+         <th:block th:replace="~{fragments/basic-components :: safe-img(${base.profileBright}, '', 'square theme-bright')}" />
+         <th:block th:replace="~{fragments/basic-components :: safe-img(${base.profileDark}, '', 'square theme-dark')}" />
+      </button>
    </th:block>
 </nav>
 
