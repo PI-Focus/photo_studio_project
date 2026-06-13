@@ -19,7 +19,7 @@
       <th:block th:replace="~{fragments/icons :: theme-switch}"></th:block>
    </button>
 
-   <th:block sec:authorize="isAnonimous()">
+   <th:block sec:authorize="isAnonymous()">
    <a th:href="@{/login}" id="header-btn-login" class="nav-link"
       th:classappend="${currentURI != null && currentURI.startsWith('/login')} ? 'active'">ВХОД</a>
    </th:block>
@@ -53,7 +53,7 @@
       <a th:href="|mailto:${base.email}|" class="footer-link">
          Почта: <span th:text="${base.email}">pi_focus@yandex.ru</span>
       </a>
-
+      
       <p th:text="|Адрес: ${base.address}|">г. Ярославль, ул. Союзная, 144</p>
    </div>
 </div>
