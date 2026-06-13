@@ -83,6 +83,11 @@ public class HomeController {
         return "pages/photographers";
     }
 
+    @GetMapping("/profile")
+    public String getProfile(Model model) {
+        return "pages/login"; // idk какая тут страница
+    }
+
     @GetMapping("/login")
     public String getLogin(
             HttpSession session,
