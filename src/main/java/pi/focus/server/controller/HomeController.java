@@ -3,7 +3,6 @@ package pi.focus.server.controller;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,26 +24,27 @@ import java.util.UUID;
 
 
 @Controller
+@SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
 public class HomeController {
-    public IStaticDataService staticDataService;
-    public IRoomService roomService;
-    public IUserService userService;
-    public PasswordEncoder passwordEncoder;
-    public IEquipmentService equipmentService;
-    public IPhotographerService photographerService;
+    private final IStaticDataService staticDataService;
+    private final IRoomService roomService;
+    private final IUserService userService;
+    private final IEquipmentService equipmentService;
+    private final IPhotographerService photographerService;
+
+    private static final int MIN_LOGIN_LENGTH = 4;
+    private static final int MIN_PASSWORD_LENGTH = 8;
 
     public HomeController(
             IStaticDataService staticDataService,
             IRoomService roomService,
-            IUserService userService, 
-            PasswordEncoder passwordEncoder,
+            IUserService userService,
             IEquipmentService equipmentService,
             IPhotographerService photographerService
     ) {
         this.staticDataService = staticDataService;
         this.roomService = roomService;
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
         this.equipmentService = equipmentService;
         this.photographerService = photographerService;
     }
@@ -104,19 +104,11 @@ public class HomeController {
             HttpServletRequest request,
             HttpSession session
     ) {
-        if (!password.equals(confirmPassword)) {
-            redirectAttributes.addFlashAttribute("error", "Пароли не совпадают");
+        if (!validateRegistration(login, password, confirmPassword, redirectAttributes)) {
             return "redirect:/registration?error";
         }
 
-        if (!login.matches("^[a-z0-9_-]+$")) {
-            redirectAttributes.addFlashAttribute("error",
-            "Логин может содержать только строчные латинские буквы, цифры, символы нижнего подчеркивания и дефиса");
-            return "redirect:/registration?error";
-        }
-
-        String encodedPassword = passwordEncoder.encode(password);
-        User user = new User(null, login, encodedPassword, UserRole.USER);
+        User user = new User(null, login, null, null, password, UserRole.USER);
         if (!userService.createUser(user)) {
             redirectAttributes.addFlashAttribute("error",
                     "Пользователь с таким именем уже существует");
@@ -143,5 +135,38 @@ public class HomeController {
             return "redirect:" + previousUrl;
         }
         return "redirect:/";
+    }
+
+    private boolean validateRegistration(
+            String login,
+            String password,
+            String confirmPassword,
+            RedirectAttributes redirectAttributes
+    ) {
+        if (!password.equals(confirmPassword)) {
+            redirectAttributes.addFlashAttribute("error", "Пароли не совпадают");
+            return false;
+        }
+        if (password.length() < MIN_PASSWORD_LENGTH) {
+            redirectAttributes.addFlashAttribute("error",
+                    "Минимальная длина пароля должна быть 8 символов");
+            return false;
+        }
+        if (!login.matches("^[a-z0-9_-]+$")) {
+            redirectAttributes.addFlashAttribute("error", "Логин может содержать " +
+                    "только строчные латинские буквы, цифры, символы нижнего подчеркивания и дефиса");
+            return false;
+        }
+        if (!login.matches(".*[a-z].*")) {
+            redirectAttributes.addFlashAttribute("error",
+                    "Логин должен содержать латинские буквы");
+            return false;
+        }
+        if (login.length() < MIN_LOGIN_LENGTH) {
+            redirectAttributes.addFlashAttribute("error",
+                    "Минимальная длина логина должна быть 4 символов");
+            return false;
+        }
+        return true;
     }
 }

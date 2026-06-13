@@ -13,6 +13,8 @@ public final class UserMapper {
                 userEntity.getId(),
                 userEntity.getLogin(),
                 userEntity.getPassword(),
+                userEntity.getPhoneNumber(),
+                userEntity.getEmail(),
                 userEntity.getRole()
         );
     }
@@ -21,6 +23,8 @@ public final class UserMapper {
         return new UserEntity(
                 user.id(),
                 user.login(),
+                user.phoneNumber(),
+                user.email(),
                 user.password(),
                 user.role()
         );
