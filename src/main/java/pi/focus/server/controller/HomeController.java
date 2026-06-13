@@ -2,8 +2,11 @@ package pi.focus.server.controller;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -86,25 +89,14 @@ public class HomeController {
             @ModelAttribute("previousURI") String previousURI,
             Authentication authentication
     ) {
-        if (authentication != null) {
-            return "redirect:" + previousURI;
+        if (authentication != null && authentication.isAuthenticated()) {
+            return "redirect:" + (previousURI != null ? previousURI : "/");
         }
 
         if (previousURI != null && !previousURI.contains("/registration") && !previousURI.contains("/login")) {
             session.setAttribute("previousUri", previousURI);
         }
         return "pages/login";
-    }
-
-    @GetMapping("/logout")
-    public String getLogout(
-            @ModelAttribute("previousURI") String previousURI,
-            Authentication authentication
-    ) {
-        if (authentication == null) {
-            return "redirect:" + previousURI;
-        }
-        return null;
     }
 
     @GetMapping("/registration")

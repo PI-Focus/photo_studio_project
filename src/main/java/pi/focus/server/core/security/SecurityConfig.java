@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 import pi.focus.server.core.domain.UserRole;
 import pi.focus.server.core.entity.UserEntity;
 import pi.focus.server.core.repository.UserRepository;
@@ -40,15 +41,14 @@ public class SecurityConfig {
                 .requestMatchers("/css/**", "/images/**", "/js/**", "/fonts/**", "/docs/**").permitAll()
                 .requestMatchers("/", "/photorooms", "/equipment", "/photographers", "/registration").permitAll()
                 .requestMatchers("/photorooms/{id}").hasRole(UserRole.USER.name()) // TODO: unlock for all
-                .anyRequest().authenticated()
             ).formLogin(form -> form
                 .loginPage("/login").permitAll()
                 .usernameParameter("login")
                 .failureHandler(authenticationFailureHandler())
                 .successHandler(authenticationSuccessHandler())
             ).logout(logout -> logout
-                .logoutUrl("/logout").permitAll()
-                .invalidateHttpSession(true)
+                .logoutUrl("/logout")
+                .logoutSuccessHandler(logoutSuccessHandler())
                 .deleteCookies("JSESSIONID")
             );
         return http.build();
@@ -97,6 +97,11 @@ public class SecurityConfig {
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
         return new CustomAuthenticationFailureHandler();
+    }
+
+    @Bean
+    public LogoutSuccessHandler logoutSuccessHandler() {
+        return new CustomLogoutSuccessHandler();
     }
 }
 
