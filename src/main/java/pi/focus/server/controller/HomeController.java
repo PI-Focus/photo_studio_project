@@ -26,11 +26,11 @@ import java.util.UUID;
 @Controller
 @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
 public class HomeController {
-    public IStaticDataService staticDataService;
-    public IRoomService roomService;
-    public IUserService userService;
-    public IEquipmentService equipmentService;
-    public IPhotographerService photographerService;
+    private final IStaticDataService staticDataService;
+    private final IRoomService roomService;
+    private final IUserService userService;
+    private final IEquipmentService equipmentService;
+    private final IPhotographerService photographerService;
 
     private static final int MIN_LOGIN_LENGTH = 4;
     private static final int MIN_PASSWORD_LENGTH = 8;
@@ -104,7 +104,7 @@ public class HomeController {
             HttpServletRequest request,
             HttpSession session
     ) {
-        if (validateRegistration(login, password, confirmPassword, redirectAttributes)) {
+        if (!validateRegistration(login, password, confirmPassword, redirectAttributes)) {
             return "redirect:/registration?error";
         }
 

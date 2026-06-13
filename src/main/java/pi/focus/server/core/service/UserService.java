@@ -12,7 +12,7 @@ import pi.focus.server.core.service.api.IUserService;
 @Profile({"dev", "prod"})
 public class UserService implements IUserService {
     private final UserRepository userRepository;
-    public PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
