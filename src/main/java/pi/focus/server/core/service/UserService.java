@@ -3,7 +3,7 @@ package pi.focus.server.core.service;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import pi.focus.server.core.domain.User;
-import pi.focus.server.core.entity.UserEntity;
+import pi.focus.server.core.mapper.UserMapper;
 import pi.focus.server.core.repository.UserRepository;
 import pi.focus.server.core.service.api.IUserService;
 
@@ -17,25 +17,15 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public void createUser(User user) {
-        userRepository.save(toEntity(user));
+    public boolean createUser(User user) {
+        if (existsByLogin(user.login())) {
+            return false;
+        }
+        userRepository.save(UserMapper.toEntity(user));
+        return true;
     }
 
-    private User toDomain(UserEntity user) {
-        return new User(
-                user.getId(),
-                user.getLogin(),
-                user.getPassword(),
-                user.getRole()
-        );
-    }
-
-    private UserEntity toEntity(User user) {
-        return new UserEntity(
-                user.id(),
-                user.login(),
-                user.password(),
-                user.role()
-        );
+    private boolean existsByLogin(String login) {
+        return userRepository.existsByLogin(login);
     }
 }

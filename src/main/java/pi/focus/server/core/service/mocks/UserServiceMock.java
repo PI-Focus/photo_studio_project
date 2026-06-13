@@ -9,6 +9,7 @@ import pi.focus.server.core.service.api.IUserService;
 @Profile({"mock", "test"})
 public class UserServiceMock implements IUserService {
     @Override
-    public void createUser(User user) {
+    public boolean createUser(User user) {
+        return false;
     }
 }
