@@ -21,39 +21,39 @@ class UserServiceIntegrationTest extends AbstractIntegrationTest {
     @Autowired
     private UserRepository userRepository;
 
-    private final String login = "test_user";
-    private final String password = "test_password";
-    private final String phoneNumber = "79991234567";
-    private final String email = "test@example.com";
+    private static final String LOGIN = "test_user";
+    private static final String PASSWORD = "test_password";
+    private static final String PHONENUMBER = "79991234567";
+    private static final String EMAIL = "test@example.com";
 
     @Test
     @DisplayName("Должен успешно создать пользователя и сохранить все поля в БД")
     void shouldCreateUserSuccessfully() {
-        User newUser = new User(null, login, phoneNumber, email, password, UserRole.USER);
+        User newUser = new User(null, LOGIN, PHONENUMBER, EMAIL, PASSWORD, UserRole.USER);
 
         boolean result = userService.createUser(newUser);
 
-        UserEntity savedUser = userRepository.findByLogin(login).orElseThrow();
+        UserEntity savedUser = userRepository.findByLogin(LOGIN).orElseThrow();
 
         assertSoftly(softly -> {
             softly.assertThat(result).isTrue();
             softly.assertThat(savedUser.getId())
                     .as("ID должен быть сгенерирован автоматически")
                     .isNotNull();
-            softly.assertThat(savedUser.getLogin()).isEqualTo(login);
-            softly.assertThat(savedUser.getPhoneNumber()).isEqualTo(phoneNumber);
-            softly.assertThat(savedUser.getEmail()).isEqualTo(email);
+            softly.assertThat(savedUser.getLogin()).isEqualTo(LOGIN);
+            softly.assertThat(savedUser.getPhoneNumber()).isEqualTo(PHONENUMBER);
+            softly.assertThat(savedUser.getEmail()).isEqualTo(EMAIL);
             softly.assertThat(savedUser.getRole()).isEqualTo(UserRole.USER);
             softly.assertThat(savedUser.getPassword())
                     .as("Пароль должен быть захеширован")
-                    .isNotEqualTo(password);
+                    .isNotEqualTo(PASSWORD);
         });
     }
 
     @Test
     @DisplayName("Должен вернуть false, если логин уже существует в БД")
     void shouldReturnFalseIfLoginAlreadyExists() {
-        User user1 = new User(null, "login1", phoneNumber, email, password, UserRole.USER);
+        User user1 = new User(null, "login1", PHONENUMBER, EMAIL, PASSWORD, UserRole.USER);
         userService.createUser(user1);
         boolean result = userService.createUser(user1);
         assertSoftly(softly -> {
@@ -71,7 +71,7 @@ class UserServiceIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Должен корректно сохранить роль ADMIN")
     void shouldSaveAdminRoleCorrectly() {
-        User adminUser = new User(null, "admin_test", phoneNumber, email, password, UserRole.ADMIN);
+        User adminUser = new User(null, "admin_test", PHONENUMBER, EMAIL, PASSWORD, UserRole.ADMIN);
 
         userService.createUser(adminUser);
 
@@ -83,7 +83,7 @@ class UserServiceIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Должен сохранить пароль в хешированном виде, а не в открытом")
     void shouldSaveHashedPasswordInsteadOfPlainText() {
-        User newUser = new User(null, "hash_test", phoneNumber, email, password, UserRole.USER);
+        User newUser = new User(null, "hash_test", PHONENUMBER, EMAIL, PASSWORD, UserRole.USER);
 
         userService.createUser(newUser);
 
@@ -92,7 +92,7 @@ class UserServiceIntegrationTest extends AbstractIntegrationTest {
         assertSoftly(softly -> {
             softly.assertThat(savedUser.getPassword())
                     .as("Пароль в базе данных не должен быть в открытом виде")
-                    .isNotEqualTo(password);
+                    .isNotEqualTo(PASSWORD);
 
             softly.assertThat(savedUser.getPassword())
                     .as("Пароль должен быть BCrypt хешем")
@@ -103,7 +103,7 @@ class UserServiceIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Должен сохранить номер телефона")
     void shouldSavePhoneNumber() {
-        User newUser = new User(null, "phone_test", "89161234567", email, password, UserRole.USER);
+        User newUser = new User(null, "phone_test", "89161234567", EMAIL, PASSWORD, UserRole.USER);
 
         userService.createUser(newUser);
 
@@ -117,7 +117,7 @@ class UserServiceIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Должен сохранить email")
     void shouldSaveEmail() {
-        User newUser = new User(null, "email_test", phoneNumber, "user@domain.com", password, UserRole.USER);
+        User newUser = new User(null, "email_test", PHONENUMBER, "user@domain.com", PASSWORD, UserRole.USER);
 
         userService.createUser(newUser);
 
@@ -133,7 +133,7 @@ class UserServiceIntegrationTest extends AbstractIntegrationTest {
     @Test
     @DisplayName("Должен создать пользователя с null email и phoneNumber")
     void shouldCreateUserWithNullOptionalFields() {
-        User newUser = new User(null, "optional_null", null, null, password, UserRole.USER);
+        User newUser = new User(null, "optional_null", null, null, PASSWORD, UserRole.USER);
 
         boolean result = userService.createUser(newUser);
 

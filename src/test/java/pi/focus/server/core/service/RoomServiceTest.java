@@ -51,7 +51,7 @@ class RoomServiceIntegrationTest extends AbstractIntegrationTest {
 
             softly.assertThat(zal1Card.getImage())
                     .as("Должна браться первая фотография из списка")
-                    .isNotNull(); //Переделать когда появятся реальные фотографии
+                    .isNotNull();
 
             softly.assertThat(zal1Card.getLinkUrl())
                     .as("Ссылка должна формироваться как 'photorooms/' + id")
