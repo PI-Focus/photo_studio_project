@@ -88,32 +88,28 @@ public class HomeController {
 
     @GetMapping("/login")
     public String getLogin(
-            HttpSession session,
-            @RequestParam(value = "previousURI", required = false) String previousURI,
             HttpServletRequest request,
+            HttpSession session,
+            @RequestParam(required = false) String error,
+            Model model,
             Authentication authentication
     ) {
-        if (previousURI == null || previousURI.isBlank()) {
-            String referer = request.getHeader("Referer");
-            if (referer != null && !referer.isBlank()) {
-                try {
-                    previousURI = new URI(referer).getPath();
-                } catch (Exception e) {
-                    previousURI = referer;
-                }
-            }
-        }
-
         if (authentication != null && authentication.isAuthenticated()) {
-            String sessionUri = (String) session.getAttribute("previousUri");
-            String redirectUrl = (previousURI != null && !previousURI.isBlank()) ? previousURI : sessionUri;
-            return "redirect:" + (redirectUrl != null ? redirectUrl : "/");
+            String previousUri = (String) session.getAttribute("previousUri");
+            if (previousUri != null) {
+                session.removeAttribute("previousUri");
+                return "redirect:" + previousUri;
+            }
+            return "redirect:/";
         }
 
-        if (previousURI != null && !previousURI.isBlank()
-                && !previousURI.contains("/registration")
-                && !previousURI.contains("/login")) {
-            session.setAttribute("previousUri", previousURI);
+        if (error != null) {
+            model.addAttribute("loginError", true);
+        } else {
+            String referer = request.getHeader("Referer");
+            if (referer != null && !referer.contains("/login") && !referer.contains("/registration")) {
+                session.setAttribute("previousUri", referer);
+            }
         }
 
         return "pages/login";
