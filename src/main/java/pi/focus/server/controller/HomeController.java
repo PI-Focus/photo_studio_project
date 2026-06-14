@@ -3,6 +3,7 @@ package pi.focus.server.controller;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,6 +26,7 @@ import java.util.UUID;
 
 @Controller
 @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
+@Transactional
 public class HomeController {
     private final IStaticDataService staticDataService;
     private final IRoomService roomService;

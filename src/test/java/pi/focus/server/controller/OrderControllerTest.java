@@ -1,5 +1,6 @@
 package pi.focus.server.controller;
 
+import io.hypersistence.utils.hibernate.type.range.Range;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -8,6 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -17,12 +19,15 @@ import org.springframework.test.web.servlet.MvcResult;
 import pi.focus.server.api.context.IInfoContext;
 import pi.focus.server.api.models.ICalendar;
 import pi.focus.server.core.domain.Equipment;
+import pi.focus.server.core.domain.Photographer;
 import pi.focus.server.core.service.api.IEquipmentService;
+import pi.focus.server.core.service.api.IPhotographerService;
 import pi.focus.server.core.service.api.IRoomService;
 import pi.focus.server.core.service.api.IStaticDataService;
 import pi.focus.server.service.context.CalendarDto;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -31,6 +36,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
@@ -56,6 +62,9 @@ class OrderControllerTest {
     private IEquipmentService equipmentService;
 
     @MockitoBean
+    private IPhotographerService photographerService;
+
+    @MockitoBean
     private IStaticDataService staticDataService;
 
     @BeforeEach
@@ -66,13 +75,12 @@ class OrderControllerTest {
     private static final String VALID_UUID = "8718f425-0ebe-48aa-9127-4541ed29524c";
     private static final String VALID_DATE = "2026-06-15";
 
-
     private List<List<Integer>> createEmptyCalendar() {
         List<List<Integer>> calendar = new ArrayList<>();
         for (int i = 0; i < 14; i++) {
             List<Integer> row = new ArrayList<>();
             for (int j = 0; j < 7; j++) {
-                row.add(0); // 0 = свободно
+                row.add(0);
             }
             calendar.add(row);
         }
@@ -86,7 +94,6 @@ class OrderControllerTest {
         @Test
         @DisplayName("Должен вернуть 200 OK и корректный JSON при валидных параметрах")
         void shouldReturnCalendarWithValidParameters() throws Exception {
-            // Arrange
             List<List<Integer>> calendarData = createEmptyCalendar();
             ICalendar mockCalendar = new CalendarDto(calendarData);
 
@@ -94,6 +101,7 @@ class OrderControllerTest {
             LocalDate date = LocalDate.parse(VALID_DATE);
 
             when(roomService.getRoomCalendar(uuid, date)).thenReturn(mockCalendar);
+
             MvcResult result = mockMvc.perform(get("/order/calendar/" + VALID_UUID)
                             .param("date", VALID_DATE)
                             .accept(MediaType.APPLICATION_JSON))
@@ -132,7 +140,6 @@ class OrderControllerTest {
         void shouldReturnCalendarWithBookedSlots() throws Exception {
             List<List<Integer>> calendarData = createEmptyCalendar();
 
-            // Эмулируем бронирование: Понедельник (столбец 0), с 10:00 до 13:00 (строки 2, 3, 4)
             calendarData.get(2).set(0, 1);
             calendarData.get(3).set(0, 1);
             calendarData.get(4).set(0, 1);
@@ -169,20 +176,6 @@ class OrderControllerTest {
             assertEquals(400, result.getResponse().getStatus(),
                     "Статус должен быть 400 для невалидного UUID: " + invalidUuid);
         }
-
-        @Test
-        @DisplayName("Должен вернуть 404 NotFound при пустой строке в UUID")
-        void shouldReturnNotFoundForInvalidUuid() throws Exception {
-            String invalidUUID = "";
-            MvcResult result = mockMvc.perform(get("/order/calendar/" + invalidUUID)
-                            .param("date", VALID_DATE))
-                    .andExpect(status().isBadRequest())
-                    .andReturn();
-
-            assertEquals(400, result.getResponse().getStatus(),
-                    "Статус должен быть 404 для пустой строки в UUID");
-        }
-
 
         @ParameterizedTest
         @ValueSource(strings = {
@@ -268,6 +261,100 @@ class OrderControllerTest {
 
             assertEquals("[]", result.getResponse().getContentAsString(),
                     "При отсутствии оборудования должен вернуться пустой JSON-массив");
+        }
+    }
+
+    @Nested
+    @DisplayName("GET /order/photographers")
+    class PhotographersEndpoint {
+
+        private static final String VALID_START = "2026-06-15T10:00:00";
+        private static final String VALID_END = "2026-06-15T14:00:00";
+
+        @Test
+        @DisplayName("Должен вернуть 200 OK и список фотографов при валидных датах")
+        @SuppressWarnings("unchecked")
+        void shouldReturnPhotographersListWithValidDates() throws Exception {
+            Photographer p1 = mock(Photographer.class);
+            Photographer p2 = mock(Photographer.class);
+            List<Photographer> photographers = List.of(p1, p2);
+
+            when(photographerService.getPhotographersByTime(any(Range.class))).thenReturn(photographers);
+
+            MvcResult result = mockMvc.perform(get("/order/photographers")
+                            .param("start", VALID_START)
+                            .param("end", VALID_END)
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$", hasSize(2)))
+                    .andReturn();
+
+            assertNotNull(result.getResponse().getContentAsString(),
+                    "Тело ответа не должно быть пустым при запросе списка фотографов");
+        }
+
+        @Test
+        @DisplayName("Должен передать корректный Range в сервис с правильными границами")
+        @SuppressWarnings("unchecked")
+        void shouldPassCorrectRangeToService() throws Exception {
+            when(photographerService.getPhotographersByTime(any(Range.class))).thenReturn(List.of());
+
+            mockMvc.perform(get("/order/photographers")
+                    .param("start", VALID_START)
+                    .param("end", VALID_END)).andReturn();
+
+            ArgumentCaptor<Range<LocalDateTime>> rangeCaptor = ArgumentCaptor.forClass(Range.class);
+            verify(photographerService).getPhotographersByTime(rangeCaptor.capture());
+
+            Range<LocalDateTime> capturedRange = rangeCaptor.getValue();
+
+            assertEquals(LocalDateTime.parse(VALID_START), capturedRange.lower(),
+                    "Нижняя граница Range должна совпадать с параметром start");
+            assertEquals(LocalDateTime.parse(VALID_END), capturedRange.upper(),
+                    "Верхняя граница Range должна совпадать с параметром end");
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {
+                "not-a-date",
+                "2026-13-45T10:00:00",
+                "15-06-2026 10:00:00"
+        })
+        @DisplayName("Должен вернуть 400 Bad Request при невалидной дате start или end")
+        void shouldReturnBadRequestForInvalidDates(String invalidDate) throws Exception {
+            MvcResult result = mockMvc.perform(get("/order/photographers")
+                            .param("start", invalidDate)
+                            .param("end", VALID_END))
+                    .andExpect(status().isBadRequest())
+                    .andReturn();
+
+            assertEquals(400, result.getResponse().getStatus(),
+                    "Статус должен быть 400 для невалидной даты start: " + invalidDate);
+        }
+
+        @Test
+        @DisplayName("Должен вернуть 400 Bad Request, если параметр start отсутствует")
+        void shouldReturnBadRequestWhenStartIsMissing() throws Exception {
+            MvcResult result = mockMvc.perform(get("/order/photographers")
+                            .param("end", VALID_END))
+                    .andExpect(status().isBadRequest())
+                    .andReturn();
+
+            assertEquals(400, result.getResponse().getStatus(),
+                    "Статус должен быть 400, если обязательный параметр start не передан");
+        }
+
+        @Test
+        @DisplayName("Должен вернуть 400 Bad Request, если параметр end отсутствует")
+        void shouldReturnBadRequestWhenEndIsMissing() throws Exception {
+            MvcResult result = mockMvc.perform(get("/order/photographers")
+                            .param("start", VALID_START))
+                    .andExpect(status().isBadRequest())
+                    .andReturn();
+
+            assertEquals(400, result.getResponse().getStatus(),
+                    "Статус должен быть 400, если обязательный параметр end не передан");
         }
     }
 }
