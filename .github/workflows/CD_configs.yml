@@ -28,7 +28,7 @@ jobs:
       - name: Copy config files to server
         uses: appleboy/scp-action@v1.0.0
         with:
-          host: ${{ secrets.SSH_HOST }}
+          host: ${{ vars.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "docker-compose.prod.yml,traefik/"
@@ -38,7 +38,7 @@ jobs:
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.2.5
         with:
-          host: ${{ secrets.SSH_HOST }}
+          host: ${{ vars.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
