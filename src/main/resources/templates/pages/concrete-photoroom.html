@@ -30,11 +30,25 @@
             </th:block>
             <p th:text="${photoroom.textData.text}"></p>
         </div>
+
+        <div class="booking-calendar">
+            <button id="calendar-btn-today">Сегодня</button>
+            <button id="calendar-btn-prev"><</button>
+            <button id="calendar-btn-next">></button>
+
+            <th:block th:replace="~{fragments/components :: time-calendar(
+                startHour=8, 
+                endHour=22, 
+                tableId='booking-table', 
+                tableDataUuid=${photoroom.roomUuid}, 
+                tableClass='')}"></th:block>
+        </div>
     </th:block>
 
     <th:block id="photoroom-scripts">
         <script th:src="@{/js/carousel.js}" defer></script>
         <script th:src="@{/js/tabs.js}" defer></script>
+        <script th:src="@{/js/booking.js}" defer></script>
     </th:block>
 </body>
 </html>
