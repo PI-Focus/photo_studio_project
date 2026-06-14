@@ -132,4 +132,9 @@ public class RoomService implements IRoomService {
         }
         return new CalendarDto(calendar);
     }
+
+    @Override
+    public Boolean exists(UUID id) {
+        return roomRepository.findById(id).isPresent();
+    }
 }
