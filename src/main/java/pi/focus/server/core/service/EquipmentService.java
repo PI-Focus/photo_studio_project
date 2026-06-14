@@ -4,11 +4,15 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import pi.focus.server.api.context.IEquipmentContext;
 import pi.focus.server.api.models.IImagedTextCard;
+import pi.focus.server.core.domain.Equipment;
+import pi.focus.server.core.mapper.EquipmentMapper;
 import pi.focus.server.core.repository.EquipmentRepository;
 
 import pi.focus.server.core.service.api.IEquipmentService;
 import pi.focus.server.service.context.EquipmentContextDto;
 import pi.focus.server.service.models.ImagedTextCardDto;
+
+import java.util.List;
 
 
 @Service
@@ -31,5 +35,10 @@ public class EquipmentService implements IEquipmentService {
                        )
                ).toList()
         );
+    }
+
+    @Override
+    public List<Equipment> getEquipment() {
+        return equipmentRepository.findAll().stream().map(EquipmentMapper::toDomain).toList();
     }
 }
