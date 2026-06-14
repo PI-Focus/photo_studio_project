@@ -23,7 +23,6 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,18 +30,19 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-
 @Service
 @Profile({"dev", "prod", "test"})
 public class RoomService implements IRoomService {
+
     @Value("${app.static-data.placeholder-path}")
     private String placeholderPath;
-    @Value("${app.timezone}")
-    private String timezone;
-    private final RoomRepository roomRepository;
 
-    public RoomService(RoomRepository roomRepository) {
+    private final RoomRepository roomRepository;
+    private final TimeProviderService timeProvider;
+
+    public RoomService(RoomRepository roomRepository, TimeProviderService timeProvider) {
         this.roomRepository = roomRepository;
+        this.timeProvider = timeProvider;
     }
 
     @Override
@@ -50,7 +50,7 @@ public class RoomService implements IRoomService {
         List<RoomEntity> roomEntities = roomRepository.findAll();
         List<IDataCard> dataCards = new ArrayList<>();
         String photoPath = placeholderPath;
-        for (RoomEntity roomEntity: roomEntities) {
+        for (RoomEntity roomEntity : roomEntities) {
             List<PhotoEntity> photos = roomEntity.getPhotos();
             if (!photos.isEmpty()) {
                 photoPath = photos.getFirst().getPath();
@@ -91,19 +91,23 @@ public class RoomService implements IRoomService {
         if (roomOpt.isEmpty()) {
             return null;
         }
-        ZonedDateTime zonedNow = ZonedDateTime.now(ZoneId.of(timezone));
+
+        ZonedDateTime zonedNow = timeProvider.now();
         LocalTime nowTime = zonedNow.toLocalTime();
         LocalDate nowDay = zonedNow.toLocalDate();
+
         RoomEntity roomEntity = roomOpt.get();
         int price = roomEntity.getPrice();
         List<List<Integer>> calendar = new ArrayList<>();
         LocalDate monday = day.with(DayOfWeek.MONDAY);
         boolean isNextWeek = false;
+
         if (monday.isBefore(nowDay.with(DayOfWeek.MONDAY))) {
             return null;
         } else if (monday.isAfter(nowDay.with(DayOfWeek.MONDAY))) {
             isNextWeek = true;
         }
+
         for (int dayIndex = 0; dayIndex < 7; dayIndex++) {
             calendar.add(new ArrayList<>(Collections.nCopies(14, -1)));
             LocalDate currentDay = monday.plusDays(dayIndex);
@@ -111,7 +115,16 @@ public class RoomService implements IRoomService {
                 continue;
             }
             calendar.set(dayIndex, new ArrayList<>(Collections.nCopies(14, price)));
-            for (ReservationEntity reservation: roomEntity.getReservations()) {
+
+            if (!isNextWeek && currentDay.equals(nowDay)) {
+                for (int hour = 8; hour < 22; hour++) {
+                    if (nowTime.getHour() >= hour) {
+                        calendar.get(dayIndex).set(hour - 8, -1);
+                    }
+                }
+            }
+
+            for (ReservationEntity reservation : roomEntity.getReservations()) {
                 Range<LocalDateTime> interval = reservation.getTime();
                 LocalDateTime start = interval.lower();
                 LocalDateTime end = interval.upper();
@@ -119,11 +132,7 @@ public class RoomService implements IRoomService {
                     int startHour = start.getHour();
                     int endHour = end.getHour();
                     for (int hour = 8; hour < 22; hour++) {
-                        if (isNextWeek && startHour <= hour && hour < endHour) {
-                            calendar.get(dayIndex).set(hour - 8, -1);
-                        } else if (!isNextWeek && nowTime.getHour() >= hour) {
-                            calendar.get(dayIndex).set(hour - 8, -1);
-                        } else if (!isNextWeek && startHour <= hour && hour < endHour) {
+                        if (startHour <= hour && hour < endHour) {
                             calendar.get(dayIndex).set(hour - 8, -1);
                         }
                     }
@@ -132,7 +141,6 @@ public class RoomService implements IRoomService {
         }
         return new CalendarDto(calendar);
     }
-
     @Override
     public Boolean exists(UUID id) {
         return roomRepository.findById(id).isPresent();

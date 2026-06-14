@@ -59,7 +59,7 @@ public class StaticDataService implements IStaticDataService {
         private IAboutDataBlock loadAboutDataBlock(Resource resource) {
         try (InputStream inputStream = resource.getInputStream()) {
             return JsonMapper.getInstance().readValue(inputStream, AboutDataBlockDto.class);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new StaticDataLoadingException(ERROR_STRING + resource.getDescription(), e);
         }
     }
@@ -68,7 +68,7 @@ public class StaticDataService implements IStaticDataService {
         try (InputStream inputStream = resource.getInputStream()) {
             List<TextCardDto> dtos = JsonMapper.getInstance().readValue(inputStream, new TypeReference<>() {});
             return List.copyOf(dtos); 
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new StaticDataLoadingException(ERROR_STRING + resource.getDescription(), e);
         }
     }
@@ -80,7 +80,7 @@ public class StaticDataService implements IStaticDataService {
                        .map(tab -> new TabDto<IDataCard>(tab.tabName(), tab.data()))
                        .map(tab -> (INamedData<IDataCard>) tab)
                        .toList();
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new StaticDataLoadingException(ERROR_STRING + resource.getDescription(), e);
         }
     }
@@ -88,7 +88,7 @@ public class StaticDataService implements IStaticDataService {
     private IBaseContext loadBaseData(Resource resource) {
         try (InputStream inputStream = resource.getInputStream()) {
             return JsonMapper.getInstance().readValue(inputStream, BaseContextDto.class);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new StaticDataLoadingException(ERROR_STRING + resource.getDescription(), e);
         }
     }
