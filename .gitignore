@@ -27,7 +27,10 @@ out/
 !**/src/test/**/out
 .env
 .vs
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 
 
 ### NetBeans ###
@@ -39,4 +42,3 @@ out/
 
 ### VS Code ###
 .vscode/
-.env
