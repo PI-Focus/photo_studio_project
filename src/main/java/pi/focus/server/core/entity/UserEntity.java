@@ -1,5 +1,6 @@
 package pi.focus.server.core.entity;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -7,11 +8,14 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 import pi.focus.server.core.domain.UserRole;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -39,28 +43,20 @@ public class UserEntity {
     @Column(name = "role", nullable = false)
     private UserRole role;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<ReservationEntity> reservations = new ArrayList<>();
+
     public UserEntity() {
     }
 
     public UserEntity(
-        UUID id,
-        String login,
-        String password,
-        UserRole role
-    ) {
-        this.id = id;
-        this.login = login;
-        this.password = password;
-        this.role = role;
-    }
-
-    public UserEntity(
-        UUID id,
-        String login,
-        String phoneNumber,
-        String email,
-        String password,
-        UserRole role
+            UUID id,
+            String login,
+            String phoneNumber,
+            String email,
+            String password,
+            UserRole role,
+            List<ReservationEntity> reservations
     ) {
         this.id = id;
         this.login = login;
@@ -68,6 +64,7 @@ public class UserEntity {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.reservations = reservations;
     }
 
     public UUID getId() {
@@ -116,5 +113,13 @@ public class UserEntity {
 
     public void setRole(UserRole role) {
         this.role = role;
+    }
+
+    public List<ReservationEntity> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<ReservationEntity> reservations) {
+        this.reservations = reservations;
     }
 }

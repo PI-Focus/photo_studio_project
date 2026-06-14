@@ -27,8 +27,14 @@ public class RoomEntity {
     @Column(name = "description", nullable = false)
     private String description;
 
+    @Column(name = "price", nullable = false)
+    private Integer price;
+
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
     private List<PhotoEntity> photos = new ArrayList<>();
+
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    private List<ReservationEntity> reservations = new ArrayList<>();
 
     public RoomEntity() {
     }
@@ -36,23 +42,17 @@ public class RoomEntity {
     public RoomEntity(
             UUID id,
             String title,
-            String description
+            String description,
+            Integer price,
+            List<PhotoEntity> photos,
+            List<ReservationEntity> reservations
     ) {
         this.id = id;
         this.title = title;
         this.description = description;
-    }
-
-    public RoomEntity(
-        UUID id,
-        String title,
-        String description,
-        List<PhotoEntity> photos
-    ) {
-        this.id = id;
-        this.title = title;
-        this.description = description;
+        this.price = price;
         this.photos = photos;
+        this.reservations = reservations;
     }
 
     public UUID getId() {
@@ -79,11 +79,27 @@ public class RoomEntity {
         this.description = description;
     }
 
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+
     public List<PhotoEntity> getPhotos() {
         return photos;
     }
 
     public void setPhotos(List<PhotoEntity> photos) {
         this.photos = photos;
+    }
+
+    public List<ReservationEntity> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<ReservationEntity> reservations) {
+        this.reservations = reservations;
     }
 }

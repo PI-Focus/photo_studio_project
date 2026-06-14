@@ -3,6 +3,8 @@ package pi.focus.server.core.mapper;
 import pi.focus.server.core.domain.User;
 import pi.focus.server.core.entity.UserEntity;
 
+import java.util.ArrayList;
+
 
 public final class UserMapper {
     private UserMapper() {
@@ -26,7 +28,8 @@ public final class UserMapper {
                 user.phoneNumber(),
                 user.email(),
                 user.password(),
-                user.role()
+                user.role(),
+                new ArrayList<>()
         );
     }
 }

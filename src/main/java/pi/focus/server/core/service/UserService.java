@@ -8,6 +8,8 @@ import pi.focus.server.core.entity.UserEntity;
 import pi.focus.server.core.repository.UserRepository;
 import pi.focus.server.core.service.api.IUserService;
 
+import java.util.ArrayList;
+
 @Service
 @Profile({"dev", "prod", "test"})
 public class UserService implements IUserService {
@@ -31,7 +33,8 @@ public class UserService implements IUserService {
                         user.phoneNumber(),
                         user.email(),
                         passwordEncoder.encode(user.password()),
-                        user.role()
+                        user.role(),
+                        new ArrayList<>()
                 )
         );
         return true;

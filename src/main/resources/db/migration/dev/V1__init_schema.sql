@@ -3,7 +3,8 @@ CREATE TYPE user_role AS ENUM ('USER', 'ADMIN');
 CREATE TABLE rooms (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title VARCHAR(32) NOT NULL,
-    description TEXT NOT NULL
+    description TEXT NOT NULL,
+    price INTEGER NOT NULL
 );
 
 CREATE TABLE photos (
@@ -19,6 +20,7 @@ CREATE TABLE photographers (
     name VARCHAR(32) NOT NULL,
     surname VARCHAR(32) NOT NULL,
     description TEXT NOT NULL,
+    price INTEGER NOT NULL,
     photo_path VARCHAR(64) NOT NULL
 );
 
@@ -26,6 +28,7 @@ CREATE TABLE equipment (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title VARCHAR(32) NOT NULL,
     description TEXT NOT NULL,
+    price INTEGER NOT NULL,
     photo_path VARCHAR(64) NOT NULL
 );
 
@@ -58,5 +61,15 @@ CREATE TABLE reserved_equipment (
     FOREIGN KEY (reservation_id) REFERENCES reservations (id)
     ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (equipment_id) REFERENCES equipment (id)
+    ON UPDATE CASCADE ON DELETE SET NULL
+);
+
+CREATE TABLE reserved_photographers (
+	reserved_photographer_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    reservation_id UUID NOT NULL,
+    photographer_id UUID,
+    FOREIGN KEY (reservation_id) REFERENCES reservations (id)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+    FOREIGN KEY (photographer_id) REFERENCES photographers (id)
     ON UPDATE CASCADE ON DELETE SET NULL
 );

@@ -3,6 +3,8 @@ package pi.focus.server.core.mapper;
 import pi.focus.server.core.domain.Photographer;
 import pi.focus.server.core.entity.PhotographerEntity;
 
+import java.util.ArrayList;
+
 
 public final class PhotographerMapper {
     private PhotographerMapper() {
@@ -14,6 +16,7 @@ public final class PhotographerMapper {
                 photographerEntity.getName(),
                 photographerEntity.getSurname(),
                 photographerEntity.getDescription(),
+                photographerEntity.getPrice(),
                 photographerEntity.getPhotoPath()
         );
     }
@@ -24,7 +27,9 @@ public final class PhotographerMapper {
                 photographer.name(),
                 photographer.surname(),
                 photographer.description(),
-                photographer.photoPath()
+                photographer.price(),
+                photographer.photoPath(),
+                new ArrayList<>()
         );
     }
 }
