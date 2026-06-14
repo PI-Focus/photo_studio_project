@@ -79,7 +79,8 @@ public class RoomService implements IRoomService {
                         "Зал " + roomEntity.getTitle(),
                         roomEntity.getDescription()
                 ),
-                roomEntity.getPhotos().stream().map(PhotoEntity::getPath).toList()
+                roomEntity.getPhotos().stream().map(PhotoEntity::getPath).toList(),
+                id
         );
     }
 

@@ -1,5 +1,8 @@
 package pi.focus.server.controller;
 
+import java.time.LocalDate;
+import java.util.UUID;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,9 +12,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import pi.focus.server.api.models.ICalendar;
 import pi.focus.server.core.service.api.IRoomService;
 import java.time.format.DateTimeParseException;
-
-import java.time.LocalDate;
-import java.util.UUID;
 
 
 @Controller
