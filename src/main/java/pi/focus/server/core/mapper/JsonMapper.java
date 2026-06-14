@@ -1,4 +1,4 @@
-package pi.focus.server.core.json;
+package pi.focus.server.core.mapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

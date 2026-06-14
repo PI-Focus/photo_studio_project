@@ -18,7 +18,6 @@ import pi.focus.server.core.service.api.IPhotographerService;
 import pi.focus.server.core.service.api.IRoomService;
 import pi.focus.server.core.service.api.IStaticDataService;
 import pi.focus.server.core.service.api.IUserService;
-import pi.focus.server.service.context.mocks.ConcretePhotoroomContextMock;
 
 import java.util.UUID;
 
@@ -63,7 +62,7 @@ public class HomeController {
 
     @GetMapping("/photorooms/{id}")
     public String getPhotoroom(Model model, @PathVariable UUID id) {
-        model.addAttribute("photoroom", new ConcretePhotoroomContextMock(id.toString().substring(0, 8)));
+        model.addAttribute("photoroom", roomService.getConcretePhotoroomContext(id));
         return "pages/concrete-photoroom";
     }
 
