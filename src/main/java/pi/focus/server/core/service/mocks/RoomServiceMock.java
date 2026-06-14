@@ -28,6 +28,6 @@ public class RoomServiceMock implements IRoomService {
 
     @Override
     public ICalendar getRoomCalendar(UUID id, LocalDate day) {
-        return new CalendarMock();
+        return new CalendarMock(day);
     }
 }
