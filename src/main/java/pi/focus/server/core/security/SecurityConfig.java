@@ -74,10 +74,10 @@ public class SecurityConfig {
                 user = userRepository.findByLogin(login)
                         .orElseThrow(() -> new UsernameNotFoundException("Неверный логин или пароль"));
             } else {
-                throw new BadCredentialsException("Неверный логин или пароль");
+                throw new UsernameNotFoundException("Неверный логин или пароль");
             }
             if (user.getRole() == UserRole.ADMIN) {
-                throw new BadCredentialsException("Неверный логин или пароль");
+                throw new UsernameNotFoundException("Неверный логин или пароль");
             }
             List<SimpleGrantedAuthority> roles = List.of(user.getRole().toAuthority());
 
