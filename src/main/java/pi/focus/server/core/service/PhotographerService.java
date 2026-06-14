@@ -1,13 +1,23 @@
 package pi.focus.server.core.service;
 
+import io.hypersistence.utils.hibernate.type.range.Range;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import pi.focus.server.api.context.IPhotographersContext;
 import pi.focus.server.api.models.IImagedTextCard;
+import pi.focus.server.core.domain.Photographer;
+import pi.focus.server.core.entity.PhotographerEntity;
+import pi.focus.server.core.entity.ReservedPhotographerEntity;
+import pi.focus.server.core.mapper.PhotographerMapper;
 import pi.focus.server.core.repository.PhotographerRepository;
 import pi.focus.server.core.service.api.IPhotographerService;
 import pi.focus.server.service.context.PhotographersContextDto;
 import pi.focus.server.service.models.ImagedTextCardDto;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Service
 @Profile({"dev", "prod", "test"})
@@ -29,5 +39,22 @@ public class PhotographerService implements IPhotographerService {
                         )
                 ).toList()
         );
+    }
+
+    @Override
+    public List<Photographer> getPhotographersByTime(Range<LocalDateTime> time) {
+        List<Photographer> photographers = new ArrayList<>();
+        for (PhotographerEntity photographer: photographerRepository.findAll()) {
+            boolean free = true;
+            for (ReservedPhotographerEntity reservation: photographer.getReservedPhotographers()) {
+                if (reservation.getReservation().getTime().contains(time)) {
+                    free = false;
+                }
+            }
+            if (free) {
+                photographers.add(PhotographerMapper.toDomain(photographer));
+            }
+        }
+        return photographers;
     }
 }

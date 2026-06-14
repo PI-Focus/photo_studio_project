@@ -1,9 +1,12 @@
 package pi.focus.server.controller;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+import io.hypersistence.utils.hibernate.type.range.Range;
+import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,20 +15,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pi.focus.server.api.models.ICalendar;
 import pi.focus.server.core.domain.Equipment;
+import pi.focus.server.core.domain.Photographer;
 import pi.focus.server.core.service.api.IEquipmentService;
+import pi.focus.server.core.service.api.IPhotographerService;
 import pi.focus.server.core.service.api.IRoomService;
 import java.time.format.DateTimeParseException;
 
 
 @Controller
 @RequestMapping("/order")
+@Transactional
 public class OrderController {
     private final IRoomService roomService;
     private final IEquipmentService equipmentService;
+    private final IPhotographerService photographerService;
 
-    public OrderController(IRoomService roomService, IEquipmentService equipmentService) {
+    public OrderController(IRoomService roomService, IEquipmentService equipmentService, IPhotographerService photographerService) {
         this.roomService = roomService;
         this.equipmentService = equipmentService;
+        this.photographerService = photographerService;
     }
 
     @GetMapping("/calendar/{id}")
@@ -49,10 +57,21 @@ public class OrderController {
     public ResponseEntity<List<Equipment>> getEquipment() {
         return ResponseEntity.ok().body(equipmentService.getEquipment());
     }
-//
-//    @GetMapping("/photographers")
-//    public ResponseEntity<> getPhotorooms() {
-//
-//        return ResponseEntity.ok();
-//    }
+
+    @GetMapping("/photographers")
+    public ResponseEntity<List<Photographer>> getPhotoPhotographer(
+            @RequestParam String start,
+            @RequestParam String end
+    ) {
+        LocalDateTime fromTime;
+        LocalDateTime toTime;
+        try {
+            fromTime = LocalDateTime.parse(start);
+            toTime = LocalDateTime.parse(end);
+        } catch (DateTimeParseException | IllegalArgumentException exception) {
+            return ResponseEntity.badRequest().build();
+        }
+        Range<LocalDateTime> time = Range.closed(fromTime, toTime);
+        return ResponseEntity.ok().body(photographerService.getPhotographersByTime(time));
+    }
 }

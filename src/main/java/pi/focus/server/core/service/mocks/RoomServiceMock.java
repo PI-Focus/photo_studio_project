@@ -30,4 +30,9 @@ public class RoomServiceMock implements IRoomService {
     public ICalendar getRoomCalendar(UUID id, LocalDate day) {
         return new CalendarMock(day);
     }
+
+    @Override
+    public Boolean exists(UUID id) {
+        return false;
+    }
 }

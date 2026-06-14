@@ -11,4 +11,5 @@ public interface IRoomService {
     IPhotoroomsContext getPhotoroomsContext();
     IConcretePhotoroomContext getConcretePhotoroomContext(UUID id);
     ICalendar getRoomCalendar(UUID id, LocalDate day);
+    Boolean exists(UUID id);
 }
