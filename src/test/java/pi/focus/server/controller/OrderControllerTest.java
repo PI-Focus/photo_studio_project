@@ -1,0 +1,273 @@
+package pi.focus.server.controller;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.ArgumentCaptor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
+import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
+import pi.focus.server.api.context.IInfoContext;
+import pi.focus.server.api.models.ICalendar;
+import pi.focus.server.core.domain.Equipment;
+import pi.focus.server.core.service.api.IEquipmentService;
+import pi.focus.server.core.service.api.IRoomService;
+import pi.focus.server.core.service.api.IStaticDataService;
+import pi.focus.server.service.context.CalendarDto;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+@WebMvcTest(OrderController.class)
+@DisplayName("Тесты для OrderController")
+@WithMockUser
+class OrderControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockitoBean
+    private IRoomService roomService;
+
+    @MockitoBean
+    private IEquipmentService equipmentService;
+
+    @MockitoBean
+    private IStaticDataService staticDataService;
+
+    @BeforeEach
+    void setUpMocks() {
+        when(staticDataService.getInfo()).thenReturn(mock(IInfoContext.class, RETURNS_DEEP_STUBS));
+    }
+
+    private static final String VALID_UUID = "8718f425-0ebe-48aa-9127-4541ed29524c";
+    private static final String VALID_DATE = "2026-06-15";
+
+
+    private List<List<Integer>> createEmptyCalendar() {
+        List<List<Integer>> calendar = new ArrayList<>();
+        for (int i = 0; i < 14; i++) {
+            List<Integer> row = new ArrayList<>();
+            for (int j = 0; j < 7; j++) {
+                row.add(0); // 0 = свободно
+            }
+            calendar.add(row);
+        }
+        return calendar;
+    }
+
+    @Nested
+    @DisplayName("GET /order/calendar/{id}")
+    class CalendarEndpoint {
+
+        @Test
+        @DisplayName("Должен вернуть 200 OK и корректный JSON при валидных параметрах")
+        void shouldReturnCalendarWithValidParameters() throws Exception {
+            // Arrange
+            List<List<Integer>> calendarData = createEmptyCalendar();
+            ICalendar mockCalendar = new CalendarDto(calendarData);
+
+            UUID uuid = UUID.fromString(VALID_UUID);
+            LocalDate date = LocalDate.parse(VALID_DATE);
+
+            when(roomService.getRoomCalendar(uuid, date)).thenReturn(mockCalendar);
+            MvcResult result = mockMvc.perform(get("/order/calendar/" + VALID_UUID)
+                            .param("date", VALID_DATE)
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$.ROWS", is(14)))
+                    .andExpect(jsonPath("$.COLUMNS", is(7)))
+                    .andExpect(jsonPath("$.calendar", hasSize(14)))
+                    .andReturn();
+
+            assertNotNull(result.getResponse().getContentAsString(),
+                    "Тело ответа не должно быть пустым при успешном запросе календаря");
+        }
+
+        @Test
+        @DisplayName("Должен распарсить строку даты и передать LocalDate в сервис")
+        void shouldParseAndPassLocalDateToService() throws Exception {
+            UUID uuid = UUID.fromString(VALID_UUID);
+            LocalDate expectedDate = LocalDate.parse(VALID_DATE);
+
+            ICalendar mockCalendar = new CalendarDto(createEmptyCalendar());
+            when(roomService.getRoomCalendar(uuid, expectedDate)).thenReturn(mockCalendar);
+
+            mockMvc.perform(get("/order/calendar/" + VALID_UUID)
+                    .param("date", VALID_DATE)).andReturn();
+
+            ArgumentCaptor<LocalDate> dateCaptor = ArgumentCaptor.forClass(LocalDate.class);
+            verify(roomService).getRoomCalendar(eq(uuid), dateCaptor.capture());
+
+            assertEquals(expectedDate, dateCaptor.getValue(),
+                    "Дата должна быть корректно распарсена из строки и передана в сервис как LocalDate");
+        }
+
+        @Test
+        @DisplayName("Должен вернуть календарь с бронированиями (частично занятая неделя)")
+        void shouldReturnCalendarWithBookedSlots() throws Exception {
+            List<List<Integer>> calendarData = createEmptyCalendar();
+
+            // Эмулируем бронирование: Понедельник (столбец 0), с 10:00 до 13:00 (строки 2, 3, 4)
+            calendarData.get(2).set(0, 1);
+            calendarData.get(3).set(0, 1);
+            calendarData.get(4).set(0, 1);
+
+            ICalendar mockCalendar = new CalendarDto(calendarData);
+            when(roomService.getRoomCalendar(eq(UUID.fromString(VALID_UUID)), eq(LocalDate.parse(VALID_DATE))))
+                    .thenReturn(mockCalendar);
+
+            mockMvc.perform(get("/order/calendar/" + VALID_UUID)
+                            .param("date", VALID_DATE)
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$.calendar[2][0]", is(1)))
+                    .andExpect(jsonPath("$.calendar[3][0]", is(1)))
+                    .andExpect(jsonPath("$.calendar[4][0]", is(1)))
+                    .andExpect(jsonPath("$.calendar[1][0]", is(0)))
+                    .andExpect(jsonPath("$.calendar[5][0]", is(0)))
+                    .andExpect(jsonPath("$.calendar[2][1]", is(0)));
+        }
+
+        @ParameterizedTest
+        @ValueSource(strings = {
+                "not-a-uuid",
+                "12345",
+                "8718f425-0ebe-48aa-9127"
+        })
+        @DisplayName("Должен вернуть 400 Bad Request при невалидном UUID")
+        void shouldReturnBadRequestForInvalidUuid(String invalidUuid) throws Exception {
+            MvcResult result = mockMvc.perform(get("/order/calendar/" + invalidUuid)
+                            .param("date", VALID_DATE))
+                    .andExpect(status().isBadRequest())
+                    .andReturn();
+
+            assertEquals(400, result.getResponse().getStatus(),
+                    "Статус должен быть 400 для невалидного UUID: " + invalidUuid);
+        }
+
+        @Test
+        @DisplayName("Должен вернуть 404 NotFound при пустой строке в UUID")
+        void shouldReturnNotFoundForInvalidUuid() throws Exception {
+            String invalidUUID = "";
+            MvcResult result = mockMvc.perform(get("/order/calendar/" + invalidUUID)
+                            .param("date", VALID_DATE))
+                    .andExpect(status().isBadRequest())
+                    .andReturn();
+
+            assertEquals(400, result.getResponse().getStatus(),
+                    "Статус должен быть 404 для пустой строки в UUID");
+        }
+
+
+        @ParameterizedTest
+        @ValueSource(strings = {
+                "not-a-date",
+                "2026-13-45",
+                "15-06-2026",
+                "2026/06/15"
+        })
+        @DisplayName("Должен вернуть 400 Bad Request при невалидной дате")
+        void shouldReturnBadRequestForInvalidDate(String invalidDate) throws Exception {
+            MvcResult result = mockMvc.perform(get("/order/calendar/" + VALID_UUID)
+                            .param("date", invalidDate))
+                    .andExpect(status().isBadRequest())
+                    .andReturn();
+
+            assertEquals(400, result.getResponse().getStatus(),
+                    "Статус должен быть 400 для невалидной даты: " + invalidDate);
+        }
+
+        @Test
+        @DisplayName("Должен вернуть 400 Bad Request, если параметр date отсутствует")
+        void shouldReturnBadRequestWhenDateParamIsMissing() throws Exception {
+            MvcResult result = mockMvc.perform(get("/order/calendar/" + VALID_UUID))
+                    .andExpect(status().isBadRequest())
+                    .andReturn();
+
+            assertEquals(400, result.getResponse().getStatus(),
+                    "Статус должен быть 400, если обязательный параметр date не передан");
+        }
+
+        @Test
+        @DisplayName("Должен вернуть 400 Bad Request, если комната не найдена (сервис вернул null)")
+        void shouldReturnBadRequestWhenRoomNotFound() throws Exception {
+            UUID uuid = UUID.fromString(VALID_UUID);
+            LocalDate date = LocalDate.parse(VALID_DATE);
+
+            when(roomService.getRoomCalendar(uuid, date)).thenReturn(null);
+
+            MvcResult result = mockMvc.perform(get("/order/calendar/" + VALID_UUID)
+                            .param("date", VALID_DATE))
+                    .andExpect(status().isBadRequest())
+                    .andReturn();
+
+            assertEquals(400, result.getResponse().getStatus(),
+                    "Статус должен быть 400, если roomService вернул null");
+        }
+    }
+
+    @Nested
+    @DisplayName("GET /order/equipment")
+    class EquipmentEndpoint {
+
+        @Test
+        @DisplayName("Должен вернуть 200 OK и список оборудования")
+        void shouldReturnEquipmentList() throws Exception {
+            Equipment equipment1 = mock(Equipment.class);
+            Equipment equipment2 = mock(Equipment.class);
+            List<Equipment> equipmentList = List.of(equipment1, equipment2);
+
+            when(equipmentService.getEquipment()).thenReturn(equipmentList);
+
+            MvcResult result = mockMvc.perform(get("/order/equipment")
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(jsonPath("$", hasSize(2)))
+                    .andReturn();
+
+            assertNotNull(result.getResponse().getContentAsString(),
+                    "Тело ответа не должно быть пустым при запросе списка оборудования");
+        }
+
+        @Test
+        @DisplayName("Должен вернуть 200 OK и пустой массив, если оборудования нет")
+        void shouldReturnEmptyListWhenNoEquipment() throws Exception {
+            when(equipmentService.getEquipment()).thenReturn(List.of());
+
+            MvcResult result = mockMvc.perform(get("/order/equipment")
+                            .accept(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk())
+                    .andExpect(jsonPath("$", hasSize(0)))
+                    .andReturn();
+
+            assertEquals("[]", result.getResponse().getContentAsString(),
+                    "При отсутствии оборудования должен вернуться пустой JSON-массив");
+        }
+    }
+}
