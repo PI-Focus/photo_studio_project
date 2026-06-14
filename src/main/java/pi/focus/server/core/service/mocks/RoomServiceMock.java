@@ -20,6 +20,6 @@ public class RoomServiceMock implements IRoomService {
 
     @Override
     public IConcretePhotoroomContext getConcretePhotoroomContext(UUID id) {
-        return new ConcretePhotoroomContextMock(id.toString().substring(0, 8));
+        return new ConcretePhotoroomContextMock(id);
     }
 }

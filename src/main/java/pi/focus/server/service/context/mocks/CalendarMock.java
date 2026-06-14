@@ -38,7 +38,7 @@ public class CalendarMock implements ICalendar {
         this.calendar = new ArrayList<>();
 
         for (int i = 0; i < ROWS; i++) {
-            int baseIndex = (int) ((i + daysBetween) % ROWS);
+            int baseIndex = (int) ((i + daysBetween / ROWS) % ROWS);
             
             this.calendar.add(new ArrayList<>(BASE_CALENDAR.get(baseIndex)));
         }
