@@ -76,4 +76,34 @@
         }
     }
 
+    .time-calendar {
+        margin-bottom: var(--space-xxl);
+    }
+
+    .order-btn-block {
+        display: flex;
+        gap: var(--space-xl);
+        margin-bottom: var(--space-xxl);
+
+        button {
+            border: none;
+            background-color: var(--color-text-accent);
+            padding: var(--space-s) var(--space-m);
+            border-radius: var(--radius-l);
+            cursor: pointer;
+
+            will-change: background;
+            transition: background var(--time-m) ease;
+
+            &:hover {
+                background: var(--color-accent);
+            }
+
+            &:disabled {
+                pointer-events: none;
+                cursor: default;
+                opacity: .3;
+            }
+        }
+    }
 }
