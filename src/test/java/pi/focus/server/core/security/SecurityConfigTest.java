@@ -164,37 +164,37 @@ class SecurityConfigAuthorizationTest {
     }
 
     @Nested
-    @DisplayName("Интеграция с HomeController и previousURI")
+    @DisplayName("Интеграция с HomeController и previousURI (через Referer)")
     class PreviousUriIntegration {
 
         @Test
         @WithAnonymousUser
-        @DisplayName("Должен сохранить previousUri в сессию при GET /login с параметром")
+        @DisplayName("Должен сохранить previousUri в сессию при GET /login с заголовком Referer")
         void shouldSavePreviousUriInSession() throws Exception {
             MockHttpSession session = new MockHttpSession();
 
+
             mockMvc.perform(get("/login")
-                    .param("previousURI", "/photorooms")
+                    .header("Referer", "/photorooms")
                     .session(session)).andReturn();
 
             assertEquals("/photorooms", session.getAttribute("previousUri"),
-                    "Атрибут previousUri должен корректно сохраниться в сессии");
+                    "Атрибут previousUri должен корректно сохраниться в сессии из заголовка Referer");
         }
 
         @ParameterizedTest
         @ValueSource(strings = {"/login", "/registration"})
         @WithAnonymousUser
-        @DisplayName("НЕ должен сохранять previousUri, если это /login или /registration")
+        @DisplayName("НЕ должен сохранять previousUri, если Referer указывает на /login или /registration")
         void shouldNotSaveLoginOrRegistrationAsPreviousUri(String forbiddenUri) throws Exception {
             MockHttpSession session = new MockHttpSession();
 
             mockMvc.perform(get("/login")
-                    .param("previousURI", forbiddenUri)
+                    .header("Referer", forbiddenUri)
                     .session(session)).andReturn();
 
-            // Для AssertJ сообщение задается через метод .as()
             assertThat(Optional.ofNullable(session.getAttribute("previousUri")))
-                    .as("Атрибут previousUri не должен сохраняться для пути " + forbiddenUri)
+                    .as("Атрибут previousUri не должен сохраняться для Referer " + forbiddenUri)
                     .isEmpty();
         }
 
@@ -211,9 +211,11 @@ class SecurityConfigAuthorizationTest {
 
             MockHttpSession session = new MockHttpSession();
 
+
             mockMvc.perform(get("/login")
-                    .param("previousURI", "/photorooms")
+                    .header("Referer", "/photorooms")
                     .session(session)).andReturn();
+
 
             MvcResult result = mockMvc.perform(post("/login")
                     .with(csrf())
@@ -222,7 +224,7 @@ class SecurityConfigAuthorizationTest {
                     .session(session)).andReturn();
 
             assertEquals("/photorooms", result.getResponse().getRedirectedUrl(),
-                    "После успешного логина должен быть редирект на previousUri");
+                    "После успешного логина должен быть редирект на previousUri из сессии");
         }
 
         @Test
