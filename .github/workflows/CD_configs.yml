@@ -32,7 +32,7 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           source: "docker-compose.prod.yml,traefik/"
-          target: "/opt/photostudio/"
+          target: "/home/${{ secrets.SSH_USER }}/photostudio"
           overwrite: true
 
       - name: Deploy to server
