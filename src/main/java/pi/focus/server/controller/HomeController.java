@@ -20,7 +20,6 @@ import pi.focus.server.core.service.api.IStaticDataService;
 import pi.focus.server.core.service.api.IUserService;
 import pi.focus.server.service.context.mocks.ConcretePhotoroomContextMock;
 
-import java.net.URI;
 import java.util.UUID;
 
 
