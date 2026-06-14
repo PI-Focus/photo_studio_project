@@ -43,4 +43,4 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
             cd /home/${{ secrets.SSH_USER }}/photostudio
-            docker compose -f docker-compose.prod.yml up
+            docker compose -f docker-compose.prod.yml up -d
