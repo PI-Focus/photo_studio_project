@@ -18,6 +18,32 @@ async function loadCalendarData(url) {
     }
 }
 
+function updateHeaderDates(daysForward) {
+    const daysShort = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
+    
+    const targetDate = new Date();
+    targetDate.setDate(targetDate.getDate() + daysForward);
+    
+    const currentDay = targetDate.getDay();
+    const distanceToMonday = currentDay === 0 ? -6 : 1 - currentDay;
+    
+    const monday = new Date(targetDate);
+    monday.setDate(targetDate.getDate() + distanceToMonday);
+
+    for (let colIdx = 0; colIdx < 7; colIdx++) {
+        const currentHeaderDate = new Date(monday);
+        currentHeaderDate.setDate(monday.getDate() + colIdx);
+
+        const dayNum = String(currentHeaderDate.getDate()).padStart(2, '0');
+        const monthNum = String(currentHeaderDate.getMonth() + 1).padStart(2, '0');
+        
+        const header = document.querySelector(`.day-header[data-day="${colIdx}"]`);
+        if (header) {
+            header.textContent = `${daysShort[colIdx]} ${dayNum}.${monthNum}`;
+        }
+    }
+}
+
 function renderCalendar(responseData) {
     if (!responseData || !responseData.calendar) return;
 
@@ -76,6 +102,8 @@ async function updateCalendar(daysForward) {
 
 function navigateCalendar(newOffset) {
     currentDaysOffset = newOffset;
+    
+    updateHeaderDates(currentDaysOffset);
     setCalendarLoading();
 
     if (debounceTimeoutId) clearTimeout(debounceTimeoutId);
@@ -86,6 +114,7 @@ function navigateCalendar(newOffset) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    updateHeaderDates(0);
     updateCalendar(0); 
 
     const btnPrev = document.getElementById('calendar-btn-prev');
