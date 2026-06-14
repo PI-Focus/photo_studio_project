@@ -1,6 +1,6 @@
 plugins {
 	java
-	id("org.springframework.boot") version "4.0.5"
+	id("org.springframework.boot") version "4.1.0"
 	id("io.spring.dependency-management") version "1.1.7"
     pmd
 	jacoco
@@ -35,6 +35,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("org.springframework.boot:spring-boot-starter-session-data-redis")
     implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.5.RELEASE")
+    implementation("io.hypersistence:hypersistence-utils-hibernate-73:3.15.3")
 
     runtimeOnly("org.postgresql:postgresql")
     testImplementation("org.springframework.boot:spring-boot-starter-test")

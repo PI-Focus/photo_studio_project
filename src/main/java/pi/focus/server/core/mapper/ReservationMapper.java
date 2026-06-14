@@ -14,9 +14,7 @@ public final class ReservationMapper {
                 reservationEntity.getId(),
                 reservationEntity.getUser().getId(),
                 reservationEntity.getRoom().getId(),
-                reservationEntity.getDay(),
-                reservationEntity.getFromTime(),
-                reservationEntity.getToTime()
+                reservationEntity.getTime()
         );
     }
 
@@ -25,9 +23,7 @@ public final class ReservationMapper {
                 reservation.id(),
                 null,
                 null,
-                reservation.day(),
-                reservation.fromTime(),
-                reservation.toTime(),
+                reservation.time(),
                 new ArrayList<>(),
                 new ArrayList<>()
         );

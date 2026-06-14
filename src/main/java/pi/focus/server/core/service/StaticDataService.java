@@ -9,8 +9,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import pi.focus.server.api.context.IBaseContext;
 import pi.focus.server.api.context.IInfoContext;
 import pi.focus.server.api.models.IAboutDataBlock;
@@ -26,6 +24,7 @@ import pi.focus.server.service.models.AboutDataBlockDto;
 import pi.focus.server.service.models.DataCardDto;
 import pi.focus.server.service.models.TabDto;
 import pi.focus.server.service.models.TextCardDto;
+import tools.jackson.core.type.TypeReference;
 
 @Service
 @Profile({"dev", "prod", "test"})

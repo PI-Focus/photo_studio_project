@@ -1,5 +1,7 @@
 package pi.focus.server.core.entity;
 
+import io.hypersistence.utils.hibernate.type.range.PostgreSQLRangeType;
+import io.hypersistence.utils.hibernate.type.range.Range;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,8 +12,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.Type;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -32,14 +35,9 @@ public class ReservationEntity {
     @JoinColumn(name = "room_id")
     RoomEntity room;
 
-    @Column(name = "day", nullable = false, columnDefinition = "DATE")
-    LocalDate day;
-
-    @Column(name = "from_time", nullable = false, columnDefinition = "SMALLINT")
-    Short fromTime;
-
-    @Column(name = "to_time", nullable = false, columnDefinition = "SMALLINT")
-    Short toTime;
+    @Column(name = "time", nullable = false, columnDefinition = "tsrange")
+    @Type(PostgreSQLRangeType.class)
+    private Range<LocalDateTime> time;
 
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
     private List<ReservedEquipmentEntity> reservedEquipments = new ArrayList<>();
@@ -51,21 +49,17 @@ public class ReservationEntity {
     }
 
     public ReservationEntity(
-            UUID id,
-            UserEntity user,
-            RoomEntity room,
-            LocalDate day,
-            Short fromTime,
-            Short toTime,
-            List<ReservedEquipmentEntity> reservedEquipments,
-            List<ReservedPhotographerEntity> reservedPhotographers
+        UUID id,
+        UserEntity user,
+        RoomEntity room,
+        Range<LocalDateTime> time,
+        List<ReservedEquipmentEntity> reservedEquipments,
+        List<ReservedPhotographerEntity> reservedPhotographers
     ) {
         this.id = id;
         this.user = user;
         this.room = room;
-        this.day = day;
-        this.fromTime = fromTime;
-        this.toTime = toTime;
+        this.time = time;
         this.reservedEquipments = reservedEquipments;
         this.reservedPhotographers = reservedPhotographers;
     }
@@ -94,28 +88,12 @@ public class ReservationEntity {
         this.room = room;
     }
 
-    public LocalDate getDay() {
-        return day;
+    public Range<LocalDateTime> getTime() {
+        return time;
     }
 
-    public void setDay(LocalDate day) {
-        this.day = day;
-    }
-
-    public Short getFromTime() {
-        return fromTime;
-    }
-
-    public void setFromTime(Short fromTime) {
-        this.fromTime = fromTime;
-    }
-
-    public Short getToTime() {
-        return toTime;
-    }
-
-    public void setToTime(Short toTime) {
-        this.toTime = toTime;
+    public void setTime(Range<LocalDateTime> time) {
+        this.time = time;
     }
 
     public List<ReservedEquipmentEntity> getReservedEquipments() {

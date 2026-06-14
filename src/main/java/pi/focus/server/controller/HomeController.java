@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import pi.focus.server.api.context.IConcretePhotoroomContext;
 import pi.focus.server.core.domain.User;
 import pi.focus.server.core.domain.UserRole;
 import pi.focus.server.core.service.api.IEquipmentService;
@@ -61,8 +62,18 @@ public class HomeController {
     }
 
     @GetMapping("/photorooms/{id}")
-    public String getPhotoroom(Model model, @PathVariable UUID id) {
-        model.addAttribute("photoroom", roomService.getConcretePhotoroomContext(id));
+    public String getPhotoroom(Model model, @PathVariable String id) {
+        UUID uuid;
+        try {
+            uuid = UUID.fromString(id);
+        } catch (IllegalArgumentException exception) {
+            return "redirect:/photorooms";
+        }
+        IConcretePhotoroomContext concretePhotoroomContext = roomService.getConcretePhotoroomContext(uuid);
+        if (concretePhotoroomContext == null) {
+            return "redirect:/photorooms";
+        }
+        model.addAttribute("photoroom", concretePhotoroomContext);
         return "pages/concrete-photoroom";
     }
 
