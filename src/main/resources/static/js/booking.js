@@ -59,19 +59,55 @@ async function sendCurrentOrderStatus() {
             body: JSON.stringify(currentOrderState)
         });
 
-        if (response.status === 200 || response.status === 202) {
+        if (response.status === 200 || response.status === 202 || response.status === 422) {
             const updatedData = await response.json();
             if (updatedData) {
                 currentOrderState = updatedData;
             }
-        } else if (response.status === 422) {
-            console.error("Validation failed: validation fields are empty (roomId, startTime or endTime)");
+            
+            if (response.status === 422 || !currentOrderState.body?.startTime) {
+                clearSelectionVisualsOnly();
+            }
+            
+            updatePriceDisplay();
         } else {
-            throw new Error(`Unexpected server status: ${response.status}`);
+            resetOrderToZero();
         }
     } catch (error) {
-        console.error("Failed to send order status:", error);
+        console.error("Network error, failed to send order status:", error);
+        resetOrderToZero();
     }
+}
+
+function resetOrderToZero() {
+    currentOrderState.body.startTime = null;
+    currentOrderState.body.endTime = null;
+    currentOrderState.body.price = null;
+    currentOrderState.body.photographerId = null;
+    currentOrderState.body.equipment = [];   
+
+    selectedCol = null;
+    selectedRowStart = null;
+    selectedRowEnd = null;
+    document.querySelectorAll('.slot-selected').forEach(cell => {
+        cell.classList.remove('slot-selected');
+    });
+
+    updatePriceDisplay();
+}
+
+
+function clearSelectionVisualsOnly() {
+    selectedCol = null;
+    selectedRowStart = null;
+    selectedRowEnd = null;
+    document.querySelectorAll('.slot-selected').forEach(cell => {
+        cell.classList.remove('slot-selected');
+    });
+}
+
+function updatePriceDisplay() {
+    
 }
 
 function updateHeaderDates(daysForward) {
@@ -218,6 +254,43 @@ function restoreSelectionVisuals() {
     }
 }
 
+function syncSelectionWithOrderState() {
+    if (selectedCol === null || selectedRowStart === null || selectedRowEnd === null) {
+        currentOrderState.body.startTime = null;
+        currentOrderState.body.endTime = null;
+        sendCurrentOrderStatus();
+        return;
+    }
+
+    const startHour = getStartHour();
+    const startRow = Math.min(selectedRowStart, selectedRowEnd);
+    const endRow = Math.max(selectedRowStart, selectedRowEnd);
+
+    const targetDate = new Date();
+    targetDate.setDate(targetDate.getDate() + currentDaysOffset);
+    
+    const currentDay = targetDate.getDay();
+    const distanceToMonday = currentDay === 0 ? -6 : 1 - currentDay;
+    const monday = new Date(targetDate);
+    monday.setDate(targetDate.getDate() + distanceToMonday);
+
+    const bookingDate = new Date(monday);
+    bookingDate.setDate(monday.getDate() + selectedCol);
+
+    const year = bookingDate.getFullYear();
+    const month = String(bookingDate.getMonth() + 1).padStart(2, '0');
+    const day = String(bookingDate.getDate()).padStart(2, '0');
+
+    const startFormattedHour = String(startHour + startRow).padStart(2, '0');
+    const endFormattedHour = String(startHour + endRow + 1).padStart(2, '0');
+
+    currentOrderState.body.startTime = `${year}-${month}-${day}T${startFormattedHour}:00:00`;
+    currentOrderState.body.endTime = `${year}-${month}-${day}T${endFormattedHour}:00:00`;
+
+    sendCurrentOrderStatus();
+}
+
+
 function handleTableClick(event) {
     const cell = event.target.closest('.slot-cell');
     if (!cell || !cell.classList.contains('slot-available')) return;
@@ -256,6 +329,8 @@ function handleTableClick(event) {
         selectedRowEnd = row;
         restoreSelectionVisuals();
     }
+
+    syncSelectionWithOrderState();
 }
 
 function getStartHour() {
