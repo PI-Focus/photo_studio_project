@@ -30,6 +30,14 @@
             </th:block>
             <p th:text="${photoroom.textData.text}"></p>
         </div>
+
+        <div class="booking-calendar">
+            <button id="calendar-btn-today">Сегодня</button>
+            <button id="calendar-btn-prev"><</button>
+            <button id="calendar-btn-next">></button>
+
+            <th:block th:replace="~{fragments/components :: time-calendar(8, 22, 'bookingTable', '')}"></th:block>
+        </div>
     </th:block>
 
     <th:block id="photoroom-scripts">
