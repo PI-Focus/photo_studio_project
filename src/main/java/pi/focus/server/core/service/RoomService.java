@@ -92,8 +92,8 @@ public class RoomService implements IRoomService {
             return null;
         }
         ZonedDateTime zonedNow = ZonedDateTime.now(ZoneId.of(timezone));
-        LocalDate nowDay = zonedNow.toLocalDate();
         LocalTime nowTime = zonedNow.toLocalTime();
+        LocalDate nowDay = zonedNow.toLocalDate();
         RoomEntity roomEntity = roomOpt.get();
         int price = roomEntity.getPrice();
         List<List<Integer>> calendar = new ArrayList<>();
@@ -105,17 +105,25 @@ public class RoomService implements IRoomService {
             isNextWeek = true;
         }
         for (int dayIndex = 0; dayIndex < 7; dayIndex++) {
-            calendar.add(new ArrayList<>(Collections.nCopies(14, price)));
+            calendar.add(new ArrayList<>(Collections.nCopies(14, -1)));
             LocalDate currentDay = monday.plusDays(dayIndex);
+            if (currentDay.isBefore(day) && !isNextWeek) {
+                continue;
+            }
+            calendar.set(dayIndex, new ArrayList<>(Collections.nCopies(14, price)));
             for (ReservationEntity reservation: roomEntity.getReservations()) {
                 Range<LocalDateTime> interval = reservation.getTime();
                 LocalDateTime start = interval.lower();
                 LocalDateTime end = interval.upper();
-                if (start.toLocalDate().equals(currentDay) && (nowDay.isAfter(currentDay) || isNextWeek)) {
+                if (start.toLocalDate().equals(currentDay)) {
                     int startHour = start.getHour();
                     int endHour = end.getHour();
-                    for (int hour = startHour; hour < endHour; hour++) {
-                        if (nowTime.getHour() < hour || isNextWeek) {
+                    for (int hour = 8; hour < 22; hour++) {
+                        if (isNextWeek && startHour <= hour && hour < endHour) {
+                            calendar.get(dayIndex).set(hour - 8, -1);
+                        } else if (!isNextWeek && nowTime.getHour() >= hour) {
+                            calendar.get(dayIndex).set(hour - 8, -1);
+                        } else if (!isNextWeek && startHour <= hour && hour < endHour) {
                             calendar.get(dayIndex).set(hour - 8, -1);
                         }
                     }
