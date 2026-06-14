@@ -5,6 +5,8 @@ let selectedCol = null;
 let selectedRowStart = null;
 let selectedRowEnd = null;
 
+let currentOrderState = null;
+
 async function loadCalendarData(url) {
     try {
         const response = await fetch(url, {
@@ -19,6 +21,22 @@ async function loadCalendarData(url) {
         return await response.json();
     } catch (error) {
         return null;
+    }
+}
+
+async function fetchCurrentOrderStatus(url) {
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+        if (response.ok) {
+            currentOrderState = await response.json();
+        }
+    } catch (error) {
+        console.error("Failed to load current order status:", error);
     }
 }
 
@@ -206,12 +224,53 @@ function handleTableClick(event) {
     }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    updateButtonStates();
-    updateHeaderDates(0);
-    updateCalendar(0); 
+function getStartHour() {
+    const firstTimeCell = document.querySelector('.time-cell');
+    if (!firstTimeCell) return 8; 
+    return parseInt(firstTimeCell.textContent.split(':')) || 8;
+}
 
+function getMonday(date) {
+    const d = new Date(date);
+    const day = d.getDay();
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1 - day);
+    const monday = new Date(d.setDate(diff));
+    monday.setHours(0, 0, 0, 0);
+    return monday;
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    updateButtonStates();
+    
+    await fetchCurrentOrderStatus('/order/current');
+    
     const table = document.querySelector('.time-calendar');
+    const currentRoomId = table ? table.dataset.uuid : '';
+
+    if (currentOrderState && currentOrderState.body && currentOrderState.body.startTime && currentOrderState.roomId === currentRoomId) {
+        const startDt = new Date(currentOrderState.body.startTime);
+        const endDt = new Date(currentOrderState.body.endTime);
+        
+        const currentMonday = getMonday(new Date());
+        const orderMonday = getMonday(startDt);
+        
+        const msPerDay = 24 * 60 * 60 * 1000;
+        const offsetInDays = Math.round((orderMonday - currentMonday) / msPerDay);
+        
+        if (offsetInDays >= 0 && offsetInDays <= 35) {
+            currentDaysOffset = offsetInDays;
+            
+            const startHour = getStartHour();
+            selectedCol = startDt.getDay() === 0 ? 6 : startDt.getDay() - 1;
+            selectedRowStart = startDt.getHours() - startHour;
+            selectedRowEnd = endDt.getHours() - 1 - startHour;
+        }
+    }
+    
+    updateButtonStates();
+    updateHeaderDates(currentDaysOffset);
+    updateCalendar(currentDaysOffset); 
+
     if (table) {
         table.addEventListener('click', handleTableClick);
     }
