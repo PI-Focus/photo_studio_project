@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -36,10 +37,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http
             .csrf(AbstractHttpConfigurer::disable) // TODO: delete this row
+            .sessionManagement(session -> session
+                    .sessionFixation().migrateSession()
+            )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/css/**", "/images/**", "/js/**", "/fonts/**", "/docs/**", "/favicon.ico").permitAll()
                 .requestMatchers("/", "/actuator/health", "/photorooms", "/photorooms/*", "/equipment", "/photographers", "/login", "/login?*", "/registration").permitAll()
-                .requestMatchers("/order/calendar/*", "/order/equipment", "/order/photographers").permitAll()
+                .requestMatchers("/order/calendar/*", "/order/equipment", "/order/photographers", "/order/current").permitAll()
                 .requestMatchers("/profile").hasRole(UserRole.USER.name())
             ).formLogin(form -> form
                 .loginPage("/login").permitAll()

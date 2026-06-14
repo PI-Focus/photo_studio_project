@@ -13,6 +13,7 @@ import pi.focus.server.service.context.EquipmentContextDto;
 import pi.focus.server.service.models.ImagedTextCardDto;
 
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -40,5 +41,10 @@ public class EquipmentService implements IEquipmentService {
     @Override
     public List<Equipment> getEquipment() {
         return equipmentRepository.findAll().stream().map(EquipmentMapper::toDomain).toList();
+    }
+
+    @Override
+    public Boolean exists(UUID id) {
+        return equipmentRepository.findById(id).isPresent();
     }
 }

@@ -1,4 +1,4 @@
-package pi.focus.server.service.context;
+package pi.focus.server.service.models;
 
 import pi.focus.server.api.models.ICalendar;
 

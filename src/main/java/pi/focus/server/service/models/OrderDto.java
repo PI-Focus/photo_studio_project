@@ -1,0 +1,81 @@
+package pi.focus.server.service.models;
+
+import pi.focus.server.api.models.IOrder;
+
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.UUID;
+
+public class OrderDto implements IOrder, Serializable {
+    private static final long serialVersionUID = 1L;
+    private LocalDateTime startTime;
+    private LocalDateTime endTime;
+    private UUID photographerId;
+    private List<EquipmentDto> equipment;
+    private Integer price;
+
+    public OrderDto(
+            LocalDateTime startTime,
+            LocalDateTime endTime,
+            UUID photographerId,
+            List<EquipmentDto> equipment,
+            Integer price
+    ) {
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.photographerId = photographerId;
+        this.equipment = equipment;
+        this.price = price;
+    }
+
+    @Override
+    public LocalDateTime getStartTime() {
+        return startTime;
+    }
+
+    @Override
+    public LocalDateTime getEndTime() {
+        return endTime;
+    }
+
+    @Override
+    public UUID getPhotographerId() {
+        return photographerId;
+    }
+
+    @Override
+    public List<EquipmentDto> getEquipment() {
+        return equipment;
+    }
+
+    @Override
+    public Integer getPrice() {
+        return price;
+    }
+
+    @Override
+    public void setStartTime(LocalDateTime startTime) {
+        this.startTime = startTime;
+    }
+
+    @Override
+    public void setEndTime(LocalDateTime endTime) {
+        this.endTime = endTime;
+    }
+
+    @Override
+    public void setPhotographerId(UUID photographerId) {
+        this.photographerId = photographerId;
+    }
+
+    @Override
+    public void setEquipment(List<EquipmentDto> equipment) {
+        this.equipment = equipment;
+    }
+
+    @Override
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
+}
