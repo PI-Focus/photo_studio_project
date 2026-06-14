@@ -11,10 +11,12 @@
 </head>
 <body>
 
-    <div th:fragment="main-content">
+    <th:block th:fragment="main-content">
         <div class="about-block">
             <div class="logo-block">
-                <div th:replace="~{fragments/basic-components :: safe-img(${info.aboutBlock.logo}, 'logo', 'square')}"></div>
+                <div th:replace="~{fragments/basic-components :: safe-img(${base.logoBright}, '', 'square theme-bright')}"></div>
+                <div th:replace="~{fragments/basic-components :: safe-img(${base.logoDark}, '', 'square theme-dark')}"></div>
+                
                 <h1>Фотостудия «Фокус»</h1>
             </div>
 
@@ -23,7 +25,7 @@
                     <p th:text="${info.aboutBlock.description} ?: 'Тут должно быть описание студии, но оно куда-то убежало :('"></p>
                     <p class="cool-phrase">Теперь у вас есть место, где идеи становятся кадрами.</p>
                 </div>
-                <div th:replace="~{fragments/basic-components :: safe-img(${info.aboutBlock.aboutImage}, 'aboutImage', 'horizontal')}"></div>
+                <div th:replace="~{fragments/basic-components :: safe-img(${info.aboutBlock.aboutImage}, '', 'horizontal')}"></div>
             </div>
         </div>
 
@@ -37,8 +39,8 @@
                     duration='0.4s',
                     autoplayInterval='5s',
                     autoplay=true,
-                    showArrows=false,
-                    showDots=true,
+                    showArrows=true,
+                    showDots=false,
                     carouselClass='',
                     carouselId='rentrules-carousel',
                     slideClass=''
@@ -56,7 +58,7 @@
                 </div>
             </th:block>
         </div>
-    </div>
+    </th:block>
 
     <th:block id="info-scripts">
         <script th:src="@{/js/carousel.js}" defer></script>

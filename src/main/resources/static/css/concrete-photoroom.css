@@ -1,0 +1,11 @@
+.photoroom-info {
+    display: flex;
+    flex-flow: column wrap;
+    margin-top: var(--space-xxl);
+    
+    h2 {
+        align-self: center;
+        margin: 0;
+        margin-bottom: var(--space-xxl);
+    }
+}

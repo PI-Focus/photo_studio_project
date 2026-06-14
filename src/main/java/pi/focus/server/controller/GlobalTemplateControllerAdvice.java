@@ -21,6 +21,11 @@ public class GlobalTemplateControllerAdvice {
         return request.getRequestURI();
     }
 
+    @ModelAttribute("previousURI")
+    public String previousURI(HttpServletRequest request) {
+        return request.getHeader("referer");
+    }
+
     @ModelAttribute("base")
     public IBaseContext base() {
         return staticDataService.getBaseContext();

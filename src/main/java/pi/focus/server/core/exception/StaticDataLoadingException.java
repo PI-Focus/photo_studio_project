@@ -9,8 +9,4 @@ public class StaticDataLoadingException extends RuntimeException {
     public StaticDataLoadingException(String message, Throwable cause) {
         super(message, cause);
     }
-
-    public StaticDataLoadingException(String message) {
-        super(message);
-    }
 }

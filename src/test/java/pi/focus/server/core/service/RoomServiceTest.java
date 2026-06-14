@@ -2,58 +2,68 @@ package pi.focus.server.core.service;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import pi.focus.server.core.domain.Room;
-import pi.focus.server.core.entity.RoomEntity;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+import pi.focus.server.AbstractIntegrationTest;
+import pi.focus.server.api.context.IPhotoroomsContext;
+import pi.focus.server.api.models.IDataCard;
 import pi.focus.server.core.repository.RoomRepository;
-
 import java.util.List;
-import java.util.UUID;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.groups.Tuple.tuple;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-@ExtendWith(MockitoExtension.class)
-class RoomServiceTest {
+@Transactional
+@SuppressWarnings("PMD.LawOfDemeter")
+class RoomServiceIntegrationTest extends AbstractIntegrationTest {
 
-    @Mock
-    private RoomRepository roomRepository;
-
-    @InjectMocks
+    @Autowired
     private RoomService roomService;
 
+    @Autowired
+    private RoomRepository roomRepository;
+
     @Test
-    @DisplayName("Должен вернуть список комнат, когда в БД есть данные")
-    void shouldReturnAllRoomsWhenDataExists() {
-        UUID room1Id = UUID.randomUUID();
-        UUID room2Id = UUID.randomUUID();
-
-        RoomEntity entity1 = new RoomEntity(room1Id, "Room 1", "Description 1");
-        RoomEntity entity2 = new RoomEntity(room2Id, "Room 2", "Description 2");
-
-        when(roomRepository.findAll()).thenReturn(List.of(entity1, entity2));
-
-        List<Room> result = roomService.getAllRooms();
-        assertThat(result)
-                .hasSize(2)
-                .extracting(Room::id, Room::title, Room::description)
-                .containsExactly(
-                        tuple(room1Id, "Room 1", "Description 1"),
-                        tuple(room2Id, "Room 2", "Description 2")
-                );
-
+    @DisplayName("Должен вернуть все 3 записи комнат из БД")
+    @SuppressWarnings("PMD.LawOfDemeter")
+    void shouldReturnAllRoomsRecords() {
+        IPhotoroomsContext context = roomService.getPhotoroomsContext();
+        assertSoftly(softly -> {
+            softly.assertThat(context).isNotNull();
+            softly.assertThat(context.getPhotorooms()).hasSize(3);
+        });
     }
 
     @Test
-    @DisplayName("Должен вернуть пустой список, когда в БД нет комнат")
-    void shouldReturnEmptyListWhenNoRooms() {
-        when(roomRepository.findAll()).thenReturn(List.of());
-        List<Room> result = roomService.getAllRooms();
-        assertThat(result).isEmpty();
+    @DisplayName("Должен корректно мапить поля и генерировать кастомные ссылки")
+    @SuppressWarnings("PMD.LawOfDemeter")
+    void shouldMapFieldsAndConstructLinksCorrectly() {
+        IPhotoroomsContext context = roomService.getPhotoroomsContext();
+        List<? extends IDataCard> cards = context.getPhotorooms();
+
+        assertSoftly(softly -> {
+            softly.assertThat(cards).hasSize(3);
+            IDataCard zal1Card = cards.stream()
+                    .filter(card -> "Зал 1".equals(card.getTitle()))
+                    .findFirst()
+                    .orElseThrow();
+            softly.assertThat(zal1Card.getTitle()).isEqualTo("Зал 1");
+            softly.assertThat(zal1Card.getText()).isNotBlank();
+
+            softly.assertThat(zal1Card.getImage())
+                    .as("Должна браться первая фотография из списка")
+                    .isNotNull();
+
+            softly.assertThat(zal1Card.getLinkUrl())
+                    .as("Ссылка должна формироваться как 'photorooms/' + id")
+                    .isEqualTo("photorooms/8718f425-0ebe-48aa-9127-4541ed29524c");
+        });
     }
 
+    @Test
+    @DisplayName("Должен вернуть пустой список после очистки таблицы")
+    void shouldReturnEmptyListAfterCleanup() {
+        roomRepository.deleteAll();
+        IPhotoroomsContext context = roomService.getPhotoroomsContext();
+        assertThat(context.getPhotorooms()).isEmpty();
+    }
 }

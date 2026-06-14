@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -26,84 +28,69 @@ import pi.focus.server.service.models.TabDto;
 import pi.focus.server.service.models.TextCardDto;
 
 @Service
-@Profile({"dev", "prod"})
+@Profile({"dev", "prod", "test"})
 public class StaticDataService implements IStaticDataService {
+    private static final String ERROR_STRING = "File load or parsing error: ";
+    private final IInfoContext infoContext;
+    private final IBaseContext baseContext;
+
+    public StaticDataService(
+        @Value("${app.static-data.about-path:classpath:/data/about.json}") Resource aboutResource,
+        @Value("${app.static-data.rules-path:classpath:/data/rules.json}") Resource rulesResource,
+        @Value("${app.static-data.preview-path:classpath:/data/preview.json}") Resource previewResource,
+        @Value("${app.static-data.base-path:classpath:/data/base.json}") Resource baseResource
+    ) {
+        this.infoContext = new InfoContextDto(
+            loadAboutDataBlock(aboutResource),
+            loadRulesData(rulesResource),
+            loadPreviewData(previewResource)
+        );
+        this.baseContext = loadBaseData(baseResource);
+    }
 
     @Override
     public IInfoContext getInfo() {
-        return new InfoContextDto(
-            loadAboutDataBlock(),
-            loadRulesData(),
-            loadPreviewData()
-        );
+        return infoContext;
     }
 
     @Override
     public IBaseContext getBaseContext() {
-        return loadBaseData();
+        return baseContext;
     }
-
-    private IAboutDataBlock loadAboutDataBlock() {
-        try (InputStream inputStream = getClass().getResourceAsStream("/data/about.json")) {
-            
-            if (inputStream == null) {
-                throw new StaticDataLoadingException("File not found: about.json"); 
-            }
+        private IAboutDataBlock loadAboutDataBlock(Resource resource) {
+        try (InputStream inputStream = resource.getInputStream()) {
             return JsonMapper.getInstance().readValue(inputStream, AboutDataBlockDto.class);
-            
         } catch (IOException e) {
-            throw new StaticDataLoadingException("File load or parsing error: about.json", e);
+            throw new StaticDataLoadingException(ERROR_STRING + resource.getDescription(), e);
         }
     }
 
-    private List<ITextCard> loadRulesData() {
-        try (InputStream inputStream = getClass().getResourceAsStream("/data/rules.json")) {
-            
-            if (inputStream == null) {
-                throw new StaticDataLoadingException("File not found: rules.json");
-            }
-            List<TextCardDto> dtos = JsonMapper.getInstance().readValue(
-                inputStream, 
-                new TypeReference<>() {}
-            );
+    private List<ITextCard> loadRulesData(Resource resource) {
+        try (InputStream inputStream = resource.getInputStream()) {
+            List<TextCardDto> dtos = JsonMapper.getInstance().readValue(inputStream, new TypeReference<>() {});
             return List.copyOf(dtos); 
-            
         } catch (IOException e) {
-            throw new StaticDataLoadingException("File load or parsing error: rules.json", e);
+            throw new StaticDataLoadingException(ERROR_STRING + resource.getDescription(), e);
         }
     }
 
-    private List<INamedData<IDataCard>> loadPreviewData() {
-        try (InputStream inputStream = getClass().getResourceAsStream("/data/preview.json")) {
-            
-            if (inputStream == null) {
-                throw new StaticDataLoadingException("File not found: preview.json");
-            }
-            List<TabDto<DataCardDto>> dtos = JsonMapper.getInstance().readValue(
-                inputStream, 
-                new TypeReference<>() {}
-            );
-            
+    private List<INamedData<IDataCard>> loadPreviewData(Resource resource) {
+        try (InputStream inputStream = resource.getInputStream()) {
+            List<TabDto<DataCardDto>> dtos = JsonMapper.getInstance().readValue(inputStream, new TypeReference<>() {});
             return dtos.stream()
                        .map(tab -> new TabDto<IDataCard>(tab.tabName(), tab.data()))
                        .map(tab -> (INamedData<IDataCard>) tab)
                        .toList();
-                       
         } catch (IOException e) {
-            throw new StaticDataLoadingException("File load or parsing error: preview.json", e);
+            throw new StaticDataLoadingException(ERROR_STRING + resource.getDescription(), e);
         }
     }
 
-    private IBaseContext loadBaseData() {
-        try (InputStream inputStream = getClass().getResourceAsStream("/data/base.json")) {
-            
-            if (inputStream == null) {
-                throw new StaticDataLoadingException("File not found: base.json");
-            }
+    private IBaseContext loadBaseData(Resource resource) {
+        try (InputStream inputStream = resource.getInputStream()) {
             return JsonMapper.getInstance().readValue(inputStream, BaseContextDto.class);
-            
         } catch (IOException e) {
-            throw new StaticDataLoadingException("File load or parsing error: base.json", e);
+            throw new StaticDataLoadingException(ERROR_STRING + resource.getDescription(), e);
         }
     }
 

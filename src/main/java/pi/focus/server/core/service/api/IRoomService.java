@@ -1,9 +1,7 @@
 package pi.focus.server.core.service.api;
 
-import pi.focus.server.core.domain.Room;
-
-import java.util.List;
+import pi.focus.server.api.context.IPhotoroomsContext;
 
 public interface IRoomService {
-    List<Room> getAllRooms();
+    IPhotoroomsContext getPhotoroomsContext();
 }

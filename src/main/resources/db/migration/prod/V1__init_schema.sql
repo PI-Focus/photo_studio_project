@@ -32,6 +32,8 @@ CREATE TABLE equipment (
 CREATE TABLE users (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     login VARCHAR(32) NOT NULL UNIQUE,
+    phone_number VARCHAR(11),
+    email TEXT,
     password TEXT NOT NULL,
     role user_role NOT NULL
 );
@@ -52,7 +54,7 @@ CREATE TABLE reservations (
 CREATE TABLE reserved_equipment (
 	reserved_equipment_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     reservation_id UUID NOT NULL,
-    equipment_id UUID NOT NULL,
+    equipment_id UUID,
     FOREIGN KEY (reservation_id) REFERENCES reservations (id)
     ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (equipment_id) REFERENCES equipment (id)
