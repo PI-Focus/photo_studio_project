@@ -58,7 +58,6 @@ function updateHeaderDates(daysForward) {
     }
 }
 
-
 function renderCalendar(responseData) {
     if (!responseData || !responseData.calendar) return;
 
@@ -117,9 +116,23 @@ async function updateCalendar(daysForward) {
     }
 }
 
+function updateButtonStates() {
+    const btnPrev = document.getElementById('calendar-btn-prev');
+    const btnNext = document.getElementById('calendar-btn-next');
+    const btnToday = document.getElementById('calendar-btn-today');
+
+    if (btnPrev) btnPrev.disabled = (currentDaysOffset <= 0);
+    if (btnNext) btnNext.disabled = (currentDaysOffset >= 35);
+    if (btnToday) btnToday.disabled = (currentDaysOffset === 0);
+}
+
 function navigateCalendar(newOffset) {
+    if (newOffset < 0 || newOffset > 35) return;
+
     currentDaysOffset = newOffset;
     
+    clearSelection();
+    updateButtonStates();
     updateHeaderDates(currentDaysOffset);
     setCalendarLoading();
 
@@ -194,6 +207,7 @@ function handleTableClick(event) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    updateButtonStates();
     updateHeaderDates(0);
     updateCalendar(0); 
 

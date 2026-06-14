@@ -62,6 +62,12 @@
             &:hover {
                 background: var(--color-secondary);
             }
+
+            &:disabled {
+                pointer-events: none;
+                cursor: default;
+                opacity: .3;
+            }
         }
 
         #calendar-btn-today {
