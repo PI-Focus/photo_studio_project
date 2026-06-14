@@ -5,7 +5,16 @@ let selectedCol = null;
 let selectedRowStart = null;
 let selectedRowEnd = null;
 
-let currentOrderState = null;
+let currentOrderState = {
+    roomId: null,
+    body: {
+        startTime: null,
+        endTime: null,
+        photographerId: null,
+        equipment: [],
+        price: null
+    }
+};
 
 async function loadCalendarData(url) {
     try {
@@ -15,9 +24,7 @@ async function loadCalendarData(url) {
                 'Accept': 'application/json'
             }
         });
-
         if (!response.ok) throw new Error();
-
         return await response.json();
     } catch (error) {
         return null;
@@ -33,10 +40,37 @@ async function fetchCurrentOrderStatus(url) {
             }
         });
         if (response.ok) {
-            currentOrderState = await response.json();
+            const data = await response.json();
+            if (data) currentOrderState = data;
         }
     } catch (error) {
         console.error("Failed to load current order status:", error);
+    }
+}
+
+async function sendCurrentOrderStatus() {
+    try {
+        const response = await fetch('/order/current', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(currentOrderState)
+        });
+
+        if (response.status === 200 || response.status === 202) {
+            const updatedData = await response.json();
+            if (updatedData) {
+                currentOrderState = updatedData;
+            }
+        } else if (response.status === 422) {
+            console.error("Validation failed: validation fields are empty (roomId, startTime or endTime)");
+        } else {
+            throw new Error(`Unexpected server status: ${response.status}`);
+        }
+    } catch (error) {
+        console.error("Failed to send order status:", error);
     }
 }
 
@@ -246,6 +280,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     const table = document.querySelector('.time-calendar');
     const currentRoomId = table ? table.dataset.uuid : '';
+    
+    currentOrderState.roomId = currentRoomId;
 
     if (currentOrderState && currentOrderState.body && currentOrderState.body.startTime && currentOrderState.roomId === currentRoomId) {
         const startDt = new Date(currentOrderState.body.startTime);
@@ -269,26 +305,20 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     updateButtonStates();
     updateHeaderDates(currentDaysOffset);
-    updateCalendar(currentDaysOffset); 
-
+    updateCalendar(currentDaysOffset);
     if (table) {
         table.addEventListener('click', handleTableClick);
     }
-
     const btnPrev = document.getElementById('calendar-btn-prev');
     if (btnPrev) {
         btnPrev.addEventListener('click', () => navigateCalendar(currentDaysOffset - 7));
     }
-
     const btnNext = document.getElementById('calendar-btn-next');
     if (btnNext) {
         btnNext.addEventListener('click', () => navigateCalendar(currentDaysOffset + 7));
     }
-
     const btnToday = document.getElementById('calendar-btn-today');
     if (btnToday) {
-        btnToday.addEventListener('click', () => {
-            if (currentDaysOffset !== 0) navigateCalendar(0);
-        });
+        btnToday.addEventListener('click', () => {if (currentDaysOffset !== 0) navigateCalendar(0);});
     }
 });
