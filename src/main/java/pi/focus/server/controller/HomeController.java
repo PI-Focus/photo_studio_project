@@ -7,7 +7,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -19,7 +18,6 @@ import pi.focus.server.core.service.api.IPhotographerService;
 import pi.focus.server.core.service.api.IRoomService;
 import pi.focus.server.core.service.api.IStaticDataService;
 import pi.focus.server.core.service.api.IUserService;
-import pi.focus.server.service.context.mocks.ConcretePhotoroomContextMock;
 
 import java.util.UUID;
 
@@ -64,7 +62,7 @@ public class HomeController {
 
     @GetMapping("/photorooms/{id}")
     public String getPhotoroom(Model model, @PathVariable UUID id) {
-        model.addAttribute("photoroom", new ConcretePhotoroomContextMock(id.toString().substring(0, 8)));
+        model.addAttribute("photoroom", roomService.getConcretePhotoroomContext(id));
         return "pages/concrete-photoroom";
     }
 
@@ -87,19 +85,33 @@ public class HomeController {
 
     @GetMapping("/login")
     public String getLogin(
+            HttpServletRequest request,
             HttpSession session,
-            @ModelAttribute("previousURI") String previousURI,
+            @RequestParam(required = false) String error,
+            Model model,
             Authentication authentication
     ) {
         if (authentication != null && authentication.isAuthenticated()) {
-            return "redirect:" + (previousURI != null ? previousURI : "/");
+            String previousUri = (String) session.getAttribute("previousUri");
+            if (previousUri != null) {
+                session.removeAttribute("previousUri");
+                return "redirect:" + previousUri;
+            }
+            return "redirect:/";
         }
 
-        if (previousURI != null && !previousURI.contains("/registration") && !previousURI.contains("/login")) {
-            session.setAttribute("previousUri", previousURI);
+        if (error != null) {
+            model.addAttribute("loginError", true);
+        } else {
+            String referer = request.getHeader("Referer");
+            if (referer != null && !referer.contains("/login") && !referer.contains("/registration")) {
+                session.setAttribute("previousUri", referer);
+            }
         }
+
         return "pages/login";
     }
+
 
     @GetMapping("/registration")
     public String getRegistration(Model model) {

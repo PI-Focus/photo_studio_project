@@ -1,11 +1,11 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
-INSERT INTO rooms (id, title, description) VALUES
-	('8718f425-0ebe-48aa-9127-4541ed29524c', 'Зал 1', 'Очень крутое описание зала 1. Лучше зала просто не существует'),
-	('602109e2-f729-41f3-b93b-2f9a81878ed6', 'Зал 2', 'Очень крутое описание зала 2. Лучше зала просто не существует'),
-	('f8dca524-e325-4a14-a049-4f0fe73b15f9', 'Зал 3', 'Очень крутое описание зала 3. Лучше зала просто не существует'),
-	('e4ca86f1-7e2c-4de1-8bc1-5078e91f8736', 'Зал 4', 'Очень крутое описание зала 4. Лучше зала просто не существует'),
-	('da0840b7-0a95-401d-8e86-aafa7df976c2', 'Зал 5', 'Очень крутое описание зала 5. Лучше зала просто не существует');
+INSERT INTO rooms (id, title, description, price) VALUES
+	('8718f425-0ebe-48aa-9127-4541ed29524c', 'Зал 1', 'Очень крутое описание зала 1. Лучше зала просто не существует', 150000),
+	('602109e2-f729-41f3-b93b-2f9a81878ed6', 'Зал 2', 'Очень крутое описание зала 2. Лучше зала просто не существует', 100000),
+	('f8dca524-e325-4a14-a049-4f0fe73b15f9', 'Зал 3', 'Очень крутое описание зала 3. Лучше зала просто не существует', 90000),
+	('e4ca86f1-7e2c-4de1-8bc1-5078e91f8736', 'Зал 4', 'Очень крутое описание зала 4. Лучше зала просто не существует', 50000),
+	('da0840b7-0a95-401d-8e86-aafa7df976c2', 'Зал 5', 'Очень крутое описание зала 5. Лучше зала просто не существует', 10000);
 
 INSERT INTO photos (id, room_id, path) VALUES
     (gen_random_uuid(), '8718f425-0ebe-48aa-9127-4541ed29524c', '/images/placeholder.png'),
@@ -34,17 +34,17 @@ INSERT INTO photos (id, room_id, path) VALUES
 	(gen_random_uuid(), 'da0840b7-0a95-401d-8e86-aafa7df976c2', '/images/placeholder.png'),
 	(gen_random_uuid(), 'da0840b7-0a95-401d-8e86-aafa7df976c2', '/images/placeholder.png');
 
-INSERT INTO photographers (id, name, surname, description, photo_path) VALUES
-    (gen_random_uuid(), 'Владимир', 'Кузнецов', 'Лучший фотограф', '/images/placeholder.png'),
-    (gen_random_uuid(), 'Марина', 'Волкова', 'Нормальный фотограф', '/images/placeholder.png'),
-    (gen_random_uuid(), 'Дмитрий', 'Соколов', 'Так себе фотограф', '/images/placeholder.png');
+INSERT INTO photographers (id, name, surname, description, price, photo_path) VALUES
+    (gen_random_uuid(), 'Владимир', 'Кузнецов', 'Лучший фотограф', 50000, '/images/placeholder.png'),
+    (gen_random_uuid(), 'Марина', 'Волкова', 'Нормальный фотограф', 70000, '/images/placeholder.png'),
+    (gen_random_uuid(), 'Дмитрий', 'Соколов', 'Так себе фотограф', 90000, '/images/placeholder.png');
 
-INSERT INTO equipment (id, title, description, photo_path) VALUES
-	('9596154e-ee45-454a-adda-084fca722807', 'Фотоаппарат', 'Описание фотоаппарата', '/images/placeholder.png'),
-	('1251f03a-1851-491f-8071-0fe87547d35d', 'Штатив', 'Описание штатива', '/images/placeholder.png'),
-	('e46bd00d-b682-4adc-8320-aabd9ba4f045', 'Софтбокс', 'Описание софтбокса', '/images/placeholder.png'),
-	('554c0677-d149-4e82-8c56-355c139e6ee1', 'Хромакей', 'Описание хромакея', '/images/placeholder.png'),
-	('60cab21d-31e8-4589-a145-5556172aa439', 'Призма', 'Описание призмы', '/images/placeholder.png');
+INSERT INTO equipment (id, title, description, price, photo_path) VALUES
+	('9596154e-ee45-454a-adda-084fca722807', 'Фотоаппарат', 'Описание фотоаппарата', 10000, '/images/placeholder.png'),
+	('1251f03a-1851-491f-8071-0fe87547d35d', 'Штатив', 'Описание штатива', 20000, '/images/placeholder.png'),
+	('e46bd00d-b682-4adc-8320-aabd9ba4f045', 'Софтбокс', 'Описание софтбокса', 15000, '/images/placeholder.png'),
+	('554c0677-d149-4e82-8c56-355c139e6ee1', 'Хромакей', 'Описание хромакея', 30000, '/images/placeholder.png'),
+	('60cab21d-31e8-4589-a145-5556172aa439', 'Призма', 'Описание призмы', 10000, '/images/placeholder.png');
 
 INSERT INTO users (id, login, phone_number, email, password, role) VALUES
 	('04070c17-74da-4074-892b-d9c4dedab9cf', 'login0', '81111111111', 'email1@e', crypt('password0', gen_salt('bf')), 'ADMIN'),
