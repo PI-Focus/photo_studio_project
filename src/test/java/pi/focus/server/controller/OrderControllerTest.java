@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static org.assertj.core.api.SoftAssertions.assertSoftly;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -50,6 +51,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(OrderController.class)
 @DisplayName("Тесты для OrderController")
 @WithMockUser
+@SuppressWarnings({"PMD.LongVariable", "PMD.AvoidDuplicateLiterals", "PMD.LawOfDemeter"})
 class OrderControllerTest {
 
     @Autowired
@@ -67,13 +69,15 @@ class OrderControllerTest {
     @MockitoBean
     private IStaticDataService staticDataService;
 
+    private static final String VALID_UUID = "8718f425-0ebe-48aa-9127-4541ed29524c";
+    private static final String VALID_DATE = "2026-06-15";
+
     @BeforeEach
     void setUpMocks() {
         when(staticDataService.getInfo()).thenReturn(mock(IInfoContext.class, RETURNS_DEEP_STUBS));
     }
 
-    private static final String VALID_UUID = "8718f425-0ebe-48aa-9127-4541ed29524c";
-    private static final String VALID_DATE = "2026-06-15";
+
 
     private List<List<Integer>> createEmptyCalendar() {
         List<List<Integer>> calendar = new ArrayList<>();
@@ -128,11 +132,14 @@ class OrderControllerTest {
             mockMvc.perform(get("/order/calendar/" + VALID_UUID)
                     .param("date", VALID_DATE)).andReturn();
 
-            ArgumentCaptor<LocalDate> dateCaptor = ArgumentCaptor.forClass(LocalDate.class);
-            verify(roomService).getRoomCalendar(eq(uuid), dateCaptor.capture());
+            assertSoftly(softly -> {
+                ArgumentCaptor<LocalDate> dateCaptor = ArgumentCaptor.forClass(LocalDate.class);
+                verify(roomService).getRoomCalendar(eq(uuid), dateCaptor.capture());
 
-            assertEquals(expectedDate, dateCaptor.getValue(),
-                    "Дата должна быть корректно распарсена из строки и передана в сервис как LocalDate");
+                softly.assertThat(dateCaptor.getValue())
+                        .as("Дата должна быть корректно распарсена из строки и передана в сервис как LocalDate")
+                        .isEqualTo(expectedDate);
+            });
         }
 
         @Test
@@ -148,7 +155,7 @@ class OrderControllerTest {
             when(roomService.getRoomCalendar(eq(UUID.fromString(VALID_UUID)), eq(LocalDate.parse(VALID_DATE))))
                     .thenReturn(mockCalendar);
 
-            mockMvc.perform(get("/order/calendar/" + VALID_UUID)
+            MvcResult result = mockMvc.perform(get("/order/calendar/" + VALID_UUID)
                             .param("date", VALID_DATE)
                             .accept(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
@@ -157,9 +164,13 @@ class OrderControllerTest {
                     .andExpect(jsonPath("$.calendar[4][0]", is(1)))
                     .andExpect(jsonPath("$.calendar[1][0]", is(0)))
                     .andExpect(jsonPath("$.calendar[5][0]", is(0)))
-                    .andExpect(jsonPath("$.calendar[2][1]", is(0)));
-        }
+                    .andExpect(jsonPath("$.calendar[2][1]", is(0)))
+                    .andReturn();
 
+
+            assertNotNull(result.getResponse().getContentAsString(),
+                    "Тело ответа не должно быть пустым при успешном запросе календаря с бронированиями");
+        }
         @ParameterizedTest
         @ValueSource(strings = {
                 "not-a-uuid",
@@ -304,17 +315,20 @@ class OrderControllerTest {
                     .param("start", VALID_START)
                     .param("end", VALID_END)).andReturn();
 
-            ArgumentCaptor<Range<LocalDateTime>> rangeCaptor = ArgumentCaptor.forClass(Range.class);
-            verify(photographerService).getPhotographersByTime(rangeCaptor.capture());
+            assertSoftly(softly -> {
+                ArgumentCaptor<Range<LocalDateTime>> rangeCaptor = ArgumentCaptor.forClass(Range.class);
+                verify(photographerService).getPhotographersByTime(rangeCaptor.capture());
 
-            Range<LocalDateTime> capturedRange = rangeCaptor.getValue();
+                Range<LocalDateTime> capturedRange = rangeCaptor.getValue();
 
-            assertEquals(LocalDateTime.parse(VALID_START), capturedRange.lower(),
-                    "Нижняя граница Range должна совпадать с параметром start");
-            assertEquals(LocalDateTime.parse(VALID_END), capturedRange.upper(),
-                    "Верхняя граница Range должна совпадать с параметром end");
+                softly.assertThat(capturedRange.lower())
+                        .as("Нижняя граница Range должна совпадать с параметром start")
+                        .isEqualTo(LocalDateTime.parse(VALID_START));
+                softly.assertThat(capturedRange.upper())
+                        .as("Верхняя граница Range должна совпадать с параметром end")
+                        .isEqualTo(LocalDateTime.parse(VALID_END));
+            });
         }
-
         @ParameterizedTest
         @ValueSource(strings = {
                 "not-a-date",

@@ -45,9 +45,7 @@ CREATE TABLE reservations (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     user_id UUID NOT NULL,
     room_id UUID,
-    day DATE NOT NULL,
-    from_time SMALLINT NOT NULL,
-    to_time SMALLINT NOT NULL,
+    time TSRANGE,
     FOREIGN KEY (user_id) REFERENCES users (id)
     ON UPDATE CASCADE ON DELETE CASCADE,
     FOREIGN KEY (room_id) REFERENCES rooms (id)

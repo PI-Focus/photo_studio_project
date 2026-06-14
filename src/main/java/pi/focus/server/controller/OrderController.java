@@ -46,6 +46,9 @@ public class OrderController {
         } catch (DateTimeParseException | IllegalArgumentException exception) {
             return ResponseEntity.badRequest().build();
         }
+        if (localDate.isAfter(LocalDate.now().plusDays(35))) {
+            return ResponseEntity.badRequest().build();
+        }
         ICalendar calendar = roomService.getRoomCalendar(uuid, localDate);
         if (calendar == null) {
             return ResponseEntity.badRequest().build();
