@@ -38,7 +38,7 @@ services:
       - SPRING_DATA_REDIS_HOST=${PROD_REDIS_NAME}
       - SPRING_DATA_REDIS_PORT=${PROD_REDIS_PORT}
       - SPRING_DATA_PASSWORD=${PROD_REDIS_PASSWORD}
-
+      - MANAGEMENT_SERVER_PORT=8081
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.app-https.rule=Host(`${DOMAIN_NAME}`)"
@@ -60,7 +60,7 @@ services:
         condition: service_healthy
 
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/actuator/health"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8081/actuator/health"]
       interval: 10s
       timeout: 10s
       retries: 3
