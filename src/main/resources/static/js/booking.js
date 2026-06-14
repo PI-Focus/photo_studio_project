@@ -1,6 +1,10 @@
 let currentDaysOffset = 0; 
 let debounceTimeoutId = null;
 
+let selectedCol = null;
+let selectedRowStart = null;
+let selectedRowEnd = null;
+
 async function loadCalendarData(url) {
     try {
         const response = await fetch(url, {
@@ -70,6 +74,8 @@ function renderCalendar(responseData) {
             }
         }
     }
+
+    restoreSelectionVisuals();
 }
 
 function setCalendarLoading() {
@@ -113,9 +119,77 @@ function navigateCalendar(newOffset) {
     }, 350);
 }
 
+function clearSelection() {
+    selectedCol = null;
+    selectedRowStart = null;
+    selectedRowEnd = null;
+    document.querySelectorAll('.slot-selected').forEach(cell => {
+        cell.classList.remove('slot-selected');
+    });
+}
+
+function restoreSelectionVisuals() {
+    if (selectedCol === null) return;
+    
+    const start = Math.min(selectedRowStart, selectedRowEnd);
+    const end = Math.max(selectedRowStart, selectedRowEnd);
+    
+    for (let row = start; row <= end; row++) {
+        const cell = document.querySelector(`.slot-cell[data-row="${row}"][data-col="${selectedCol}"]`);
+        if (cell && cell.classList.contains('slot-available')) {
+            cell.classList.add('slot-selected');
+        }
+    }
+}
+
+function handleTableClick(event) {
+    const cell = event.target.closest('.slot-cell');
+    if (!cell || !cell.classList.contains('slot-available')) return;
+
+    const col = parseInt(cell.dataset.col);
+    const row = parseInt(cell.dataset.row);
+
+    if (selectedCol !== col || selectedRowStart === null || selectedRowEnd !== selectedRowStart) {
+        clearSelection();
+        selectedCol = col;
+        selectedRowStart = row;
+        selectedRowEnd = row;
+        cell.classList.add('slot-selected');
+        return;
+    }
+
+    const start = Math.min(selectedRowStart, row);
+    const end = Math.max(selectedRowStart, row);
+    
+    let hasGap = false;
+    for (let r = start; r <= end; r++) {
+        const checkCell = document.querySelector(`.slot-cell[data-row="${r}"][data-col="${col}"]`);
+        if (!checkCell || checkCell.classList.contains('slot-disabled')) {
+            hasGap = true;
+            break;
+        }
+    }
+
+    if (hasGap) {
+        clearSelection();
+        selectedCol = col;
+        selectedRowStart = row;
+        selectedRowEnd = row;
+        cell.classList.add('slot-selected');
+    } else {
+        selectedRowEnd = row;
+        restoreSelectionVisuals();
+    }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     updateHeaderDates(0);
     updateCalendar(0); 
+
+    const table = document.querySelector('.time-calendar');
+    if (table) {
+        table.addEventListener('click', handleTableClick);
+    }
 
     const btnPrev = document.getElementById('calendar-btn-prev');
     if (btnPrev) {
