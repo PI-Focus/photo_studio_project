@@ -112,3 +112,9 @@ async function runCalendarTest(daysForward) {
         console.error('[Тест] Отрисовка отменена: loadCalendarData вернула null');
     }
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM готов. Запускаем календарь на сегодня...');
+    
+    runCalendarTest(0); 
+});
