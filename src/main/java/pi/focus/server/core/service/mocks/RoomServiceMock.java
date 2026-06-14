@@ -4,10 +4,13 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import pi.focus.server.api.context.IConcretePhotoroomContext;
 import pi.focus.server.api.context.IPhotoroomsContext;
+import pi.focus.server.api.models.ICalendar;
 import pi.focus.server.core.service.api.IRoomService;
+import pi.focus.server.service.context.mocks.CalendarMock;
 import pi.focus.server.service.context.mocks.ConcretePhotoroomContextMock;
 import pi.focus.server.service.context.mocks.PhotoroomsContextMock;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Service
@@ -21,5 +24,10 @@ public class RoomServiceMock implements IRoomService {
     @Override
     public IConcretePhotoroomContext getConcretePhotoroomContext(UUID id) {
         return new ConcretePhotoroomContextMock(id);
+    }
+
+    @Override
+    public ICalendar getRoomCalendar(UUID id, LocalDate day) {
+        return new CalendarMock(day);
     }
 }

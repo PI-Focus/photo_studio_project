@@ -8,10 +8,12 @@ public record CalendarDto(List<List<Integer>> calendar) implements ICalendar {
     private static final Integer ROWS = 14;
     private static final Integer COLUMNS = 7;
 
+    @Override
     public Integer getROWS() {
         return ROWS;
     }
 
+    @Override
     public Integer getCOLUMNS() {
         return COLUMNS;
     }
