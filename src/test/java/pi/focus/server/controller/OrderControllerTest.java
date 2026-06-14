@@ -24,7 +24,7 @@ import pi.focus.server.core.service.api.IEquipmentService;
 import pi.focus.server.core.service.api.IPhotographerService;
 import pi.focus.server.core.service.api.IRoomService;
 import pi.focus.server.core.service.api.IStaticDataService;
-import pi.focus.server.service.context.CalendarDto;
+import pi.focus.server.service.models.CalendarDto;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

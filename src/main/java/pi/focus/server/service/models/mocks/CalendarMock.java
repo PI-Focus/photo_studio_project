@@ -1,4 +1,4 @@
-package pi.focus.server.service.context.mocks;
+package pi.focus.server.service.models.mocks;
 
 import pi.focus.server.api.models.ICalendar;
 

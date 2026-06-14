@@ -17,6 +17,7 @@ import pi.focus.server.service.models.ImagedTextCardDto;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 
 @Service
@@ -56,5 +57,10 @@ public class PhotographerService implements IPhotographerService {
             }
         }
         return photographers;
+    }
+
+    @Override
+    public Boolean exists(UUID id) {
+        return photographerRepository.findById(id).isPresent();
     }
 }

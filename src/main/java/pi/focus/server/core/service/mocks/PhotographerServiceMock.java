@@ -10,6 +10,7 @@ import pi.focus.server.service.context.mocks.PhotographersContextMock;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Profile({"mock", "test"})
@@ -22,5 +23,10 @@ public class PhotographerServiceMock implements IPhotographerService {
     @Override
     public List<Photographer> getPhotographersByTime(Range<LocalDateTime> time) {
         return List.of();
+    }
+
+    @Override
+    public Boolean exists(UUID id) {
+        return false;
     }
 }

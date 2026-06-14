@@ -6,7 +6,7 @@ import pi.focus.server.api.context.IConcretePhotoroomContext;
 import pi.focus.server.api.context.IPhotoroomsContext;
 import pi.focus.server.api.models.ICalendar;
 import pi.focus.server.core.service.api.IRoomService;
-import pi.focus.server.service.context.mocks.CalendarMock;
+import pi.focus.server.service.models.mocks.CalendarMock;
 import pi.focus.server.service.context.mocks.ConcretePhotoroomContextMock;
 import pi.focus.server.service.context.mocks.PhotoroomsContextMock;
 

@@ -13,7 +13,7 @@ import pi.focus.server.core.entity.ReservationEntity;
 import pi.focus.server.core.entity.RoomEntity;
 import pi.focus.server.core.repository.RoomRepository;
 import pi.focus.server.core.service.api.IRoomService;
-import pi.focus.server.service.context.CalendarDto;
+import pi.focus.server.service.models.CalendarDto;
 import pi.focus.server.service.context.ConcretePhotoroomContextDto;
 import pi.focus.server.service.context.PhotoroomsContextDto;
 import pi.focus.server.service.models.DataCardDto;
