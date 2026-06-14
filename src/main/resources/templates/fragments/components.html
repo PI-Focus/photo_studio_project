@@ -92,9 +92,10 @@
     </div>
 </div>
 
-<table th:fragment="time-calendar(startHour, endHour, tableId, tableClass)"
+<table th:fragment="time-calendar(startHour, endHour, tableId, tableDataUuid, tableClass)"
    th:id="${tableId}"
-   th:class="|time-calendar ${tableClass}|">
+   th:class="|time-calendar ${tableClass}|"
+   th:data-uuid="${tableDataUuid}">
    <thead>
         <tr>
             <th></th>

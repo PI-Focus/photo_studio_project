@@ -1,3 +1,6 @@
+let currentDaysOffset = 0; 
+let debounceTimeoutId = null;
+
 async function loadCalendarData(url) {
     try {
         const response = await fetch(url, {
@@ -7,24 +10,16 @@ async function loadCalendarData(url) {
             }
         });
 
-        if (!response.ok) {
-            throw new Error(`Ошибка сервера: ${response.status} ${response.statusText}`);
-        }
+        if (!response.ok) throw new Error();
 
-        const matrix = await response.json();
-        return matrix;
-
+        return await response.json();
     } catch (error) {
-        console.error('Can\'t load calendar data:', error);
         return null;
     }
 }
 
 function renderCalendar(responseData) {
-    if (!responseData || !responseData.calendar) {
-        console.warn("No calendar data provided.");
-        return;
-    }
+    if (!responseData || !responseData.calendar) return;
 
     const calendarMatrix = responseData.calendar;
 
@@ -33,12 +28,10 @@ function renderCalendar(responseData) {
 
         for (let rowIdx = 0; rowIdx < dayHours.length; rowIdx++) {
             const slotValue = dayHours[rowIdx];
-
             const cell = document.querySelector(`.slot-cell[data-row="${rowIdx}"][data-col="${colIdx}"]`);
             
             if (cell) {
                 const priceSpan = cell.querySelector('.slot-price');
-                
                 cell.className = 'slot-cell'; 
 
                 if (slotValue === -1) {
@@ -53,68 +46,62 @@ function renderCalendar(responseData) {
     }
 }
 
+function setCalendarLoading() {
+    document.querySelectorAll('.slot-cell').forEach(cell => {
+        cell.className = 'slot-cell slot-loading';
+        const priceSpan = cell.querySelector('.slot-price');
+        if (priceSpan) priceSpan.textContent = '';
+    });
+}
 
-async function getCalendarTest(daysForward) {
-    // 1. Генерируем рандомный UUID для {id}
-    const randomUuid = crypto.randomUUID();
-    
-    // 2. Считаем целевую дату относительно текущей
+async function updateCalendar(daysForward) {
     const targetDate = new Date();
     targetDate.setDate(targetDate.getDate() + daysForward);
     
-    // Форматируем дату локально в YYYY-MM-DD без искажения часовых поясов через ISO
     const year = targetDate.getFullYear();
     const month = String(targetDate.getMonth() + 1).padStart(2, '0');
     const day = String(targetDate.getDate()).padStart(2, '0');
     const formattedDate = `${year}-${month}-${day}`;
     
-    // 3. Собираем финальный URL: /order/calendar/{id}?date=YYYY-MM-DD
-    const testUrl = `/order/calendar/${randomUuid}?date=${formattedDate}`; 
+    const table = document.querySelector('.time-calendar');
+    const uuid = table ? table.dataset.uuid : '';
     
-    console.log(`Пробуем сделать запрос на: ${testUrl} (смещение дней: ${daysForward})`);
+    const url = `/order/calendar/${uuid}?date=${formattedDate}`; 
     
-    try {
-        const result = await loadCalendarData(testUrl);
-        console.log('Результат запроса:', result);
-        return result;
-    } catch (error) {
-        console.error('Ошибка при выполнении запроса:', error);
+    const matrixData = await loadCalendarData(url);
+    if (matrixData) {
+        renderCalendar(matrixData);
     }
 }
 
-async function runCalendarTest(daysForward) {
-    // 1. Генерируем рандомный UUID для {id}
-    const randomUuid = crypto.randomUUID();
-    
-    // 2. Считаем целевую дату относительно текущей
-    const targetDate = new Date();
-    targetDate.setDate(targetDate.getDate() + daysForward);
-    
-    // Форматируем дату локально в YYYY-MM-DD без искажения часовых поясов через ISO
-    const year = targetDate.getFullYear();
-    const month = String(targetDate.getMonth() + 1).padStart(2, '0');
-    const day = String(targetDate.getDate()).padStart(2, '0');
-    const formattedDate = `${year}-${month}-${day}`;
-    
-    // 3. Собираем финальный URL
-    const testUrl = `/order/calendar/${randomUuid}?date=${formattedDate}`; 
-    
-    console.log(`[Тест] Отправка запроса на: ${testUrl} (Смещение: +${daysForward} дн.)`);
-    
-    // 4. Запрашиваем данные с помощью нашей первой функции
-    const matrixData = await loadCalendarData(testUrl);
-    
-    // 5. Передаем результат в отрисовку (если данные пришли успешно)
-    if (matrixData) {
-        console.log('[Тест] Данные успешно получены, отрисовываем таблицу...', matrixData);
-        renderCalendar(matrixData);
-    } else {
-        console.error('[Тест] Отрисовка отменена: loadCalendarData вернула null');
-    }
+function navigateCalendar(newOffset) {
+    currentDaysOffset = newOffset;
+    setCalendarLoading();
+
+    if (debounceTimeoutId) clearTimeout(debounceTimeoutId);
+
+    debounceTimeoutId = setTimeout(() => {
+        updateCalendar(currentDaysOffset);
+    }, 350);
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('DOM готов. Запускаем календарь на сегодня...');
-    
-    runCalendarTest(0); 
+    updateCalendar(0); 
+
+    const btnPrev = document.getElementById('calendar-btn-prev');
+    if (btnPrev) {
+        btnPrev.addEventListener('click', () => navigateCalendar(currentDaysOffset - 7));
+    }
+
+    const btnNext = document.getElementById('calendar-btn-next');
+    if (btnNext) {
+        btnNext.addEventListener('click', () => navigateCalendar(currentDaysOffset + 7));
+    }
+
+    const btnToday = document.getElementById('calendar-btn-today');
+    if (btnToday) {
+        btnToday.addEventListener('click', () => {
+            if (currentDaysOffset !== 0) navigateCalendar(0);
+        });
+    }
 });

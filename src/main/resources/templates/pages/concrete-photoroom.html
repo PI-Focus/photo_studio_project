@@ -36,7 +36,12 @@
             <button id="calendar-btn-prev"><</button>
             <button id="calendar-btn-next">></button>
 
-            <th:block th:replace="~{fragments/components :: time-calendar(8, 22, 'bookingTable', '')}"></th:block>
+            <th:block th:replace="~{fragments/components :: time-calendar(
+                startHour=8, 
+                endHour=22, 
+                tableId='booking-table', 
+                tableDataUuid=${photoroom.roomUuid}, 
+                tableClass='')}"></th:block>
         </div>
     </th:block>
 
