@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" th:fragment="main-layout(content, title, pageStyles, scripts)">
+<head>
+    <meta charset="UTF-8">
+    <meta name="color-scheme" content="light"> 
+
+    <link rel="stylesheet" th:href="@{/css/style.css}" blocking="render">
+
+    <th:block th:replace="${pageStyles}"></th:block>
+
+    <title th:replace="${title}">PI-FOCUS</title>
+    <script>let FF_FOUC_FIX;</script> 
+</head>
+<body>
+    <header>
+        <nav th:replace="~{fragments/basic-components :: header-nav}"></nav>
+    </header>
+    <main>
+        <div class="main-wrapper">
+            <div th:replace="${content}">Content space</div>
+        </div>
+    </main>
+    <footer>
+        <div th:replace="~{fragments/basic-components :: footer-info}"></div>
+    </footer>
+    <th:block th:replace="${scripts}"></th:block>
+    <script th:src="@{/js/theme-switch.js}" defer></script>
+</body>
+</html>

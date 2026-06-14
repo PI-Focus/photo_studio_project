@@ -19,6 +19,7 @@
         <exclude name="LocalVariableCouldBeFinal"/>
         <exclude name="MethodArgumentCouldBeFinal"/>
         <exclude name="PrematureDeclaration"/>
+        <exclude name="TooManyStaticImports"/>
     </rule>
     <rule ref="category/java/codestyle.xml/ShortVariable">
         <properties>
@@ -28,11 +29,11 @@
 
     <rule ref="category/java/design.xml">
         <exclude name="DataClass"/>
-        <exclude name="AtLeastOneConstructor"/>
         <exclude name="CognitiveComplexity"/>4
         <exclude name="CyclomaticComplexity"/>
         <exclude name="ExcessiveImports"/>
         <exclude name="ExcessiveParameterList"/>
+        <exclude name="LoosePackageCoupling"/>
         <exclude name="NPathComplexity"/>
         <exclude name="TooManyFields"/>
         <exclude name="UseObjectForClearerAPI"/>

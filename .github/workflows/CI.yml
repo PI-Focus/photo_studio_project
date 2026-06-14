@@ -3,9 +3,13 @@ name: CI
 on:
   pull_request: 
     branches:
-      - main
+      - master
       - develop
   workflow_dispatch: 
+
+permissions:
+  contents: read
+  checks: write
 
 jobs:
   test:

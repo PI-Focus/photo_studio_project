@@ -1,18 +1,22 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://thymeleaf.org" 
+      th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title}, ~{::#equipment-css}, ~{})}">
 <head>
-    <meta charset="UTF-8">
-    <title>Message</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <title>Фотостудия «Фокус»</title>
+
+    <th:block id="equipment-css">
+        <link rel="stylesheet" th:href="@{/css/components.css}" blocking="render">
+    </th:block>
 </head>
 <body>
-<div th:replace="~{fragments/header :: header}"></div>
 
-<div class="main-wrapper">
-    <p th:text="${equipment.textString}"></p>
-    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Nisi explicabo pariatur voluptate qui corrupti totam corporis molestias earum officiis maxime nesciunt aliquid dolore odio, aut voluptatum. Fuga ullam excepturi tempora!
-</div>
+    <th:block th:fragment="main-content">
+        <th:block th:if="${equipment.equipment != null && !equipment.equipment.isEmpty()}">
+            <th:block th:each="item : ${equipment.equipment}">
+                <th:block th:replace="~{fragments/components :: imaged-text-card(${item}, 'horizontal', 'underlined')}"></th:block>
+            </th:block>
+        </th:block>
+    </th:block>
 
-<div th:replace="~{fragments/footer :: footer}"></div>
 </body>
 </html>
