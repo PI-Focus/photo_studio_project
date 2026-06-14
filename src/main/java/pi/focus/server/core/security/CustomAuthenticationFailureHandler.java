@@ -16,11 +16,16 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
             HttpServletResponse response,
             AuthenticationException exception
     ) throws IOException {
-        if (exception.getCause() instanceof BadCredentialsException) {
+
+        if (exception instanceof BadCredentialsException) {
             response.sendRedirect("/login?error");
+            return;
         }
         if (exception.getCause() instanceof UsernameNotFoundException) {
             response.sendRedirect("/login?error");
+            return;
         }
+
+        response.sendRedirect("/login?error");
     }
 }
