@@ -6,6 +6,7 @@ public record Equipment(
         UUID id,
         String title,
         String description,
+        Integer price,
         String photoPath
 ) { }
 

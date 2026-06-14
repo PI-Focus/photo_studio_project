@@ -14,7 +14,9 @@
     <th:block th:fragment="main-content">
         <div class="about-block">
             <div class="logo-block">
-                <div th:replace="~{fragments/basic-components :: safe-img(${info.aboutBlock.logo}, '', 'square')}"></div>
+                <div th:replace="~{fragments/basic-components :: safe-img(${base.logoBright}, '', 'square theme-bright')}"></div>
+                <div th:replace="~{fragments/basic-components :: safe-img(${base.logoDark}, '', 'square theme-dark')}"></div>
+                
                 <h1>Фотостудия «Фокус»</h1>
             </div>
 

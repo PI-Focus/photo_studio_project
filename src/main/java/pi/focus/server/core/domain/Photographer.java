@@ -7,6 +7,7 @@ public record Photographer(
         String name,
         String surname,
         String description,
+        Integer price,
         String photoPath
 ) { }
 
