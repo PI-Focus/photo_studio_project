@@ -9,11 +9,13 @@ import pi.focus.server.api.context.IPhotoroomsContext;
 import pi.focus.server.api.models.IDataCard;
 import pi.focus.server.core.repository.RoomRepository;
 
+import java.util.List;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
 @Transactional
-@SuppressWarnings({"PMD.LawOfDemeter", "PMD.LongVariable"})
+@SuppressWarnings({"PMD.LawOfDemeter"})
 class RoomServiceIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired
@@ -41,7 +43,7 @@ class RoomServiceIntegrationTest extends AbstractIntegrationTest {
     @DisplayName("Должен корректно мапить поля и генерировать кастомные ссылки")
     void shouldMapFieldsAndConstructLinksCorrectly() {
         IPhotoroomsContext context = roomService.getPhotoroomsContext();
-        var cards = context.getPhotorooms();
+        List<? extends IDataCard> cards = context.getPhotorooms();
 
         assertSoftly(softly -> {
             softly.assertThat(cards)

@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import pi.focus.server.AbstractIntegrationTest;
 import pi.focus.server.api.context.IPhotographersContext;
+import pi.focus.server.api.models.IImagedTextCard;
 import pi.focus.server.api.models.ITextCard;
 import pi.focus.server.core.repository.PhotographerRepository;
 
@@ -45,7 +46,7 @@ class PhotographerServiceIntegrationTest extends AbstractIntegrationTest {
     void shouldMapAllFieldsCorrectly() {
         IPhotographersContext context = photographerService.getEquipmentContext();
 
-        var cards = context.getPhotographers();
+        List<? extends IImagedTextCard> cards = context.getPhotographers();
 
         assertSoftly(softly -> {
             softly.assertThat(cards)
@@ -74,7 +75,7 @@ class PhotographerServiceIntegrationTest extends AbstractIntegrationTest {
     @DisplayName("Должен формировать title как конкатенацию имени и фамилии")
     void shouldConcatenateNameAndSurnameInTitle() {
         IPhotographersContext context = photographerService.getEquipmentContext();
-        var cards = context.getPhotographers();
+        List<? extends IImagedTextCard> cards = context.getPhotographers();
 
         assertSoftly(softly -> {
             List<String> titles = cards.stream()
