@@ -25,6 +25,9 @@ async function loadCalendarData(url) {
 function updateHeaderDates(daysForward) {
     const daysShort = ['Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб', 'Вс'];
     
+    const today = new Date();
+    const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    
     const targetDate = new Date();
     targetDate.setDate(targetDate.getDate() + daysForward);
     
@@ -40,10 +43,17 @@ function updateHeaderDates(daysForward) {
 
         const dayNum = String(currentHeaderDate.getDate()).padStart(2, '0');
         const monthNum = String(currentHeaderDate.getMonth() + 1).padStart(2, '0');
+        const currentHeaderStr = `${currentHeaderDate.getFullYear()}-${monthNum}-${dayNum}`;
         
         const header = document.querySelector(`.day-header[data-day="${colIdx}"]`);
         if (header) {
             header.textContent = `${daysShort[colIdx]} ${dayNum}.${monthNum}`;
+            
+            if (currentHeaderStr === todayStr) {
+                header.classList.add('current-day');
+            } else {
+                header.classList.remove('current-day');
+            }
         }
     }
 }
@@ -66,7 +76,7 @@ function renderCalendar(responseData) {
 
                 if (slotValue === -1) {
                     cell.classList.add('slot-disabled');
-                    if (priceSpan) priceSpan.textContent = '—';
+                    if (priceSpan) priceSpan.textContent = '';
                 } else {
                     cell.classList.add('slot-available');
                     if (priceSpan) priceSpan.textContent = `${(slotValue / 100).toFixed(2)} ₽`;
@@ -106,9 +116,23 @@ async function updateCalendar(daysForward) {
     }
 }
 
+function updateButtonStates() {
+    const btnPrev = document.getElementById('calendar-btn-prev');
+    const btnNext = document.getElementById('calendar-btn-next');
+    const btnToday = document.getElementById('calendar-btn-today');
+
+    if (btnPrev) btnPrev.disabled = (currentDaysOffset <= 0);
+    if (btnNext) btnNext.disabled = (currentDaysOffset >= 35);
+    if (btnToday) btnToday.disabled = (currentDaysOffset === 0);
+}
+
 function navigateCalendar(newOffset) {
+    if (newOffset < 0 || newOffset > 35) return;
+
     currentDaysOffset = newOffset;
     
+    clearSelection();
+    updateButtonStates();
     updateHeaderDates(currentDaysOffset);
     setCalendarLoading();
 
@@ -183,6 +207,7 @@ function handleTableClick(event) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    updateButtonStates();
     updateHeaderDates(0);
     updateCalendar(0); 
 

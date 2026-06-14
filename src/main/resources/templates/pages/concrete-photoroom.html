@@ -32,9 +32,16 @@
         </div>
 
         <div class="booking-calendar">
-            <button id="calendar-btn-today">Сегодня</button>
-            <button id="calendar-btn-prev"><</button>
-            <button id="calendar-btn-next">></button>
+            <h2>Бронирование</h2>
+            <div class="calendar-btn-block">
+                <button id="calendar-btn-today">Сегодня</button>
+                <button id="calendar-btn-prev">
+                    <svg th:replace="~{fragments/icons :: arrow(180)}"></svg>
+                </button>
+                <button id="calendar-btn-next">
+                    <svg th:replace="~{fragments/icons :: arrow(0)}"></svg>
+                </button>
+            </div>
 
             <th:block th:replace="~{fragments/components :: time-calendar(
                 startHour=8, 

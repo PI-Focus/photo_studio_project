@@ -1,11 +1,79 @@
 .photoroom-info {
     display: flex;
     flex-flow: column wrap;
-    margin-top: var(--space-xxl);
+    margin: var(--space-xxl) 0;
     
     h2 {
         align-self: center;
         margin: 0;
         margin-bottom: var(--space-xxl);
     }
+
+    p {
+        margin-bottom: 0;
+        margin-top: var(--space-xxl);
+    }
+
+    .image-card {
+        border-radius: var(--radius-s);
+        img {
+            border-radius: var(--radius-s);
+        }
+    }
+}
+
+.booking-calendar {
+    display: flex;
+    flex-flow: column wrap;
+    margin-top: var(--space-xxl);
+    align-items: stretch;
+
+    h2 {
+        align-self: center;
+        margin: 0;
+        margin-bottom: var(--space-xxl);
+    }
+
+    .calendar-btn-block {
+        display: flex;
+        align-items: stretch; 
+        justify-content: flex-start;
+        margin-bottom: var(--space-l);
+
+        button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            padding: 0;
+            background: var(--color-background);
+            border: 1px solid var(--color-primary);
+            color: var(--color-text-calendar);
+            cursor: pointer;
+
+            will-change: background;
+            transition: background var(--time-m) ease;
+
+            svg {
+                width: var(--space-xl);
+                height: var(--space-xl);
+            }
+
+            &:hover {
+                background: var(--color-secondary);
+            }
+
+            &:disabled {
+                pointer-events: none;
+                cursor: default;
+                opacity: .3;
+            }
+        }
+
+        #calendar-btn-today {
+            padding: var(--space-m) 2rem;
+            margin-right: var(--space-l);
+        }
+    }
+
 }
