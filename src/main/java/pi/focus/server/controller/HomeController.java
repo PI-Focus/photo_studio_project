@@ -21,6 +21,7 @@ import pi.focus.server.core.service.api.IStaticDataService;
 import pi.focus.server.core.service.api.IUserService;
 import pi.focus.server.service.context.mocks.ConcretePhotoroomContextMock;
 
+import java.net.URI;
 import java.util.UUID;
 
 
@@ -88,18 +89,36 @@ public class HomeController {
     @GetMapping("/login")
     public String getLogin(
             HttpSession session,
-            @ModelAttribute("previousURI") String previousURI,
+            @RequestParam(value = "previousURI", required = false) String previousURI,
+            HttpServletRequest request,
             Authentication authentication
     ) {
-        if (authentication != null && authentication.isAuthenticated()) {
-            return "redirect:" + (previousURI != null ? previousURI : "/");
+        if (previousURI == null || previousURI.isBlank()) {
+            String referer = request.getHeader("Referer");
+            if (referer != null && !referer.isBlank()) {
+                try {
+                    previousURI = new URI(referer).getPath();
+                } catch (Exception e) {
+                    previousURI = referer;
+                }
+            }
         }
 
-        if (previousURI != null && !previousURI.contains("/registration") && !previousURI.contains("/login")) {
+        if (authentication != null && authentication.isAuthenticated()) {
+            String sessionUri = (String) session.getAttribute("previousUri");
+            String redirectUrl = (previousURI != null && !previousURI.isBlank()) ? previousURI : sessionUri;
+            return "redirect:" + (redirectUrl != null ? redirectUrl : "/");
+        }
+
+        if (previousURI != null && !previousURI.isBlank()
+                && !previousURI.contains("/registration")
+                && !previousURI.contains("/login")) {
             session.setAttribute("previousUri", previousURI);
         }
+
         return "pages/login";
     }
+
 
     @GetMapping("/registration")
     public String getRegistration(Model model) {
