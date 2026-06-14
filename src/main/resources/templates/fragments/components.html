@@ -93,7 +93,7 @@
 </div>
 
 <table th:fragment="time-calendar(startHour, endHour, tableId, tableClass)"
-   th:id="${routerId}"
+   th:id="${tableId}"
    th:class="|time-calendar ${tableClass}|">
    <thead>
         <tr>
@@ -108,13 +108,13 @@
         </tr>
     </thead>
     <tbody>
-        <tr th:each="hour : ${#numbers.sequence(startHour, endHour - 1)}">
+        <tr th:each="hour, hourStat : ${#numbers.sequence(startHour, endHour - 1)}">
             <td class="time-cell" th:text="${#strings.concat(#numbers.formatInteger(hour, 2), ':00')}">time</td>
             
             <td th:each="dayIdx : ${#numbers.sequence(0, 6)}" 
                 class="slot-cell slot-empty" 
-                th:data-time="${hour}" 
-                th:data-day="${dayIdx}">
+                th:data-row="${hourStat.index}" 
+                th:data-col="${dayIdx}">
                 <span class="slot-price"></span>
             </td>
         </tr>
