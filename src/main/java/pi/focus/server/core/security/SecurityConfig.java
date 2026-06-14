@@ -2,7 +2,6 @@ package pi.focus.server.core.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -38,8 +37,8 @@ public class SecurityConfig {
         http
             .csrf(AbstractHttpConfigurer::disable) // TODO: delete this row
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/css/**", "/images/**", "/js/**", "/fonts/**", "/docs/**").permitAll()
-                .requestMatchers("/", "/photorooms", "/photorooms/{id}", "/equipment", "/photographers", "/registration").permitAll()
+                .requestMatchers("/css/**", "/images/**", "/js/**", "/fonts/**", "/docs/**", "/favicon.ico").permitAll()
+                .requestMatchers("/", "/photorooms", "/photorooms/{id}", "/equipment", "/photographers", "/login", "/login?*", "/registration").permitAll()
                 .requestMatchers("/profile").hasRole(UserRole.USER.name())
             ).formLogin(form -> form
                 .loginPage("/login").permitAll()
@@ -74,10 +73,10 @@ public class SecurityConfig {
                 user = userRepository.findByLogin(login)
                         .orElseThrow(() -> new UsernameNotFoundException("Неверный логин или пароль"));
             } else {
-                throw new BadCredentialsException("Неверный логин или пароль");
+                throw new UsernameNotFoundException("Неверный логин или пароль");
             }
             if (user.getRole() == UserRole.ADMIN) {
-                throw new BadCredentialsException("Неверный логин или пароль");
+                throw new UsernameNotFoundException("Неверный логин или пароль");
             }
             List<SimpleGrantedAuthority> roles = List.of(user.getRole().toAuthority());
 

@@ -26,7 +26,7 @@
                 </div>
             </form>
 
-            <p id="error-msg" class="error-msg" th:text="${error}"></p>
+            <p class="error-msg" th:if="${param.error}">Неверный логин, телефон или пароль.</p>
         </div>
     </th:block>
 
