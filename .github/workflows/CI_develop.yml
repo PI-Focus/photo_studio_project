@@ -1,9 +1,8 @@
-name: CI
+name: CI_develop
 
 on:
   pull_request: 
     branches:
-      - master
       - develop
   workflow_dispatch: 
 
