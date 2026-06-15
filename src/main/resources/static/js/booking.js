@@ -359,7 +359,7 @@ async function loadAvailablePhotographers() {
         return null;
     }
 
-    const url = `/order/photographers?from-time=${encodeURIComponent(startTime)}&to-time=${encodeURIComponent(endTime)}`;
+    const url = `/order/photographers?start=${encodeURIComponent(startTime)}&end=${encodeURIComponent(endTime)}`;
 
     try {
         const response = await fetch(url, {
