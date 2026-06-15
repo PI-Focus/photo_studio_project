@@ -70,6 +70,7 @@ async function sendCurrentOrderStatus() {
             }
             
             updatePriceDisplay();
+            updateOrderButtonsState();
         } else {
             resetOrderToZero();
         }
@@ -94,6 +95,7 @@ function resetOrderToZero() {
     });
 
     updatePriceDisplay();
+    updateOrderButtonsState();
 }
 
 
@@ -348,6 +350,48 @@ function getMonday(date) {
     return monday;
 }
 
+async function loadAvailablePhotographers() {
+    const startTime = currentOrderState?.body?.startTime;
+    const endTime = currentOrderState?.body?.endTime;
+
+    if (!startTime || !endTime) {
+        console.warn("Cannot load photographers: time interval is not selected.");
+        return null;
+    }
+
+    const url = `/order/photographers?from-time=${encodeURIComponent(startTime)}&to-time=${encodeURIComponent(endTime)}`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) throw new Error();
+
+        const photographers = await response.json();
+        return photographers;
+    } catch (error) {
+        console.error("Failed to load photographers:", error);
+        return null;
+    }
+}
+
+function updateOrderButtonsState() {
+    const btnPhotographers = document.getElementById('order-btn-photographers');
+    const btnEquipment = document.getElementById('order-btn-equipment');
+    const btnConfirm = document.getElementById('order-btn-confirm');
+
+    const hasValidTime = !!(currentOrderState?.body?.startTime && currentOrderState?.body?.endTime);
+
+    if (btnPhotographers) btnPhotographers.disabled = !hasValidTime;
+    if (btnEquipment) btnEquipment.disabled = !hasValidTime;
+    if (btnConfirm) btnConfirm.disabled = !hasValidTime;
+}
+
+
 document.addEventListener('DOMContentLoaded', async () => {
     updateButtonStates();
     
@@ -381,6 +425,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     updateButtonStates();
     updateHeaderDates(currentDaysOffset);
     updateCalendar(currentDaysOffset);
+    updateOrderButtonsState();
+
     if (table) {
         table.addEventListener('click', handleTableClick);
     }
@@ -395,5 +441,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const btnToday = document.getElementById('calendar-btn-today');
     if (btnToday) {
         btnToday.addEventListener('click', () => {if (currentDaysOffset !== 0) navigateCalendar(0);});
+    }
+    const btnPhotographers = document.getElementById('order-btn-photographers');
+    if (btnPhotographers) {
+        btnPhotographers.addEventListener('click', async () => {
+            const list = await loadAvailablePhotographers();
+            if (list) {
+                console.log("Доступные фотографы получены:", list);
+            }
+        });
     }
 });
