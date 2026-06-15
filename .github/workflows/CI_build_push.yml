@@ -2,9 +2,8 @@ name: Build Dockerfile and push
 
 on:
   workflow_run:
-    workflows: ["CI"]
+    workflows: ["CI_master"]
     types: [completed]
-    branches: [master]
   workflow_dispatch: 
 
 permissions:
