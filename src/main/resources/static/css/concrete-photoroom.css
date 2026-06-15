@@ -304,4 +304,8 @@
     display: flex;
     flex-flow: column wrap;
     gap: var(--space-s);
+
+    .error-label {
+        color: var(--color-error);
+    }
 }
