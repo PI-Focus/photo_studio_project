@@ -60,7 +60,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WithMockUser
 @SuppressWarnings({"PMD.LawOfDemeter","PMD.LongVariable", "PMD.AvoidDuplicateLiterals", "PMD.CouplingBetweenObjects"})
 class OrderControllerTest {
-
     @Autowired
     private MockMvc mockMvc;
 
