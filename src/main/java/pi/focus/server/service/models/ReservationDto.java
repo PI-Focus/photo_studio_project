@@ -5,7 +5,9 @@ import pi.focus.server.api.models.IReservation;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-
+/**
+ * DTO с краткой информацией о совершенном бронировании.
+ */
 public record ReservationDto(
         UUID id,
         String roomTitle,

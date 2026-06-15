@@ -27,6 +27,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Основная реализация фасада управления заказами.
+ * Координирует работу сервисов залов и фотографов, а также напрямую взаимодействует
+ * с репозиториями для проверки доступности ресурсов, расчета стоимости и сохранения бронирований.
+ */
 @Service
 @Transactional
 @Profile({"dev", "prod", "test"})
@@ -41,6 +46,7 @@ public class OrderFacade implements IOrderFacade {
     private final PhotographerRepository photographerRepository;
     private final UserRepository userRepository;
 
+    /** Конструктор со всеми необходимыми зависимостями для работы с заказами */
     public OrderFacade(
             RoomService roomService,
             PhotographerService photographerService,
@@ -58,6 +64,10 @@ public class OrderFacade implements IOrderFacade {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Создает начальный объект заказа с пустыми полями и нулевой ценой.
+     * @return инициализированный DTO статуса заказа
+     */
     @Override
     public IOrderStatus getEmptyOrderStatus() {
         return new OrderStatusDto(
@@ -72,6 +82,14 @@ public class OrderFacade implements IOrderFacade {
         );
     }
 
+    /**
+     * Сохраняет данные о бронировании в базу данных.
+     * Преобразует данные из DTO в сущности и связывает их с пользователем,
+     * залом, фотографом и списком забронированного оборудования.
+     * 
+     * @param id уникальный идентификатор пользователя
+     * @param orderStatus объект заказа для сохранения
+     */
     @Override
     public void createReservation(UUID id, IOrderStatus orderStatus) {
         IOrder order = orderStatus.getBody();
@@ -104,6 +122,22 @@ public class OrderFacade implements IOrderFacade {
         reservationRepository.save(reservation);
     }
 
+    /**
+     * Выполняет валидацию заказа и расчет итоговой стоимости.
+     * Проверки включают:
+     * - Существование выбранного зала.
+     * - Корректность временного интервала 
+     * - Свободность зала на выбранное время.
+     * - Свободность фотографа.
+     * - Доступность каждой единицы оборудования.
+     * 
+     * Если фотограф или оборудование недоступны, они удаляются из заказа, а метод возвращает 1.
+     * 
+     * @param orderStatus данные заказа для проверки
+     * @return 0 - заказ полностью валиден; 
+     *         1 - заказ скорректирован;
+     *        -1 - критическая ошибка валидации.
+     */
     @Override
     @SuppressWarnings({"PMD.CognitiveComplexity", "PMD.CyclomaticComplexity"})
     public Integer validateOrderStatus(IOrderStatus orderStatus) {

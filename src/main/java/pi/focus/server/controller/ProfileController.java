@@ -33,7 +33,11 @@ import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.UUID;
 
-
+/**
+ * Контроллер личного кабинета пользователя.
+ * Обеспечивает управление профилем, просмотр персонального календаря заказов,
+ * отмену бронирований и обновление учетных данных.
+ */
 @Controller
 @Transactional
 @RequestMapping("/profile")
@@ -42,11 +46,21 @@ public class ProfileController {
     private final IUserService userService;
     private final IReservationService reservationService;
 
+    /** Конструктор контроллера с внедрением сервисов пользователя и бронирования */
     public ProfileController(IUserService userService, IReservationService reservationService) {
         this.userService = userService;
         this.reservationService = reservationService;
     }
 
+    /**
+     * Отображает страницу со списком заказов пользователя.
+     * Выполняет проверку прав доступа: пользователь может видеть только свой профиль.
+     * 
+     * @param id строковое представление UUID пользователя
+     * @param userDetails данные текущего аутентифицированного пользователя
+     * @param session текущая сессия для редиректа
+     * @return путь к шаблону профиля или редирект при ошибке доступа
+     */
     @GetMapping("/{id}/orders")
     public String getOrders(
             @PathVariable String id,
@@ -62,10 +76,19 @@ public class ProfileController {
         if (!uuid.equals(userDetails.userId())) {
             return redirectPrevious(session);
         } else {
-            return "pages/profile";
+            return "pages/profile-orders";
         }
     }
 
+    /**
+     * Возвращает данные для календаря заказов пользователя на указанную дату.
+     * Включает в себя информацию о занятости залов и детали конкретных бронирований.
+     * 
+     * @param id идентификатор пользователя
+     * @param date дата для отображения (ISO формат)
+     * @param userDetails данные текущего пользователя
+     * @return ResponseEntity с информацией о заказах и календаре
+     */
     @GetMapping("/{id}/orders/calendar")
     public ResponseEntity<IProfileOrders> getCalendar(
             @PathVariable String id,
@@ -97,6 +120,15 @@ public class ProfileController {
         ));
     }
 
+    /**
+     * Обрабатывает запрос на удаление (отмену) заказа.
+     * Проверяет принадлежность удаляемого заказа текущему пользователю.
+     * 
+     * @param id идентификатор пользователя
+     * @param stringOrderId JSON с ID заказа
+     * @param userDetails данные текущего пользователя
+     * @return 200 OK при успехе или 400 Bad Request при ошибке
+     */
     @DeleteMapping("/{id}/orders")
     public ResponseEntity<?> deleteOrder(
             @PathVariable String id,
@@ -121,6 +153,13 @@ public class ProfileController {
         }
     }
 
+    /**
+     * Перенаправляет пользователя на страницу настроек профиля.
+     * 
+     * @param id идентификатор пользователя
+     * @param userDetails данные текущего пользователя
+     * @return путь к странице настроек (логина/регистрации в данном контексте) или редирект
+     */
     @GetMapping("/{id}/options")
     public String getOptions(
             @PathVariable String id,
@@ -135,9 +174,16 @@ public class ProfileController {
         if (!uuid.equals(userDetails.userId())) {
             return "redirect:/";
         }
-        return "pages/login";
+        return "pages/profile-options";
     }
 
+    /**
+     * Возвращает текущие учетные данные пользователя для редактирования.
+     * 
+     * @param id идентификатор пользователя
+     * @param userDetails данные текущего пользователя
+     * @return ResponseEntity с объектом учетных данных (логин, телефон, почта)
+     */
     @GetMapping("{id}/credentials")
     public ResponseEntity<ICredentials> getCredentials(
             @PathVariable String id,
@@ -161,6 +207,15 @@ public class ProfileController {
         ));
     }
 
+    /**
+     * Обрабатывает запрос на обновление учетных данных пользователя.
+     * Проверяет уникальность и валидность новых данных через сервис пользователя.
+     * 
+     * @param id идентификатор пользователя
+     * @param stringOrderId JSON с новыми учетными данными
+     * @param userDetails данные текущего пользователя
+     * @return ResponseEntity с обновленными данными или ошибкой валидации
+     */
     @PostMapping("{id}/credentials")
     public ResponseEntity<ICredentials> postCredentials(
             @PathVariable String id,
@@ -197,6 +252,12 @@ public class ProfileController {
         }
     }
 
+    /**
+     * Вспомогательный метод для перенаправления на предыдущую посещенную страницу.
+     * 
+     * @param session текущая сессия пользователя
+     * @return строка редиректа
+     */
     private String redirectPrevious(HttpSession session) {
         String previousUri = (String) session.getAttribute("previousUri");
         if (previousUri != null) {
