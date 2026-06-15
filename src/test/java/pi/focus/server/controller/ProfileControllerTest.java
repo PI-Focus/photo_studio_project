@@ -44,7 +44,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SuppressWarnings({"PMD.LawOfDemeter", "PMD.LongVariable", "PMD.AvoidDuplicateLiterals", "PMD.CouplingBetweenObjects", "PMD.TooManyMethods"})
+@SuppressWarnings({"PMD.LawOfDemeter", "PMD.LongVariable", "PMD.AvoidDuplicateLiterals"})
 class ProfileControllerTest {
 
     private MockMvc mockMvc;

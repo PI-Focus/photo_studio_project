@@ -40,7 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.when;
 
 @Transactional
-@SuppressWarnings({"PMD.LawOfDemeter", "PMD.LongVariable", "PMD.AvoidDuplicateLiterals"})
+@SuppressWarnings({"PMD.LongVariable", "PMD.TooManyMethods"})
 class UserServiceTest extends AbstractIntegrationTest {
 
     @Autowired
@@ -512,10 +512,11 @@ class UserServiceTest extends AbstractIntegrationTest {
 
             ICalendar calendar = userService.getUserCalendar(testUser.getId(), currentMonday);
 
-            assertNotNull(calendar, "Календарь не должен быть null");
+
             List<List<Integer>> matrix = calendar.getCalendar();
 
             assertSoftly(softly -> {
+                assertNotNull(calendar, "Календарь не должен быть null");
                 softly.assertThat(matrix.getFirst().get(6))
                         .as("Слот в 14:00 должен быть заполнен ценой бронирования")
                         .isGreaterThan(0);
@@ -540,10 +541,11 @@ class UserServiceTest extends AbstractIntegrationTest {
 
             ICalendar calendar = userService.getUserCalendar(testUser.getId(), futureMonday);
 
-            assertNotNull(calendar, "Календарь не должен быть null");
+
             List<List<Integer>> matrix = calendar.getCalendar();
 
             assertSoftly(softly -> {
+                assertNotNull(calendar, "Календарь не должен быть null");
                 softly.assertThat(matrix.getFirst().get(2))
                         .as("Слот в 10:00 должен быть заполнен ценой бронирования")
                         .isGreaterThan(0);
@@ -560,9 +562,10 @@ class UserServiceTest extends AbstractIntegrationTest {
 
             ICalendar calendar = userService.getUserCalendar(USER_1_ID, currentMonday);
 
-            assertNotNull(calendar, "Календарь не должен быть null");
+
 
             assertSoftly(softly -> {
+                assertNotNull(calendar, "Календарь не должен быть null");
                 softly.assertThat(calendar.getROWS())
                         .as("Календарь должен иметь 14 строк (часов с 8 до 22)")
                         .isEqualTo(14);
