@@ -56,7 +56,7 @@ public class OrderController {
         this.orderService = orderService;
     }
 
-    @GetMapping("/calendar/{getOrderId}")
+    @GetMapping("/calendar/{id}")
     public ResponseEntity<ICalendar> getPhotorooms(@PathVariable String id, @RequestParam String date) {
         UUID uuid;
         LocalDate localDate;
