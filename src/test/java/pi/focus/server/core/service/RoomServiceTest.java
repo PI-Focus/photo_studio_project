@@ -100,7 +100,7 @@ class RoomServiceTest extends AbstractIntegrationTest {
                         .as("Должна браться первая фотография из списка photos")
                         .isEqualTo("/images/placeholder.png");
                 softly.assertThat(zal1Card.getLinkUrl())
-                        .as("Ссылка должна формироваться как 'photorooms/' + id")
+                        .as("Ссылка должна формироваться как 'photorooms/' + getOrderId")
                         .isEqualTo("photorooms/" + ROOM_1_ID);
             });
         }

@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import pi.focus.server.core.repository.ReservationRepository;
 import pi.focus.server.core.service.api.IReservationService;
 
+import java.util.UUID;
+
 @Service
 @Profile({"dev", "prod", "test"})
 public class ReservationService implements IReservationService {
@@ -12,5 +14,16 @@ public class ReservationService implements IReservationService {
 
     public ReservationService(ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
+    }
+
+    @Override
+    public Boolean deleteOrderById(UUID id) {
+        if (reservationRepository.existsById(id)) {
+            reservationRepository.deleteById(id);
+            return true;
+        } else {
+            return false;
+        }
+
     }
 }

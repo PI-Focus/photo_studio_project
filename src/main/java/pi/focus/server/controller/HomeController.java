@@ -66,7 +66,7 @@ public class HomeController {
         return "pages/photorooms";
     }
 
-    @GetMapping("/photorooms/{id}")
+    @GetMapping("/photorooms/{getOrderId}")
     public String getPhotoroom(Model model, @PathVariable String id) {
         UUID uuid;
         try {

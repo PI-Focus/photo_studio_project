@@ -28,6 +28,9 @@ import java.util.UUID;
 @Service
 @Profile({"dev", "prod", "test"})
 public class UserService implements IUserService {
+    private static final int MIN_LOGIN_LENGTH = 4;
+    private static final int MIN_PASSWORD_LENGTH = 8;
+
     @Value("${app.static-data.placeholder-path}")
     private String placeholderPath;
 
@@ -136,6 +139,52 @@ public class UserService implements IUserService {
         }
         return new CalendarDto(calendar);
     }
+
+    @Override
+    public String updateUser(User user) {
+        Optional<UserEntity> userOpt = userRepository.findById(user.id());
+        if (userOpt.isEmpty()) {
+            return null;
+        }
+        UserEntity userEntity = userOpt.get();
+
+        if (!user.login().matches("^[a-z0-9_-]+$")) {
+            return "Логин может содержать только строчные латинские буквы, цифры, символы нижнего подчеркивания и дефиса";
+        }
+        if (!user.login().matches(".*[a-z].*")) {
+            return "Логин должен содержать латинские буквы";
+        }
+        if (user.login().length() < MIN_LOGIN_LENGTH) {
+            return "Минимальная длина логина должна быть 4 символов";
+        }
+        if (userRepository.existsByLogin(user.login())) {
+            return "Логин занят";
+        }
+        if (user.password().length() < MIN_PASSWORD_LENGTH) {
+            return "Минимальная длина пароля должна быть 8 символов";
+        }
+        if (userRepository.existsByPhoneNumber(user.phoneNumber())) {
+            return "Пользователь с таким номером телефона существует";
+        }
+        if (!user.phoneNumber().matches("^8\\d{10}$")) {
+            return "Некорректный номер телефона";
+        }
+        if (userRepository.existsByEmail(user.email())) {
+            return "Пользователь с таким email телефона существует";
+        }
+        if (!user.email().matches("^[^@]+@[^@]+$")) {
+            return "Некорректный email";
+        }
+
+        userEntity.setLogin(user.login());
+        userEntity.setPassword(passwordEncoder.encode(user.password()));
+        userEntity.setPhoneNumber(user.phoneNumber());
+        userEntity.setEmail(user.email());
+        userRepository.save(userEntity);
+        return "";
+    }
+
+
 
     private boolean existsByLogin(String login) {
         return userRepository.existsByLogin(login);
