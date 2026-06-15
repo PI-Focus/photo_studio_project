@@ -70,12 +70,14 @@ async function restoreLocalStateFromOrder() {
     if (currentOrderState.roomId && currentRoomUuid && currentOrderState.roomId !== currentRoomUuid) {
         resetOrderToZero();
         currentDaysOffset = 0;
+        updatePriceDisplay()
         updateCalendar(currentDaysOffset);
         return;
     }
 
     if (!currentOrderState.body) {
         currentDaysOffset = 0; 
+        updatePriceDisplay()
         updateCalendar(currentDaysOffset);
         return;
     }
@@ -103,6 +105,7 @@ async function restoreLocalStateFromOrder() {
         currentDaysOffset = 0;
     }
 
+    updatePriceDisplay();
     updateCalendar(currentDaysOffset);
 }
 
@@ -174,7 +177,21 @@ function clearSelectionVisualsOnly() {
 }
 
 function updatePriceDisplay() {
-    
+    const priceEl = document.getElementById('summary-total-price');
+    if (priceEl && currentOrderState.body.price !== undefined) {
+        priceEl.textContent = (currentOrderState.body.price / 100).toFixed(2);
+    }
+
+    const photographerEl = document.getElementById('summary-photographer');
+    if (photographerEl) {
+        photographerEl.textContent = currentOrderState.body.photographerId ? 'выбран' : 'не выбран';
+    }
+
+    const equipmentEl = document.getElementById('summary-equipment-count');
+    if (equipmentEl) {
+        const count = (currentOrderState.body.equipment || []).reduce((sum, eq) => sum + (eq.count || 0), 0);
+        equipmentEl.textContent = count > 0 ? `${count}` : '0';
+    }
 }
 
 function updateHeaderDates(daysForward) {
@@ -714,7 +731,6 @@ function updateEquipmentInfo() {
     if (infoSpan) {
         const totalCount = selectedEquipmentState.reduce((sum, eq) => sum + eq.count, 0);
         infoSpan.textContent = totalCount > 0 ? `ВЫБРАНО: ${totalCount}` : 'ВЫБРАНО: 0';
-        updatePriceDisplay(); 
     }
 }
 
