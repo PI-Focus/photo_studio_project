@@ -5,6 +5,11 @@ let selectedCol = null;
 let selectedRowStart = null;
 let selectedRowEnd = null;
 
+let selectedStartTime = null;
+let selectedEndTime = null;
+
+let currentRoomId = null;
+
 let currentOrderState = {
     roomId: null,
     body: {
@@ -12,9 +17,13 @@ let currentOrderState = {
         endTime: null,
         photographerId: null,
         equipment: [],
-        price: null
+        price: 0
     }
 };
+
+let selectedPhotographerId = null;
+let selectedPhotographerName = null;
+let currentPhotographersList = [];
 
 async function loadCalendarData(url) {
     try {
@@ -41,12 +50,53 @@ async function fetchCurrentOrderStatus(url) {
         });
         if (response.ok) {
             const data = await response.json();
-            if (data) currentOrderState = data;
+            if (data) {
+                currentOrderState = data;
+                await restoreLocalStateFromOrder();
+            }
         }
     } catch (error) {
         console.error("Failed to load current order status:", error);
     }
 }
+
+async function restoreLocalStateFromOrder() {
+    const table = document.querySelector('.time-calendar');
+    const currentRoomUuid = table ? table.dataset.uuid : null;
+
+    if (currentOrderState.roomId && currentRoomUuid && currentOrderState.roomId !== currentRoomUuid) {
+        resetOrderToZero();
+        currentDaysOffset = 0;
+        updateCalendar(currentDaysOffset);
+        return;
+    }
+
+    if (!currentOrderState.body) {
+        currentDaysOffset = 0; 
+        updateCalendar(currentDaysOffset);
+        return;
+    }
+    
+    selectedPhotographerId = currentOrderState.body.photographerId || null;
+    
+    if (currentOrderState.body.startTime && currentOrderState.body.endTime) {
+        selectedStartTime = new Date(currentOrderState.body.startTime);
+        selectedEndTime = new Date(currentOrderState.body.endTime);
+        
+        const currentMonday = getMonday(new Date());
+        const orderMonday = getMonday(selectedStartTime);
+        
+        const msPerDay = 24 * 60 * 60 * 1000;
+        currentDaysOffset = Math.round((orderMonday - currentMonday) / msPerDay);
+    } else {
+        selectedStartTime = null;
+        selectedEndTime = null;
+        currentDaysOffset = 0;
+    }
+
+    updateCalendar(currentDaysOffset);
+}
+
 
 async function sendCurrentOrderStatus() {
     try {
@@ -59,17 +109,17 @@ async function sendCurrentOrderStatus() {
             body: JSON.stringify(currentOrderState)
         });
 
-        if (response.status === 200 || response.status === 202 || response.status === 422) {
+        if (response.status === 200 || response.status === 202) {
             const updatedData = await response.json();
             if (updatedData) {
                 currentOrderState = updatedData;
             }
             
-            if (response.status === 422 || !currentOrderState.body?.startTime) {
-                clearSelectionVisualsOnly();
-            }
-            
             updatePriceDisplay();
+            updateOrderButtonsState();
+        } else if (response.status === 422) {
+            clearSelectionVisualsOnly();
+            resetOrderToZero();
         } else {
             resetOrderToZero();
         }
@@ -80,20 +130,27 @@ async function sendCurrentOrderStatus() {
 }
 
 function resetOrderToZero() {
+    const table = document.querySelector('.time-calendar');
+    currentOrderState.roomId = table ? table.dataset.uuid : null;
+
     currentOrderState.body.startTime = null;
     currentOrderState.body.endTime = null;
-    currentOrderState.body.price = null;
+    currentOrderState.body.price = 0;
     currentOrderState.body.photographerId = null;
     currentOrderState.body.equipment = [];   
 
     selectedCol = null;
     selectedRowStart = null;
     selectedRowEnd = null;
+    selectedPhotographerId = null;
+    selectedPhotographerName = null;
+    
     document.querySelectorAll('.slot-selected').forEach(cell => {
         cell.classList.remove('slot-selected');
     });
 
     updatePriceDisplay();
+    updateOrderButtonsState();
 }
 
 
@@ -173,6 +230,29 @@ function renderCalendar(responseData) {
         }
     }
 
+    restoreSelectionFromOrderState();
+}
+
+function restoreSelectionFromOrderState() {
+    if (!currentOrderState.body.startTime || !currentOrderState.body.endTime) return;
+    
+    const startDt = new Date(currentOrderState.body.startTime);
+    const endDt = new Date(currentOrderState.body.endTime);
+    
+    const currentMonday = getMonday(new Date());
+    const orderMonday = getMonday(startDt);
+    
+    const msPerDay = 24 * 60 * 60 * 1000;
+    const offsetInDays = Math.round((orderMonday - currentMonday) / msPerDay);
+    
+    if (offsetInDays !== currentDaysOffset) return;
+    
+    const startHour = getStartHour();
+    const dayOfWeek = startDt.getDay();
+    selectedCol = dayOfWeek === 0 ? 6 : dayOfWeek - 1;
+    selectedRowStart = startDt.getHours() - startHour;
+    selectedRowEnd = endDt.getHours() - 1 - startHour;
+    
     restoreSelectionVisuals();
 }
 
@@ -185,12 +265,17 @@ function setCalendarLoading() {
 }
 
 async function updateCalendar(daysForward) {
+    updateHeaderDates(daysForward);
+    updateCalendarButtonStates();
+
     const targetDate = new Date();
     targetDate.setDate(targetDate.getDate() + daysForward);
     
-    const year = targetDate.getFullYear();
-    const month = String(targetDate.getMonth() + 1).padStart(2, '0');
-    const day = String(targetDate.getDate()).padStart(2, '0');
+    const monday = getMonday(targetDate);
+    
+    const year = monday.getFullYear();
+    const month = String(monday.getMonth() + 1).padStart(2, '0');
+    const day = String(monday.getDate()).padStart(2, '0');
     const formattedDate = `${year}-${month}-${day}`;
     
     const table = document.querySelector('.time-calendar');
@@ -198,29 +283,34 @@ async function updateCalendar(daysForward) {
     
     const url = `/order/calendar/${uuid}?date=${formattedDate}`; 
     
+    setCalendarLoading();
+    
     const matrixData = await loadCalendarData(url);
     if (matrixData) {
         renderCalendar(matrixData);
     }
 }
 
-function updateButtonStates() {
+
+function updateCalendarButtonStates() {
     const btnPrev = document.getElementById('calendar-btn-prev');
     const btnNext = document.getElementById('calendar-btn-next');
     const btnToday = document.getElementById('calendar-btn-today');
 
     if (btnPrev) btnPrev.disabled = (currentDaysOffset <= 0);
+    if (btnToday) btnToday.disabled = (currentDaysOffset <= 0);
+    
     if (btnNext) btnNext.disabled = (currentDaysOffset >= 35);
-    if (btnToday) btnToday.disabled = (currentDaysOffset === 0);
 }
+
 
 function navigateCalendar(newOffset) {
     if (newOffset < 0 || newOffset > 35) return;
 
     currentDaysOffset = newOffset;
     
-    clearSelection();
-    updateButtonStates();
+    clearSelectionVisualsOnly();
+    updateCalendarButtonStates();
     updateHeaderDates(currentDaysOffset);
     setCalendarLoading();
 
@@ -241,18 +331,17 @@ function clearSelection() {
 }
 
 function restoreSelectionVisuals() {
-    if (selectedCol === null) return;
+    if (selectedCol === null || selectedRowStart === null || selectedRowEnd === null) return;
     
-    const start = Math.min(selectedRowStart, selectedRowEnd);
-    const end = Math.max(selectedRowStart, selectedRowEnd);
-    
-    for (let row = start; row <= end; row++) {
-        const cell = document.querySelector(`.slot-cell[data-row="${row}"][data-col="${selectedCol}"]`);
-        if (cell && cell.classList.contains('slot-available')) {
+    for (let rowIdx = selectedRowStart; rowIdx <= selectedRowEnd; rowIdx++) {
+        const cell = document.querySelector(`.slot-cell[data-row="${rowIdx}"][data-col="${selectedCol}"]`);
+        
+        if (cell && !cell.classList.contains('slot-disabled')) {
             cell.classList.add('slot-selected');
         }
     }
 }
+
 
 function syncSelectionWithOrderState() {
     if (selectedCol === null || selectedRowStart === null || selectedRowEnd === null) {
@@ -289,7 +378,6 @@ function syncSelectionWithOrderState() {
 
     sendCurrentOrderStatus();
 }
-
 
 function handleTableClick(event) {
     const cell = event.target.closest('.slot-cell');
@@ -334,22 +422,186 @@ function handleTableClick(event) {
 }
 
 function getStartHour() {
-    const firstTimeCell = document.querySelector('.time-cell');
-    if (!firstTimeCell) return 8; 
-    return parseInt(firstTimeCell.textContent.split(':')) || 8;
+    const firstCell = document.querySelector('.slot-cell[data-row="0"]');
+    
+    if (firstCell && firstCell.dataset.time) {
+        return parseInt(firstCell.dataset.time.split(':')[0], 10);
+    }
+    
+    if (firstCell) {
+        const timeText = firstCell.innerText || firstCell.textContent;
+        const match = timeText.match(/(\d{1,2})/);
+        if (match) return parseInt(match[1], 10);
+    }
+    
+    return 8; 
 }
+
 
 function getMonday(date) {
     const d = new Date(date);
+    d.setHours(0, 0, 0, 0);
     const day = d.getDay();
-    const diff = d.getDate() - day + (day === 0 ? -6 : 1 - day);
-    const monday = new Date(d.setDate(diff));
-    monday.setHours(0, 0, 0, 0);
-    return monday;
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+    return new Date(d.setDate(diff));
+}
+
+
+async function loadAvailablePhotographers() {
+    const startTime = currentOrderState?.body?.startTime;
+    const endTime = currentOrderState?.body?.endTime;
+
+    if (!startTime || !endTime) {
+        console.warn("Cannot load photographers: time interval is not selected.");
+        return null;
+    }
+
+    const url = `/order/photographers?start=${encodeURIComponent(startTime)}&end=${encodeURIComponent(endTime)}`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) throw new Error();
+
+        const photographers = await response.json();
+        return photographers;
+    } catch (error) {
+        console.error("Failed to load photographers:", error);
+        return null;
+    }
+}
+
+function updateOrderButtonsState() {
+    const btnPhotographers = document.getElementById('order-btn-photographers');
+    const btnEquipment = document.getElementById('order-btn-equipment');
+    const btnConfirm = document.getElementById('order-btn-confirm');
+
+    const hasValidTime = !!(currentOrderState?.body?.startTime && currentOrderState?.body?.endTime);
+
+    if (btnPhotographers) btnPhotographers.disabled = !hasValidTime;
+    if (btnEquipment) btnEquipment.disabled = !hasValidTime;
+    if (btnConfirm) btnConfirm.disabled = !hasValidTime;
+}
+
+function openModal(modalId) {
+    document.getElementById(modalId).style.display = 'flex';
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+async function openPhotographerModal() {
+    const modal = document.getElementById('photographers-modal');
+    if (!modal) return;
+    
+    if (!currentOrderState.body.startTime || !currentOrderState.body.endTime) {
+        alert('Сначала выберите время бронирования');
+        return;
+    }
+    
+    const photographers = await loadAvailablePhotographers();
+    if (photographers) {
+        currentPhotographersList = photographers;
+        
+        if (selectedPhotographerId) {
+            const selected = photographers.find(p => p.id === selectedPhotographerId);
+            if (selected) {
+                selectedPhotographerName = `${selected.name} ${selected.surname}`;
+            }
+        }
+        
+        renderPhotographerList(photographers);
+        openModal('photographers-modal');
+    }
+}
+
+function closePhotographerModal() {
+    closeModal('photographers-modal');
+}
+
+function renderPhotographerList(photographers) {
+    const listContainer = document.getElementById('photographer-list');
+    if (!listContainer) return;
+    
+    listContainer.innerHTML = '';
+    
+    photographers.forEach(photographer => {
+        const item = document.createElement('div');
+        item.className = 'photographer-item';
+        
+        const isSelected = selectedPhotographerId === photographer.id;
+        
+        item.innerHTML = `
+            <img src="${photographer.photoPath || '/images/placeholder.png'}" 
+                alt="${photographer.name} ${photographer.surname}" 
+                class="round"
+                onerror="this.src='/images/placeholder.png'">
+            <div class="photographer-info">
+                <h3>${photographer.name} ${photographer.surname}</h3>
+                <p>${photographer.description || ''}</p>
+                <p>Стоимость: ${(photographer.price / 100).toFixed(2)} ₽/час</p>
+                <div class="btn-block">
+                    <button class="select-photographer-btn ${isSelected ? 'selected' : ''}" 
+                            onclick="selectPhotographer('${photographer.id}', '${photographer.name} ${photographer.surname}')"
+                            ${isSelected ? 'disabled' : ''}>
+                        ${isSelected ? 'ВЫБРАНО' : 'ВЫБРАТЬ'}
+                    </button>
+                    <button class="deselect-photographer-btn ${isSelected ? '' : 'hidden'}" 
+                            onclick="deselectPhotographer()"
+                            ${isSelected ? '' : 'disabled'}>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <line x1="3" y1="8" x2="13" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        listContainer.appendChild(item);
+    });
+    
+    updatePhotographerInfo();
+}
+
+function selectPhotographer(id, name) {
+    selectedPhotographerId = id;
+    selectedPhotographerName = name;
+    currentOrderState.body.photographerId = id;
+    
+    renderPhotographerList(currentPhotographersList);
+    updatePhotographerInfo();
+}
+
+function deselectPhotographer() {
+    selectedPhotographerId = null;
+    selectedPhotographerName = null;
+    currentOrderState.body.photographerId = null;
+    
+    renderPhotographerList(currentPhotographersList);
+    updatePhotographerInfo();
+}
+
+function updatePhotographerInfo() {
+    const infoSpan = document.getElementById('photographer-selected-info');
+    if (infoSpan) {
+        infoSpan.textContent = `ВЫБРАНО: ${selectedPhotographerName || 'НЕ ВЫБРАНО'}`;
+    }
+}
+
+function confirmPhotographerSelection() {
+    currentOrderState.body.photographerId = selectedPhotographerId;
+    sendCurrentOrderStatus();
+    closePhotographerModal();
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
-    updateButtonStates();
+    updateCalendarButtonStates();
     
     await fetchCurrentOrderStatus('/order/current');
     
@@ -358,29 +610,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     
     currentOrderState.roomId = currentRoomId;
 
-    if (currentOrderState && currentOrderState.body && currentOrderState.body.startTime && currentOrderState.roomId === currentRoomId) {
-        const startDt = new Date(currentOrderState.body.startTime);
-        const endDt = new Date(currentOrderState.body.endTime);
-        
-        const currentMonday = getMonday(new Date());
-        const orderMonday = getMonday(startDt);
-        
-        const msPerDay = 24 * 60 * 60 * 1000;
-        const offsetInDays = Math.round((orderMonday - currentMonday) / msPerDay);
-        
-        if (offsetInDays >= 0 && offsetInDays <= 35) {
-            currentDaysOffset = offsetInDays;
-            
-            const startHour = getStartHour();
-            selectedCol = startDt.getDay() === 0 ? 6 : startDt.getDay() - 1;
-            selectedRowStart = startDt.getHours() - startHour;
-            selectedRowEnd = endDt.getHours() - 1 - startHour;
-        }
-    }
-    
-    updateButtonStates();
-    updateHeaderDates(currentDaysOffset);
-    updateCalendar(currentDaysOffset);
     if (table) {
         table.addEventListener('click', handleTableClick);
     }
@@ -395,5 +624,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const btnToday = document.getElementById('calendar-btn-today');
     if (btnToday) {
         btnToday.addEventListener('click', () => {if (currentDaysOffset !== 0) navigateCalendar(0);});
+    }
+    const btnPhotographers = document.getElementById('order-btn-photographers');
+    if (btnPhotographers) {
+        btnPhotographers.addEventListener('click', openPhotographerModal);
+    }
+    const photographerConfirmBtn = document.getElementById('photographer-close-btn');
+    if (photographerConfirmBtn) {
+        photographerConfirmBtn.addEventListener('click', confirmPhotographerSelection);
     }
 });

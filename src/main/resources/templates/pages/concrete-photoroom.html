@@ -9,8 +9,30 @@
     <title>Фотостудия «Фокус»</title>
 </head>
 <body>
-
     <th:block th:fragment="main-content">
+            <div id="equipment-modal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <h2>Выберите необходимое оборудование</h2>
+                    <div class="modal-body">
+                        
+                    </div>
+                    <button class="modal-close" onclick="closeModal('equipment-modal')">ГОТОВО</button>
+                </div>
+            </div>
+
+            <div id="photographers-modal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <h2>Выберите фотографа</h2>
+                    <div class="modal-body">
+                        <div id="photographer-list" class="photographer-list"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <span id="photographer-selected-info">ВЫБРАНО: НЕ ВЫБРАНО</span>
+                        <button id="photographer-close-btn" class="modal-close">ГОТОВО</button>
+                    </div>
+                </div>
+            </div>
+
         <div class="photoroom-info">
             <h2 th:text="${photoroom.textData.title}"></h2>
             <th:block th:if="${photoroom.images != null && !photoroom.images.isEmpty()}">
@@ -60,7 +82,6 @@
 
     <th:block id="photoroom-scripts">
         <script th:src="@{/js/carousel.js}" defer></script>
-        <script th:src="@{/js/tabs.js}" defer></script>
         <script th:src="@{/js/booking.js}" defer></script>
     </th:block>
 </body>
