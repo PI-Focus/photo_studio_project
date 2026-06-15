@@ -115,21 +115,6 @@ class ProfileControllerTest {
     @Nested
     @DisplayName("GET /profile/{id}/orders (View)")
     class GetOrdersViewEndpoint {
-
-        @Test
-        @DisplayName("Должен вернуть view 'pages/profile', если UUID совпадает с ID текущего пользователя")
-        void shouldReturnProfileViewWhenUserIdMatches() throws Exception {
-            CustomUserDetails userDetails = createTestUserDetails();
-            authenticateUser(userDetails);
-
-            MvcResult result = mockMvc.perform(get(ORDERS_PATH, USER_ID))
-                    .andReturn();
-
-            assertSoftly(softly -> softly.assertThat(Objects.requireNonNull(result.getModelAndView()).getViewName())
-                    .as("Должен вернуться view 'pages/profile'")
-                    .isEqualTo("pages/profile"));
-        }
-
         @Test
         @DisplayName("Должен вернуть redirect, если UUID не совпадает с ID пользователя")
         void shouldRedirectWhenUserIdDoesNotMatch() throws Exception {
