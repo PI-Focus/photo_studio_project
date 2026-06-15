@@ -26,4 +26,4 @@ jobs:
           script: |
             cd /home/${{ secrets.SSH_USER }}/photostudio
             docker compose -f docker-compose.prod.yml pull app
-            docker rollout -f docker-compose.prod.yml app
+            docker rollout -f docker-compose.prod.yml --wait-after-healthy 10 app
