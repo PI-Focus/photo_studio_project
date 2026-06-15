@@ -135,7 +135,7 @@ public class ProfileController {
         if (!uuid.equals(userDetails.userId())) {
             return "redirect:/";
         }
-        return "pages/login";
+        return "pages/profile-options";
     }
 
     @GetMapping("{id}/credentials")

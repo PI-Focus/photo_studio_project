@@ -54,3 +54,50 @@ main {
         margin-top: auto;
     }
 }
+
+.reservations-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    width: 100%;
+    box-sizing: border-box;
+    padding: var(--space-xxl)
+}
+
+.reservation-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+    width: 100%;
+    box-sizing: border-box;
+    padding: var(--space-m); 
+
+    background: var(--color-secondary);
+    border-radius: var(--radius-m);
+}
+
+.card-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s); 
+}
+
+.room-title, 
+.booking-time {
+    margin: 0;
+    padding: 0;
+}
+
+.delete-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: var(--space-s); 
+    margin: 0;
+    line-height: 1;
+
+    font-size: var(--space-l);
+}
