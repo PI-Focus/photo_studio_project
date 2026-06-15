@@ -10,9 +10,9 @@ let currentOrderState = {
     body: {
         startTime: null,
         endTime: null,
-        photographerId: null,
+        photographer: null,
         equipment: [],
-        price: null
+        price: 0
     }
 };
 
@@ -63,18 +63,17 @@ async function sendCurrentOrderStatus() {
             body: JSON.stringify(currentOrderState)
         });
 
-        if (response.status === 200 || response.status === 202 || response.status === 422) {
+        if (response.status === 200 || response.status === 202) {
             const updatedData = await response.json();
             if (updatedData) {
                 currentOrderState = updatedData;
             }
             
-            if (response.status === 422 || !currentOrderState.body?.startTime) {
-                clearSelectionVisualsOnly();
-            }
-            
             updatePriceDisplay();
             updateOrderButtonsState();
+        } else if (response.status === 422) {
+            clearSelectionVisualsOnly();
+            resetOrderToZero();
         } else {
             resetOrderToZero();
         }
@@ -87,13 +86,16 @@ async function sendCurrentOrderStatus() {
 function resetOrderToZero() {
     currentOrderState.body.startTime = null;
     currentOrderState.body.endTime = null;
-    currentOrderState.body.price = null;
-    currentOrderState.body.photographerId = null;
+    currentOrderState.body.price = 0;
+    currentOrderState.body.photographer = null;
     currentOrderState.body.equipment = [];   
 
     selectedCol = null;
     selectedRowStart = null;
     selectedRowEnd = null;
+    selectedPhotographerId = null;
+    selectedPhotographerName = null;
+    
     document.querySelectorAll('.slot-selected').forEach(cell => {
         cell.classList.remove('slot-selected');
     });
@@ -468,19 +470,21 @@ function renderPhotographerList(photographers) {
 function selectPhotographer(id, name) {
     selectedPhotographerId = id;
     selectedPhotographerName = name;
-    currentOrderState.body.photographerId = id;
+    currentOrderState.body.photographer = id;
     
     renderPhotographerList(currentPhotographersList);
     updatePhotographerInfo();
+    sendCurrentOrderStatus();
 }
 
 function deselectPhotographer() {
     selectedPhotographerId = null;
     selectedPhotographerName = null;
-    currentOrderState.body.photographerId = null;
+    currentOrderState.body.photographer = null;
     
     renderPhotographerList(currentPhotographersList);
     updatePhotographerInfo();
+    sendCurrentOrderStatus();
 }
 
 function updatePhotographerInfo() {
