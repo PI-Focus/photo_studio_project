@@ -8,6 +8,8 @@ let selectedRowEnd = null;
 let selectedStartTime = null;
 let selectedEndTime = null;
 
+let currentRoomId = null;
+
 let currentOrderState = {
     roomId: null,
     body: {
@@ -59,6 +61,16 @@ async function fetchCurrentOrderStatus(url) {
 }
 
 async function restoreLocalStateFromOrder() {
+    const table = document.querySelector('.time-calendar');
+    const currentRoomUuid = table ? table.dataset.uuid : null;
+
+    if (currentOrderState.roomId && currentRoomUuid && currentOrderState.roomId !== currentRoomUuid) {
+        resetOrderToZero();
+        currentDaysOffset = 0;
+        updateCalendar(currentDaysOffset);
+        return;
+    }
+
     if (!currentOrderState.body) {
         currentDaysOffset = 0; 
         updateCalendar(currentDaysOffset);
@@ -84,7 +96,6 @@ async function restoreLocalStateFromOrder() {
 
     updateCalendar(currentDaysOffset);
 }
-
 
 
 async function sendCurrentOrderStatus() {
@@ -119,6 +130,9 @@ async function sendCurrentOrderStatus() {
 }
 
 function resetOrderToZero() {
+    const table = document.querySelector('.time-calendar');
+    currentOrderState.roomId = table ? table.dataset.uuid : null;
+
     currentOrderState.body.startTime = null;
     currentOrderState.body.endTime = null;
     currentOrderState.body.price = 0;
@@ -138,6 +152,7 @@ function resetOrderToZero() {
     updatePriceDisplay();
     updateOrderButtonsState();
 }
+
 
 function clearSelectionVisualsOnly() {
     selectedCol = null;
