@@ -44,3 +44,4 @@ Server --> Browser : Форма регистрации
 group Валидация на клиенте
     User -> Browser : Заполняет данные
     alt Ошибка 
+@enduml
