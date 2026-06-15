@@ -148,38 +148,49 @@ public class UserService implements IUserService {
         }
         UserEntity userEntity = userOpt.get();
 
-        if (!user.login().matches("^[a-z0-9_-]+$")) {
+        if (user.login() != null && !user.login().matches("^[a-z0-9_-]+$")) {
             return "Логин может содержать только строчные латинские буквы, цифры, символы нижнего подчеркивания и дефиса";
         }
-        if (!user.login().matches(".*[a-z].*")) {
+        if (user.login() != null && !user.login().matches(".*[a-z].*")) {
             return "Логин должен содержать латинские буквы";
         }
-        if (user.login().length() < MIN_LOGIN_LENGTH) {
+        if (user.login() != null && user.login().length() < MIN_LOGIN_LENGTH) {
             return "Минимальная длина логина должна быть 4 символов";
         }
-        if (userRepository.existsByLogin(user.login())) {
+        if (user.login() != null && !user.login().equals(userEntity.getLogin())
+                && userRepository.existsByLogin(user.login())) {
             return "Логин занят";
         }
-        if (user.password().length() < MIN_PASSWORD_LENGTH) {
+        if (user.password() != null && user.password().length() < MIN_PASSWORD_LENGTH) {
             return "Минимальная длина пароля должна быть 8 символов";
         }
-        if (userRepository.existsByPhoneNumber(user.phoneNumber())) {
+        if (user.phoneNumber() != null && !user.phoneNumber().equals(userEntity.getPhoneNumber())
+                && userRepository.existsByPhoneNumber(user.phoneNumber())) {
             return "Пользователь с таким номером телефона существует";
         }
-        if (!user.phoneNumber().matches("^8\\d{10}$")) {
+        if (user.phoneNumber() != null && !user.phoneNumber().matches("^8\\d{10}$")) {
             return "Некорректный номер телефона";
         }
-        if (userRepository.existsByEmail(user.email())) {
+        if (user.email() != null && !user.email().equals(userEntity.getEmail())
+                && userRepository.existsByEmail(user.email())) {
             return "Пользователь с таким email телефона существует";
         }
-        if (!user.email().matches("^[^@]+@[^@]+$")) {
+        if (user.email() != null && !user.email().matches("^[^@]+@[^@]+$")) {
             return "Некорректный email";
         }
 
-        userEntity.setLogin(user.login());
-        userEntity.setPassword(passwordEncoder.encode(user.password()));
-        userEntity.setPhoneNumber(user.phoneNumber());
-        userEntity.setEmail(user.email());
+        if (user.login() != null) {
+            userEntity.setLogin(user.login());
+        }
+        if (user.password() != null) {
+            userEntity.setPassword(passwordEncoder.encode(user.password()));
+        }
+        if (user.phoneNumber() != null) {
+            userEntity.setPhoneNumber(user.phoneNumber());
+        }
+        if (user.email() != null) {
+            userEntity.setEmail(user.email());
+        }
         userRepository.save(userEntity);
         return "";
     }
