@@ -36,4 +36,6 @@ public interface UserRepository extends JpaRepository<UserEntity, UUID> {
      * @return true, если логин уже занят; false, если свободен
      */
     Boolean existsByLogin(String login);
+    Boolean existsByPhoneNumber(String phoneNumber);
+    Boolean existsByEmail(String email);
 }

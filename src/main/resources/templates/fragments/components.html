@@ -91,3 +91,33 @@
         </div>
     </div>
 </div>
+
+<table th:fragment="time-calendar(startHour, endHour, tableId, tableDataUuid, tableClass)"
+   th:id="${tableId}"
+   th:class="|time-calendar ${tableClass}|"
+   th:data-uuid="${tableDataUuid}">
+   <thead>
+        <tr>
+            <th class="time-cell"><span th:text="${#strings.concat(#numbers.formatInteger(startHour, 2), ':00')}">time</span></th>
+            <th class="day-header" data-day="0">Пн <span>--</span></th>
+            <th class="day-header" data-day="1">Вт <span>--</span></th>
+            <th class="day-header" data-day="2">Ср <span>--</span></th>
+            <th class="day-header" data-day="3">Чт <span>--</span></th>
+            <th class="day-header" data-day="4">Пт <span>--</span></th>
+            <th class="day-header" data-day="5">Сб <span>--</span></th>
+            <th class="day-header" data-day="6">Вс <span>--</span></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="hour, hourStat : ${#numbers.sequence(startHour + 1, endHour)}">
+            <td class="time-cell"><span th:text="${#strings.concat(#numbers.formatInteger(hour, 2), ':00')}">time</span></td>
+            
+            <td th:each="dayIdx : ${#numbers.sequence(0, 6)}" 
+                class="slot-cell slot-empty" 
+                th:data-row="${hourStat.index}" 
+                th:data-col="${dayIdx}">
+                <span class="slot-price"></span>
+            </td>
+        </tr>
+    </tbody>
+</table>

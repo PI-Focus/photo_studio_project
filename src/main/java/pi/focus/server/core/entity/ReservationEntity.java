@@ -1,5 +1,7 @@
 package pi.focus.server.core.entity;
 
+import io.hypersistence.utils.hibernate.type.range.PostgreSQLRangeType;
+import io.hypersistence.utils.hibernate.type.range.Range;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,89 +12,50 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import org.hibernate.annotations.Type;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-/** 
- * Сущность бронирования.
- * Центровой узел, объединяющий информацию о клиенте,
- * забронированном зале, времени аренды и выбранных дополнительных услугах
- */
 @Entity
 @Table(name = "reservations")
 public class ReservationEntity {
-    /** Уникальный идентификатор бронирования */
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false, updatable = false)
     UUID id;
 
-    /** Пользователь, совершивший бронирование */
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     UserEntity user;
 
-    /** Фотозал, выбранный для аренды */
     @ManyToOne
     @JoinColumn(name = "room_id")
     RoomEntity room;
 
-    /** Дата, на которую забронирован зал */
-    @Column(name = "day", nullable = false, columnDefinition = "DATE")
-    LocalDate day;
+    @ManyToOne
+    @JoinColumn(name = "photographer_id")
+    private PhotographerEntity photographer;
 
-    /** Время начала аренды */
-    @Column(name = "from_time", nullable = false, columnDefinition = "SMALLINT")
-    Short fromTime;
+    @Column(name = "time", nullable = false, columnDefinition = "tsrange")
+    @Type(PostgreSQLRangeType.class)
+    private Range<LocalDateTime> time;
 
-    /** Время окончания аренды */
-    @Column(name = "to_time", nullable = false, columnDefinition = "SMALLINT")
-    Short toTime;
-
-    /** Список дополнительного оборудования, зарезервированного в рамках данной брони */
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
     private List<ReservedEquipmentEntity> reservedEquipments = new ArrayList<>();
 
-    /** Список фотографов, забронированных для проведения съемки в рамках данной брони */
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
-    private List<ReservedPhotographerEntity> reservedPhotographers = new ArrayList<>();
-
-    /** Конструктор для спецификации JPA */
     public ReservationEntity() {
     }
 
-    /** 
-     * Конструктор для создания полной записи о бронировании
-     * @param id уникальный идентификатор
-     * @param user объект пользователя
-     * @param room объект выбранного зала
-     * @param day дата съемки
-     * @param fromTime час начала
-     * @param toTime час окончания
-     * @param reservedEquipments список оборудования
-     * @param reservedPhotographers список фотографов
-     */
-    public ReservationEntity(
-            UUID id,
-            UserEntity user,
-            RoomEntity room,
-            LocalDate day,
-            Short fromTime,
-            Short toTime,
-            List<ReservedEquipmentEntity> reservedEquipments,
-            List<ReservedPhotographerEntity> reservedPhotographers
-    ) {
+    public ReservationEntity(UUID id, UserEntity user, RoomEntity room, PhotographerEntity photographer, Range<LocalDateTime> time, List<ReservedEquipmentEntity> reservedEquipments) {
         this.id = id;
         this.user = user;
         this.room = room;
-        this.day = day;
-        this.fromTime = fromTime;
-        this.toTime = toTime;
+        this.photographer = photographer;
+        this.time = time;
         this.reservedEquipments = reservedEquipments;
-        this.reservedPhotographers = reservedPhotographers;
     }
 
     public UUID getId() {
@@ -119,28 +82,20 @@ public class ReservationEntity {
         this.room = room;
     }
 
-    public LocalDate getDay() {
-        return day;
+    public PhotographerEntity getPhotographer() {
+        return photographer;
     }
 
-    public void setDay(LocalDate day) {
-        this.day = day;
+    public void setPhotographer(PhotographerEntity photographer) {
+        this.photographer = photographer;
     }
 
-    public Short getFromTime() {
-        return fromTime;
+    public Range<LocalDateTime> getTime() {
+        return time;
     }
 
-    public void setFromTime(Short fromTime) {
-        this.fromTime = fromTime;
-    }
-
-    public Short getToTime() {
-        return toTime;
-    }
-
-    public void setToTime(Short toTime) {
-        this.toTime = toTime;
+    public void setTime(Range<LocalDateTime> time) {
+        this.time = time;
     }
 
     public List<ReservedEquipmentEntity> getReservedEquipments() {
@@ -149,14 +104,6 @@ public class ReservationEntity {
 
     public void setReservedEquipments(List<ReservedEquipmentEntity> reservedEquipments) {
         this.reservedEquipments = reservedEquipments;
-    }
-
-    public List<ReservedPhotographerEntity> getReservedPhotographers() {
-        return reservedPhotographers;
-    }
-
-    public void setReservedPhotographers(List<ReservedPhotographerEntity> reservedPhotographers) {
-        this.reservedPhotographers = reservedPhotographers;
     }
 }
 

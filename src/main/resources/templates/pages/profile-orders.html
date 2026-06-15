@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" 
+      th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title}, ~{::#profile-css}, ~{::#profile-orders-scripts})}">
+<head>
+    <th:block id="profile-css">
+        <link rel="stylesheet" th:href="@{/css/components.css}" blocking="render">
+        <link rel="stylesheet" th:href="@{/css/profile.css}" blocking="render">
+    </th:block>
+    <title>Профиль - Фотостудия «Фокус»</title>
+</head>
+<body>
+
+    <th:block th:fragment="main-content">
+        <div class="left-pane">
+            <div class="logo-login-wrap">
+                <div class="logo-block">
+                    <div th:replace="~{fragments/basic-components :: safe-img(${base.profileBright}, '', 'square theme-bright')}"></div>
+                    <div th:replace="~{fragments/basic-components :: safe-img(${base.profileDark}, '', 'square theme-dark')}"></div>
+                </div>
+                <p id="login-name">ЛОГИН</p>
+            </div>
+            <a th:href="@{orders}" class="active">Заказы</a>
+            <a th:href="@{options}">Настройки</a>
+            <a th:href="@{/logout}" id="link-logout">Выход</a>
+        </div>
+        <div class="content-pane">
+            <div class="reservation-wrap">
+                <div id="reservations-list" class="reservations-container"></div>
+            </div>
+        </div>
+    </th:block>
+
+    <th:block id="profile-orders-scripts">
+        <script th:src="@{/js/profile-orders.js}" defer></script>
+    </th:block>
+</body>
+</html>

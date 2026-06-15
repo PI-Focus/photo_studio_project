@@ -272,3 +272,72 @@
         }
     }
 }
+
+.time-calendar {
+    border-collapse: collapse; 
+    border-spacing: 0;
+
+    .day-header {
+        width: 9rem;
+        height: 3.25rem;
+        background: var(--color-background);
+        color: var(--color-text-calendar);
+        font-weight: 400;
+        border: 1px solid var(--color-primary);
+
+        &:nth-last-child(-n + 2) {
+            color: var(--color-accent);
+        }
+
+        &.current-day {
+            background: var(--color-secondary);
+        }
+    }
+
+    .time-cell {
+        height: 3.25rem;
+        width: 3.75rem;
+        color: var(--color-text-calendar);
+        position: relative;
+
+        &:first-child {
+            font-weight: 400;
+        }
+
+        span {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translate(-50%, 50%); 
+        }
+    }
+
+    .slot-cell {
+        width: 9rem;
+        height: 3.25rem;
+        background: var(--color-calendar-busy);
+        color: var(--color-text-calendar);
+        border: 1px solid var(--color-primary);
+        text-align: center;
+
+        will-change: background;
+        transition: background var(--time-xs) ease;
+
+        &.slot-available {
+            background: var(--color-background);
+
+            &:hover {
+                background: var(--color-secondary);
+            }
+        }
+
+        &.slot-selected {
+            background: var(--color-text-accent);
+            color: var(--color-background);
+
+            &:hover {
+                background: var(--color-accent);
+            }
+        }
+    }
+}

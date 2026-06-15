@@ -9,8 +9,33 @@
     <title>Фотостудия «Фокус»</title>
 </head>
 <body>
-
     <th:block th:fragment="main-content">
+            <div id="equipment-modal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <h2>Выберите необходимое оборудование</h2>
+                    <div class="modal-body">
+                        <div id="equipment-list" class="equipment-list"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <span id="equipment-selected-info">ВЫБРАНО: 0</span>
+                        <button id="equipment-close-btn" class="modal-close">ГОТОВО</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="photographers-modal" class="modal" style="display: none;">
+                <div class="modal-content">
+                    <h2>Выберите фотографа</h2>
+                    <div class="modal-body">
+                        <div id="photographer-list" class="photographer-list"></div>
+                    </div>
+                    <div class="modal-footer">
+                        <span id="photographer-selected-info">ВЫБРАНО: НЕ ВЫБРАНО</span>
+                        <button id="photographer-close-btn" class="modal-close">ГОТОВО</button>
+                    </div>
+                </div>
+            </div>
+
         <div class="photoroom-info">
             <h2 th:text="${photoroom.textData.title}"></h2>
             <th:block th:if="${photoroom.images != null && !photoroom.images.isEmpty()}">
@@ -30,11 +55,55 @@
             </th:block>
             <p th:text="${photoroom.textData.text}"></p>
         </div>
+
+        <div class="booking-calendar">
+            <h2>Бронирование</h2>
+            <div class="calendar-btn-block">
+                <button id="calendar-btn-today">Сегодня</button>
+                <button id="calendar-btn-prev">
+                    <svg th:replace="~{fragments/icons :: arrow(180)}"></svg>
+                </button>
+                <button id="calendar-btn-next">
+                    <svg th:replace="~{fragments/icons :: arrow(0)}"></svg>
+                </button>
+            </div>
+
+            <th:block th:replace="~{fragments/components :: time-calendar(
+                startHour=8, 
+                endHour=22, 
+                tableId='booking-table', 
+                tableDataUuid=${photoroom.roomUuid}, 
+                tableClass='')}"></th:block>
+
+            <div class="order-btn-block">
+                <button id="order-btn-equipment">ВЫБРАТЬ ОБОРУДОВАНИЕ</button>
+                <button id="order-btn-photographers">ВЫБРАТЬ ФОТОГРАФА</button>
+                <button id="order-btn-confirm">ЗАБРОНИРОВАТЬ</button>
+            </div>
+
+            <div class="order-status-block">
+                <div class="status-item">
+                    <span class="status-label">Итоговая стоимость:</span>
+                    <span class="status-value" id="summary-total-price">0.00 ₽</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Фотограф:</span>
+                    <span class="status-value" id="summary-photographer">Не выбран</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Выбрано оборудования:</span>
+                    <span class="status-value" id="summary-equipment-count">0</span>
+                </div>
+                <div class="status-item">
+                    <span class="error-label" id="order-status-message">Ohh hell naah</span>
+                </div>
+            </div>
+        </div>
     </th:block>
 
     <th:block id="photoroom-scripts">
         <script th:src="@{/js/carousel.js}" defer></script>
-        <script th:src="@{/js/tabs.js}" defer></script>
+        <script th:src="@{/js/booking.js}" defer></script>
     </th:block>
 </body>
 </html>

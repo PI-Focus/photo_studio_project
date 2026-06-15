@@ -1,5 +1,51 @@
 CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
+INSERT INTO rooms (id, title, description, price) VALUES
+	('8718f425-0ebe-48aa-9127-4541ed29524c', 'Зал 1', 'Очень крутое описание зала 1. Лучше зала просто не существует', 150000),
+	('602109e2-f729-41f3-b93b-2f9a81878ed6', 'Зал 2', 'Очень крутое описание зала 2. Лучше зала просто не существует', 100000),
+	('f8dca524-e325-4a14-a049-4f0fe73b15f9', 'Зал 3', 'Очень крутое описание зала 3. Лучше зала просто не существует', 90000),
+	('e4ca86f1-7e2c-4de1-8bc1-5078e91f8736', 'Зал 4', 'Очень крутое описание зала 4. Лучше зала просто не существует', 50000),
+	('da0840b7-0a95-401d-8e86-aafa7df976c2', 'Зал 5', 'Очень крутое описание зала 5. Лучше зала просто не существует', 10000);
+
+INSERT INTO photos (id, room_id, path) VALUES
+    (gen_random_uuid(), '8718f425-0ebe-48aa-9127-4541ed29524c', '/images/placeholder.png'),
+	(gen_random_uuid(), '8718f425-0ebe-48aa-9127-4541ed29524c', '/images/placeholder.png'),
+	(gen_random_uuid(), '8718f425-0ebe-48aa-9127-4541ed29524c', '/images/placeholder.png'),
+	(gen_random_uuid(), '8718f425-0ebe-48aa-9127-4541ed29524c', '/images/placeholder.png'),
+	(gen_random_uuid(), '8718f425-0ebe-48aa-9127-4541ed29524c', '/images/placeholder.png'),
+	(gen_random_uuid(), '602109e2-f729-41f3-b93b-2f9a81878ed6', '/images/placeholder.png'),
+	(gen_random_uuid(), '602109e2-f729-41f3-b93b-2f9a81878ed6', '/images/placeholder.png'),
+	(gen_random_uuid(), '602109e2-f729-41f3-b93b-2f9a81878ed6', '/images/placeholder.png'),
+	(gen_random_uuid(), '602109e2-f729-41f3-b93b-2f9a81878ed6', '/images/placeholder.png'),
+	(gen_random_uuid(), '602109e2-f729-41f3-b93b-2f9a81878ed6', '/images/placeholder.png'),
+	(gen_random_uuid(), 'f8dca524-e325-4a14-a049-4f0fe73b15f9', '/images/placeholder.png'),
+	(gen_random_uuid(), 'f8dca524-e325-4a14-a049-4f0fe73b15f9', '/images/placeholder.png'),
+	(gen_random_uuid(), 'f8dca524-e325-4a14-a049-4f0fe73b15f9', '/images/placeholder.png'),
+	(gen_random_uuid(), 'f8dca524-e325-4a14-a049-4f0fe73b15f9', '/images/placeholder.png'),
+	(gen_random_uuid(), 'f8dca524-e325-4a14-a049-4f0fe73b15f9', '/images/placeholder.png'),
+	(gen_random_uuid(), 'e4ca86f1-7e2c-4de1-8bc1-5078e91f8736', '/images/placeholder.png'),
+	(gen_random_uuid(), 'e4ca86f1-7e2c-4de1-8bc1-5078e91f8736', '/images/placeholder.png'),
+	(gen_random_uuid(), 'e4ca86f1-7e2c-4de1-8bc1-5078e91f8736', '/images/placeholder.png'),
+	(gen_random_uuid(), 'e4ca86f1-7e2c-4de1-8bc1-5078e91f8736', '/images/placeholder.png'),
+	(gen_random_uuid(), 'e4ca86f1-7e2c-4de1-8bc1-5078e91f8736', '/images/placeholder.png'),
+	(gen_random_uuid(), 'da0840b7-0a95-401d-8e86-aafa7df976c2', '/images/placeholder.png'),
+	(gen_random_uuid(), 'da0840b7-0a95-401d-8e86-aafa7df976c2', '/images/placeholder.png'),
+	(gen_random_uuid(), 'da0840b7-0a95-401d-8e86-aafa7df976c2', '/images/placeholder.png'),
+	(gen_random_uuid(), 'da0840b7-0a95-401d-8e86-aafa7df976c2', '/images/placeholder.png'),
+	(gen_random_uuid(), 'da0840b7-0a95-401d-8e86-aafa7df976c2', '/images/placeholder.png');
+
+INSERT INTO photographers (id, name, surname, description, price, photo_path) VALUES
+    ('692d3820-d762-436a-93ae-aaa1c7d2c1f5', 'Владимир', 'Кузнецов', 'Лучший фотограф', 50000, '/images/placeholder.png'),
+    ('c0db4f10-b720-4e2e-9a72-e3a4f30d3028', 'Марина', 'Волкова', 'Нормальный фотограф', 70000, '/images/placeholder.png'),
+    ('19b7720d-793a-4add-8207-a8baead65e2a', 'Дмитрий', 'Соколов', 'Так себе фотограф', 90000, '/images/placeholder.png');
+
+INSERT INTO equipment (id, title, description, price, photo_path) VALUES
+	('9596154e-ee45-454a-adda-084fca722807', 'Фотоаппарат', 'Описание фотоаппарата', 10000, '/images/placeholder.png'),
+	('1251f03a-1851-491f-8071-0fe87547d35d', 'Штатив', 'Описание штатива', 20000, '/images/placeholder.png'),
+	('e46bd00d-b682-4adc-8320-aabd9ba4f045', 'Софтбокс', 'Описание софтбокса', 15000, '/images/placeholder.png'),
+	('554c0677-d149-4e82-8c56-355c139e6ee1', 'Хромакей', 'Описание хромакея', 30000, '/images/placeholder.png'),
+	('60cab21d-31e8-4589-a145-5556172aa439', 'Призма', 'Описание призмы', 10000, '/images/placeholder.png');
+
 INSERT INTO users (id, login, phone_number, email, password, role) VALUES
 	('04070c17-74da-4074-892b-d9c4dedab9cf', 'login0', '81111111111', 'email1@e', crypt('password0', gen_salt('bf')), 'ADMIN'),
 	('3e5f1ff2-7c6f-47ec-9aac-62d0f328b4bd', 'login1', '82222222222', 'email2@e', crypt('password1', gen_salt('bf')), 'USER'),
@@ -11,3 +57,56 @@ INSERT INTO users (id, login, phone_number, email, password, role) VALUES
 	('a92b31ca-8087-48b9-bd9d-a4c6e730f529', 'login7', null, 'email6@e', crypt('password7', gen_salt('bf')), 'USER'),
 	('9400ca07-e888-488c-878b-c56743dc646e', 'login8', null, null, crypt('password8', gen_salt('bf')), 'USER'),
 	('af402408-fbdd-460d-8819-866cccda6a22', 'login9', null, null, crypt('password9', gen_salt('bf')), 'USER');
+
+INSERT INTO reservations (id, user_id, room_id, photographer_id, time) VALUES
+    ('56190bf3-92e4-450f-8fed-f2298069c82a', 'e4a507da-7b8b-4f4b-9957-9d592d474621', '8718f425-0ebe-48aa-9127-4541ed29524c', '692d3820-d762-436a-93ae-aaa1c7d2c1f5', '[2026-06-15 08:00:00, 2026-06-15 12:00:00]'),
+    ('95e913dd-9de0-4bec-bb4c-6828556a7259', 'e4a507da-7b8b-4f4b-9957-9d592d474621', '8718f425-0ebe-48aa-9127-4541ed29524c', 'c0db4f10-b720-4e2e-9a72-e3a4f30d3028', '[2026-06-15 13:00:00, 2026-06-15 14:00:00]'),
+    ('f54cdf57-a4a9-471e-b70a-c170b5d9b88e', 'e4a507da-7b8b-4f4b-9957-9d592d474621', '602109e2-f729-41f3-b93b-2f9a81878ed6', '19b7720d-793a-4add-8207-a8baead65e2a', '[2026-06-15 09:00:00, 2026-06-15 19:00:00]'),
+    ('f936c6d4-dec8-448c-807a-23e06522b8db', '09db59da-56eb-480d-8886-88642450fc98', '8718f425-0ebe-48aa-9127-4541ed29524c', '692d3820-d762-436a-93ae-aaa1c7d2c1f5', '[2026-06-15 14:00:00, 2026-06-15 18:00:00]'),
+    ('eae75504-50f3-4faf-9a0c-0bb2a51ebaea', '09db59da-56eb-480d-8886-88642450fc98', '8718f425-0ebe-48aa-9127-4541ed29524c', 'c0db4f10-b720-4e2e-9a72-e3a4f30d3028', '[2026-06-16 09:00:00, 2026-06-16 10:00:00]'),
+    ('3f414437-1730-49b0-b9e9-e08724b09217', '09db59da-56eb-480d-8886-88642450fc98', '602109e2-f729-41f3-b93b-2f9a81878ed6', '19b7720d-793a-4add-8207-a8baead65e2a', '[2026-06-18 10:00:00, 2026-06-18 12:00:00]'),
+    ('e5f94e3b-f4d1-48e4-add8-30e8dc18ee25', 'bc146acb-084c-472b-b3a3-f58ba2677c05', '8718f425-0ebe-48aa-9127-4541ed29524c', '692d3820-d762-436a-93ae-aaa1c7d2c1f5', '[2026-06-16 10:00:00, 2026-06-16 15:00:00]'),
+    ('c9d79ec8-7628-4a83-a280-873627c41152', 'bc146acb-084c-472b-b3a3-f58ba2677c05', 'f8dca524-e325-4a14-a049-4f0fe73b15f9', 'c0db4f10-b720-4e2e-9a72-e3a4f30d3028', '[2026-06-16 10:00:00, 2026-06-16 12:00:00]'),
+    ('ed063b5f-7db9-48cc-a932-f623ce92d4fb', 'bc146acb-084c-472b-b3a3-f58ba2677c05', '8718f425-0ebe-48aa-9127-4541ed29524c', '19b7720d-793a-4add-8207-a8baead65e2a', '[2026-06-16 19:00:00, 2026-06-16 22:00:00]'),
+    ('b36eeea6-a93e-49db-bfc8-fdf7e10b3d2d', 'edec74be-5539-4d72-9537-03acf9e1c866', '8718f425-0ebe-48aa-9127-4541ed29524c', '692d3820-d762-436a-93ae-aaa1c7d2c1f5', '[2026-06-17 10:00:00, 2026-06-17 11:00:00]'),
+    ('32e34b22-d6b7-4120-a67e-888458f55948', 'edec74be-5539-4d72-9537-03acf9e1c866', '8718f425-0ebe-48aa-9127-4541ed29524c', 'c0db4f10-b720-4e2e-9a72-e3a4f30d3028', '[2026-06-17 12:00:00, 2026-06-17 18:00:00]'),
+    ('576440db-c654-4f7c-8cfc-a4c9aa875e86', 'edec74be-5539-4d72-9537-03acf9e1c866', 'f8dca524-e325-4a14-a049-4f0fe73b15f9', '19b7720d-793a-4add-8207-a8baead65e2a', '[2026-06-18 10:00:00, 2026-06-18 12:00:00]'),
+    ('7c7cf0d0-11ae-4bbd-98c1-9a9137582749', '499af41b-fddb-4970-868b-201c2b5776bb', '8718f425-0ebe-48aa-9127-4541ed29524c', '692d3820-d762-436a-93ae-aaa1c7d2c1f5', '[2026-06-23 08:00:00, 2026-06-23 12:00:00]'),
+    ('49326607-fc78-49fa-8b7e-95f413010844', '499af41b-fddb-4970-868b-201c2b5776bb', 'e4ca86f1-7e2c-4de1-8bc1-5078e91f8736', 'c0db4f10-b720-4e2e-9a72-e3a4f30d3028', '[2026-06-16 10:00:00, 2026-06-16 12:00:00]'),
+    ('293ea282-94e1-4c48-961e-302f0bc136ae', '499af41b-fddb-4970-868b-201c2b5776bb', '8718f425-0ebe-48aa-9127-4541ed29524c', '19b7720d-793a-4add-8207-a8baead65e2a', '[2026-06-23 12:00:00, 2026-06-23 13:00:00]'),
+    ('60b4b070-1d6e-4d80-a7a4-2ebed4b8eff8', 'a92b31ca-8087-48b9-bd9d-a4c6e730f529', '602109e2-f729-41f3-b93b-2f9a81878ed6', '692d3820-d762-436a-93ae-aaa1c7d2c1f5', '[2026-06-19 10:00:00, 2026-06-19 12:00:00]'),
+    ('1aa97aeb-df4e-4bb2-bc4a-10a35c3d8451', 'a92b31ca-8087-48b9-bd9d-a4c6e730f529', '8718f425-0ebe-48aa-9127-4541ed29524c', 'c0db4f10-b720-4e2e-9a72-e3a4f30d3028', '[2026-06-23 15:00:00, 2026-06-23 21:00:00]'),
+    ('1e969ce1-3d7e-474c-8c5a-061d633a0acd', '9400ca07-e888-488c-878b-c56743dc646e', '8718f425-0ebe-48aa-9127-4541ed29524c', '19b7720d-793a-4add-8207-a8baead65e2a', '[2026-06-24 10:00:00, 2026-06-24 12:00:00]'),
+    ('d17c5e8e-cf35-470f-a0bc-3893e9be1caa', '9400ca07-e888-488c-878b-c56743dc646e', '602109e2-f729-41f3-b93b-2f9a81878ed6', '692d3820-d762-436a-93ae-aaa1c7d2c1f5', '[2026-06-19 16:00:00, 2026-06-19 22:00:00]');
+
+INSERT INTO reserved_equipment (reserved_equipment_id, reservation_id, equipment_id, count) VALUES
+    (gen_random_uuid(), '95e913dd-9de0-4bec-bb4c-6828556a7259', 'e46bd00d-b682-4adc-8320-aabd9ba4f045', 1),
+    (gen_random_uuid(), 'f936c6d4-dec8-448c-807a-23e06522b8db', '9596154e-ee45-454a-adda-084fca722807', 1),
+    (gen_random_uuid(), 'f936c6d4-dec8-448c-807a-23e06522b8db', '60cab21d-31e8-4589-a145-5556172aa439', 1),
+    (gen_random_uuid(), 'e5f94e3b-f4d1-48e4-add8-30e8dc18ee25', '554c0677-d149-4e82-8c56-355c139e6ee1', 1),
+    (gen_random_uuid(), '7c7cf0d0-11ae-4bbd-98c1-9a9137582749', '1251f03a-1851-491f-8071-0fe87547d35d', 1),
+    (gen_random_uuid(), '1aa97aeb-df4e-4bb2-bc4a-10a35c3d8451', '9596154e-ee45-454a-adda-084fca722807', 1),
+    (gen_random_uuid(), '1aa97aeb-df4e-4bb2-bc4a-10a35c3d8451', 'e46bd00d-b682-4adc-8320-aabd9ba4f045', 1),
+    (gen_random_uuid(), '1aa97aeb-df4e-4bb2-bc4a-10a35c3d8451', '60cab21d-31e8-4589-a145-5556172aa439', 1),
+    (gen_random_uuid(), '56190bf3-92e4-450f-8fed-f2298069c82a', 'e46bd00d-b682-4adc-8320-aabd9ba4f045', 1),
+    (gen_random_uuid(), '56190bf3-92e4-450f-8fed-f2298069c82a', '60cab21d-31e8-4589-a145-5556172aa439', 1),
+    (gen_random_uuid(), 'eae75504-50f3-4faf-9a0c-0bb2a51ebaea', '9596154e-ee45-454a-adda-084fca722807', 2),
+    (gen_random_uuid(), 'eae75504-50f3-4faf-9a0c-0bb2a51ebaea', '1251f03a-1851-491f-8071-0fe87547d35d', 2),
+    (gen_random_uuid(), 'ed063b5f-7db9-48cc-a932-f623ce92d4fb', '554c0677-d149-4e82-8c56-355c139e6ee1', 2),
+    (gen_random_uuid(), '32e34b22-d6b7-4120-a67e-888458f55948', '9596154e-ee45-454a-adda-084fca722807', 2),
+    (gen_random_uuid(), '32e34b22-d6b7-4120-a67e-888458f55948', 'e46bd00d-b682-4adc-8320-aabd9ba4f045', 2),
+    (gen_random_uuid(), '32e34b22-d6b7-4120-a67e-888458f55948', '1251f03a-1851-491f-8071-0fe87547d35d', 2),
+    (gen_random_uuid(), '32e34b22-d6b7-4120-a67e-888458f55948', '60cab21d-31e8-4589-a145-5556172aa439', 2),
+    (gen_random_uuid(), '60b4b070-1d6e-4d80-a7a4-2ebed4b8eff8', '1251f03a-1851-491f-8071-0fe87547d35d', 2),
+    (gen_random_uuid(), 'd17c5e8e-cf35-470f-a0bc-3893e9be1caa', '9596154e-ee45-454a-adda-084fca722807', 2),
+    (gen_random_uuid(), 'd17c5e8e-cf35-470f-a0bc-3893e9be1caa', 'e46bd00d-b682-4adc-8320-aabd9ba4f045', 2),
+    (gen_random_uuid(), 'f54cdf57-a4a9-471e-b70a-c170b5d9b88e', '554c0677-d149-4e82-8c56-355c139e6ee1', 3),
+    (gen_random_uuid(), 'f54cdf57-a4a9-471e-b70a-c170b5d9b88e', '1251f03a-1851-491f-8071-0fe87547d35d', 3),
+    (gen_random_uuid(), '3f414437-1730-49b0-b9e9-e08724b09217', '9596154e-ee45-454a-adda-084fca722807', 3),
+    (gen_random_uuid(), 'c9d79ec8-7628-4a83-a280-873627c41152', 'e46bd00d-b682-4adc-8320-aabd9ba4f045', 3),
+    (gen_random_uuid(), 'c9d79ec8-7628-4a83-a280-873627c41152', '60cab21d-31e8-4589-a145-5556172aa439', 3),
+    (gen_random_uuid(), '576440db-c654-4f7c-8cfc-a4c9aa875e86', '1251f03a-1851-491f-8071-0fe87547d35d', 3),
+    (gen_random_uuid(), '49326607-fc78-49fa-8b7e-95f413010844', '9596154e-ee45-454a-adda-084fca722807', 3),
+    (gen_random_uuid(), '49326607-fc78-49fa-8b7e-95f413010844', 'e46bd00d-b682-4adc-8320-aabd9ba4f045', 3),
+    (gen_random_uuid(), '49326607-fc78-49fa-8b7e-95f413010844', '1251f03a-1851-491f-8071-0fe87547d35d', 3),
+    (gen_random_uuid(), '49326607-fc78-49fa-8b7e-95f413010844', '554c0677-d149-4e82-8c56-355c139e6ee1', 3);

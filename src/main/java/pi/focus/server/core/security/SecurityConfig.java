@@ -6,7 +6,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -20,11 +19,6 @@ import pi.focus.server.core.repository.UserRepository;
 
 import java.util.List;
 
-/**
- * Главный конфигурационный класс безопасности приложения.
- * Настраивает цепочку фильтров безопасности правила доступа к эндпоинтам,
- * процесс авторизации через форму и алгоритмы шифрования паролей.
- */
 @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
 @Configuration
 @EnableWebSecurity
@@ -37,21 +31,18 @@ public class SecurityConfig {
         this.userRepository = userRepository;
     }
 
-    /**
-     * Конфигурация HTTP безопасности.
-     * Определяет публичные и защищенные ресурсы, настройки формы входа и выхода.
-     * 
-     * @param http объект для настройки безопасности
-     * @return сконфигурированная цепочка фильтров
-     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http
-            .csrf(AbstractHttpConfigurer::disable) // TODO: delete this row
+            .csrf(AbstractHttpConfigurer::disable)
+            .sessionManagement(session -> session
+                    .sessionFixation().migrateSession()
+            )
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/css/**", "/images/**", "/js/**", "/fonts/**", "/docs/**", "/favicon.ico").permitAll()
-                .requestMatchers("/", "/photorooms", "/photorooms/{id}", "/equipment", "/photographers", "/login", "/login?*", "/registration", "/actuator/health").permitAll()
-                .requestMatchers("/profile").hasRole(UserRole.USER.name())
+                .requestMatchers("/", "/actuator/health", "/photorooms", "/photorooms/*", "/equipment", "/photographers", "/login", "/login?*", "/registration").permitAll()
+                .requestMatchers("/order/calendar/*", "/order/equipment", "/order/photographers", "/order/current").permitAll()
+                .requestMatchers("/profile", "/profile/**", "/order/confirm").hasRole(UserRole.USER.name())
             ).formLogin(form -> form
                 .loginPage("/login").permitAll()
                 .usernameParameter("login")
@@ -65,21 +56,11 @@ public class SecurityConfig {
         return http.build();
     }
 
-    /**
-     * Бин для шифрования паролей с использованием алгоритма BCrypt.
-     */
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    /**
-     * Пользовательский сервис для поиска и загрузки данных пользователя при входе.
-     * Поддерживает три формата логина: телефон, email или классический логин.
-     * 
-     * @return реализация UserDetailsService
-     * @throws UsernameNotFoundException если формат логина неверен или пользователь не найден
-     */
     @Bean
     public UserDetailsService userDetailsService() {
         return login -> {
@@ -102,42 +83,28 @@ public class SecurityConfig {
             }
             List<SimpleGrantedAuthority> roles = List.of(user.getRole().toAuthority());
 
-            return new User(
-                user.getLogin(),
-                user.getPassword(),
-                roles
+            return new CustomUserDetails(
+                    user.getLogin(),
+                    user.getPassword(),
+                    roles,
+                    user.getId(),
+                    user.getLogin(),
+                    user.getEmail(),
+                    user.getPhoneNumber()
             );
         };
     }
 
-    /**
-     * Создает бин обработчика успешной аутентификации.
-     * Использует CustomAuthenticationSuccessHandler для управления редиректами после входа.
-     * 
-     * @return объект обработчика успешного входа
-     */
     @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
         return new CustomAuthenticationSuccessHandler();
     }
 
-    /**
-     * Создает бин обработчика неудачной аутентификации.
-     * Использует CustomAuthenticationFailureHandler для возврата на страницу логина с ошибкой.
-     * 
-     * @return объект обработчика ошибок входа
-     */
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
         return new CustomAuthenticationFailureHandler();
     }
 
-    /**
-     * Создает бин обработчика успешного выхода из системы.
-     * Использует CustomLogoutSuccessHandler для возврата пользователя на исходную страницу.
-     * 
-     * @return объект обработчика завершения сессии
-     */
     @Bean
     public LogoutSuccessHandler logoutSuccessHandler() {
         return new CustomLogoutSuccessHandler();

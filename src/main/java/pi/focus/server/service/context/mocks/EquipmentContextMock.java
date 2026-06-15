@@ -25,7 +25,7 @@ public class EquipmentContextMock implements IEquipmentContext{
             " deleniti excepturi distinctio, numquam veniam! Lorem ipsum dolor sit amet consectetur adipisicing elit. Officia minus incidunt," + 
             " harum porro magni inventore, doloremque libero quam, ullam necessitatibus iusto at omnis quisquam saepe voluptate adipisci" +
             " eaque in vitae? Lorem ipsum dolor sit amet consectetur adipisicing elit. Blanditiis architecto suscipit impedit dolorum nihil," + 
-            " est vitae at molestias, dignissimos fugit consectetur! Doloremque rerum dolores itaque assumenda id sunt soluta architecto!", 
+            " est vitae at molestias, dignissimos fugit consectetur! Doloremque rerum dolores itaque assumenda getOrderId sunt soluta architecto!",
             MocksDefines.TEST_IMAGE_PATH),
             new ImagedTextCardDto("Оборудованя 3", "Штучка для нефотогрофированя 3", MocksDefines.TEST_IMAGE_PATH)
         );

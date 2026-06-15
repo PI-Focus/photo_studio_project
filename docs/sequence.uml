@@ -1,0 +1,47 @@
+@startuml
+autonumber
+
+actor "Пользователь" as User
+participant "Браузер (JS)" as Browser
+participant "Сервер (Controller)" as Server
+participant "Сервис Аутентификации" as AuthSvc
+database "База Данных" as DB
+
+== Процесс Авторизации (Login) ==
+
+User -> Browser : Нажимает "Войти"
+Browser -> Server : GET /login
+Server --> Browser : Форма логина + кнопка регистрации
+
+group Валидация на клиенте
+    User -> Browser : Заполняет форму, жмет "Отправить"
+    alt Ошибка (JS)
+        Browser --> User : Отобразить ошибки
+    else Все ОК
+        Browser -> Server : POST /login (данные)
+        
+        Server -> AuthSvc : Проверить учетные данные
+        AuthSvc -> DB : Поиск пользователя
+        DB --> AuthSvc : User / null
+        
+        alt Сервер: Все ОК
+            AuthSvc --> Server : Успех (создание сессии)
+            Server --> Browser : Redirect (прошлая стр. или /)
+            Browser --> User : Авторизован
+        else Сервер: Ошибка данных
+            Server --> Browser : Redirect /login?error
+            Browser --> User : Показать "Неверный логин/пароль"
+        end
+    end
+end
+
+== Процесс Регистрации (Registration) ==
+
+User -> Browser : Нажимает "Зарегистрироваться"
+Browser -> Server : GET /registration
+Server --> Browser : Форма регистрации
+
+group Валидация на клиенте
+    User -> Browser : Заполняет данные
+    alt Ошибка 
+@enduml

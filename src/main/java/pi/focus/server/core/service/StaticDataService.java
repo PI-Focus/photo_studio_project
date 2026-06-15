@@ -9,8 +9,6 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-
 import pi.focus.server.api.context.IBaseContext;
 import pi.focus.server.api.context.IInfoContext;
 import pi.focus.server.api.models.IAboutDataBlock;
@@ -26,6 +24,9 @@ import pi.focus.server.service.models.AboutDataBlockDto;
 import pi.focus.server.service.models.DataCardDto;
 import pi.focus.server.service.models.TabDto;
 import pi.focus.server.service.models.TextCardDto;
+import tools.jackson.core.exc.UnexpectedEndOfInputException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.exc.MismatchedInputException;
 
 /**
  * Сервис загрузки и предоставления статических данных студии.
@@ -78,7 +79,7 @@ public class StaticDataService implements IStaticDataService {
         private IAboutDataBlock loadAboutDataBlock(Resource resource) {
         try (InputStream inputStream = resource.getInputStream()) {
             return JsonMapper.getInstance().readValue(inputStream, AboutDataBlockDto.class);
-        } catch (IOException e) {
+        } catch (UnexpectedEndOfInputException | MismatchedInputException | IOException e) {
             throw new StaticDataLoadingException(ERROR_STRING + resource.getDescription(), e);
         }
     }
@@ -91,7 +92,7 @@ public class StaticDataService implements IStaticDataService {
         try (InputStream inputStream = resource.getInputStream()) {
             List<TextCardDto> dtos = JsonMapper.getInstance().readValue(inputStream, new TypeReference<>() {});
             return List.copyOf(dtos); 
-        } catch (IOException e) {
+        } catch (UnexpectedEndOfInputException | MismatchedInputException | IOException e) {
             throw new StaticDataLoadingException(ERROR_STRING + resource.getDescription(), e);
         }
     }
@@ -107,7 +108,7 @@ public class StaticDataService implements IStaticDataService {
                        .map(tab -> new TabDto<IDataCard>(tab.tabName(), tab.data()))
                        .map(tab -> (INamedData<IDataCard>) tab)
                        .toList();
-        } catch (IOException e) {
+        } catch (UnexpectedEndOfInputException | MismatchedInputException | IOException e) {
             throw new StaticDataLoadingException(ERROR_STRING + resource.getDescription(), e);
         }
     }
@@ -115,7 +116,7 @@ public class StaticDataService implements IStaticDataService {
     private IBaseContext loadBaseData(Resource resource) {
         try (InputStream inputStream = resource.getInputStream()) {
             return JsonMapper.getInstance().readValue(inputStream, BaseContextDto.class);
-        } catch (IOException e) {
+        } catch (UnexpectedEndOfInputException | MismatchedInputException | IOException e) {
             throw new StaticDataLoadingException(ERROR_STRING + resource.getDescription(), e);
         }
     }

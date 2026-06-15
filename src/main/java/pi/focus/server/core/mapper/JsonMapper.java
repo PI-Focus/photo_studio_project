@@ -1,6 +1,6 @@
 package pi.focus.server.core.mapper;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * Маппер для работы с форматом JSON.
