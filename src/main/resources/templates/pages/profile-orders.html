@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" 
+      th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title}, ~{::#profile-css}, ~{::#profile-orders-scripts})}">
+<head>
+    <th:block id="profile-css">
+    </th:block>
+    <title>Фотостудия «Фокус»</title>
+</head>
+<body>
+
+    <th:block th:fragment="main-content">
+        Это профиль.
+    </th:block>
+
+    <th:block id="profile-orders-scripts">
+    </th:block>
+</body>
+</html>

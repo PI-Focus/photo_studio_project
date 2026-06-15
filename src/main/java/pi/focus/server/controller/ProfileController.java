@@ -48,7 +48,7 @@ public class ProfileController {
         if (!uuid.equals(userDetails.userId())) {
             return redirectPrevious(session);
         } else {
-            return "pages/profile";
+            return "pages/profile-orders";
         }
     }
 
