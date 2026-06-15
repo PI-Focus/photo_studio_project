@@ -16,6 +16,10 @@ let currentOrderState = {
     }
 };
 
+let selectedPhotographerId = null;
+let selectedPhotographerName = null;
+let currentPhotographersList = [];
+
 async function loadCalendarData(url) {
     try {
         const response = await fetch(url, {
@@ -97,7 +101,6 @@ function resetOrderToZero() {
     updatePriceDisplay();
     updateOrderButtonsState();
 }
-
 
 function clearSelectionVisualsOnly() {
     selectedCol = null;
@@ -292,7 +295,6 @@ function syncSelectionWithOrderState() {
     sendCurrentOrderStatus();
 }
 
-
 function handleTableClick(event) {
     const cell = event.target.closest('.slot-cell');
     if (!cell || !cell.classList.contains('slot-available')) return;
@@ -391,6 +393,107 @@ function updateOrderButtonsState() {
     if (btnConfirm) btnConfirm.disabled = !hasValidTime;
 }
 
+function openModal(modalId) {
+    document.getElementById(modalId).style.display = 'flex';
+}
+
+function closeModal(modalId) {
+    document.getElementById(modalId).style.display = 'none';
+}
+
+async function openPhotographerModal() {
+    const modal = document.getElementById('photographers-modal');
+    if (!modal) return;
+    
+    if (!currentOrderState.body.startTime || !currentOrderState.body.endTime) {
+        return;
+    }
+    
+    const photographers = await loadAvailablePhotographers();
+    if (photographers) {
+        currentPhotographersList = photographers;
+        renderPhotographerList(photographers);
+        openModal('photographers-modal');
+    }
+}
+
+function closePhotographerModal() {
+    closeModal('photographers-modal');
+}
+
+function renderPhotographerList(photographers) {
+    const listContainer = document.getElementById('photographer-list');
+    if (!listContainer) return;
+    
+    listContainer.innerHTML = '';
+    
+    photographers.forEach(photographer => {
+        const item = document.createElement('div');
+        item.className = 'photographer-item';
+        
+        const isSelected = selectedPhotographerId === photographer.id;
+        
+        item.innerHTML = `
+            <img src="${photographer.photoPath || '/images/placeholder.png'}" 
+                alt="${photographer.name} ${photographer.surname}" 
+                class="round"
+                onerror="this.src='/images/placeholder.png'">
+            <div class="photographer-info">
+                <h3>${photographer.name} ${photographer.surname}</h3>
+                <p>${photographer.description || ''}</p>
+                <p>Стоимость: ${(photographer.price / 100).toFixed(2)} ₽/час</p>
+                <div class="btn-block">
+                    <button class="select-photographer-btn ${isSelected ? 'selected' : ''}" 
+                            onclick="selectPhotographer('${photographer.id}', '${photographer.name} ${photographer.surname}')"
+                            ${isSelected ? 'disabled' : ''}>
+                        ${isSelected ? 'ВЫБРАНО' : 'ВЫБРАТЬ'}
+                    </button>
+                    <button class="deselect-photographer-btn ${isSelected ? '' : 'hidden'}" 
+                            onclick="deselectPhotographer()"
+                            ${isSelected ? '' : 'disabled'}>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <line x1="3" y1="8" x2="13" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        listContainer.appendChild(item);
+    });
+    
+    updatePhotographerInfo();
+}
+
+function selectPhotographer(id, name) {
+    selectedPhotographerId = id;
+    selectedPhotographerName = name;
+    currentOrderState.body.photographerId = id;
+    
+    renderPhotographerList(currentPhotographersList);
+    updatePhotographerInfo();
+}
+
+function deselectPhotographer() {
+    selectedPhotographerId = null;
+    selectedPhotographerName = null;
+    currentOrderState.body.photographerId = null;
+    
+    renderPhotographerList(currentPhotographersList);
+    updatePhotographerInfo();
+}
+
+function updatePhotographerInfo() {
+    const infoSpan = document.getElementById('photographer-selected-info');
+    if (infoSpan) {
+        infoSpan.textContent = `ВЫБРАНО: ${selectedPhotographerName || 'НЕ ВЫБРАНО'}`;
+    }
+}
+
+function confirmPhotographerSelection() {
+    sendCurrentOrderStatus();
+    closePhotographerModal();
+}
 
 document.addEventListener('DOMContentLoaded', async () => {
     updateButtonStates();
@@ -444,11 +547,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     const btnPhotographers = document.getElementById('order-btn-photographers');
     if (btnPhotographers) {
-        btnPhotographers.addEventListener('click', async () => {
-            const list = await loadAvailablePhotographers();
-            if (list) {
-                console.log("Доступные фотографы получены:", list);
-            }
-        });
+        btnPhotographers.addEventListener('click', openPhotographerModal);
+    }
+    const photographerCloseBtn = document.getElementById('photographer-close-btn');
+    if (photographerCloseBtn) {
+        photographerCloseBtn.addEventListener('click', closePhotographerModal);
+    }
+    const photographerConfirmBtn = document.getElementById('photographer-confirm-btn');
+    if (photographerConfirmBtn) {
+        photographerConfirmBtn.addEventListener('click', confirmPhotographerSelection);
     }
 });
