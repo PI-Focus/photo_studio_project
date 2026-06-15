@@ -25,6 +25,9 @@ let selectedPhotographerId = null;
 let selectedPhotographerName = null;
 let currentPhotographersList = [];
 
+let selectedEquipmentState = []; 
+let currentEquipmentList = [];
+
 async function loadCalendarData(url) {
     try {
         const response = await fetch(url, {
@@ -78,6 +81,12 @@ async function restoreLocalStateFromOrder() {
     }
     
     selectedPhotographerId = currentOrderState.body.photographerId || null;
+
+    if (currentOrderState.body.equipment && Array.isArray(currentOrderState.body.equipment)) {
+        selectedEquipmentState = currentOrderState.body.equipment.map(eq => ({ id: eq.id, count: eq.count }));
+    } else {
+        selectedEquipmentState = [];
+    }
     
     if (currentOrderState.body.startTime && currentOrderState.body.endTime) {
         selectedStartTime = new Date(currentOrderState.body.startTime);
@@ -144,6 +153,7 @@ function resetOrderToZero() {
     selectedRowEnd = null;
     selectedPhotographerId = null;
     selectedPhotographerName = null;
+    selectedEquipmentState = [];
     
     document.querySelectorAll('.slot-selected').forEach(cell => {
         cell.classList.remove('slot-selected');
@@ -476,6 +486,27 @@ async function loadAvailablePhotographers() {
     }
 }
 
+async function loadAvailableEquipment() {
+    const url = `/order/equipment`;
+
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        if (!response.ok) throw new Error();
+
+        const equipment = await response.json();
+        return equipment;
+    } catch (error) {
+        console.error("Failed to load equipment:", error);
+        return null;
+    }
+}
+
 function updateOrderButtonsState() {
     const btnPhotographers = document.getElementById('order-btn-photographers');
     const btnEquipment = document.getElementById('order-btn-equipment');
@@ -521,8 +552,30 @@ async function openPhotographerModal() {
     }
 }
 
+async function openEquipmentModal() {
+    const modal = document.getElementById('equipment-modal');
+    if (!modal) return;
+    
+    if (!currentOrderState.body.startTime || !currentOrderState.body.endTime) {
+        alert('Сначала выберите время бронирования');
+        return;
+    }
+    
+    const equipment = await loadAvailableEquipment();
+    if (equipment) {
+        currentEquipmentList = equipment;
+        selectedEquipmentState = (currentOrderState.body.equipment || []).map(eq => ({ id: eq.id, count: eq.count }));
+        renderEquipmentList(equipment);
+        openModal('equipment-modal');
+    }
+}
+
 function closePhotographerModal() {
     closeModal('photographers-modal');
+}
+
+function closeEquipmentModal() {
+    closeModal('equipment-modal');
 }
 
 function renderPhotographerList(photographers) {
@@ -556,7 +609,7 @@ function renderPhotographerList(photographers) {
                             onclick="deselectPhotographer()"
                             ${isSelected ? '' : 'disabled'}>
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                            <line x1="3" y1="8" x2="13" y2="8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                            <line x1="5" y1="8" x2="11" y2="8" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
                         </svg>
                     </button>
                 </div>
@@ -567,6 +620,50 @@ function renderPhotographerList(photographers) {
     });
     
     updatePhotographerInfo();
+}
+
+function renderEquipmentList(equipmentList) {
+    const listContainer = document.getElementById('equipment-list');
+    if (!listContainer) return;
+    
+    listContainer.innerHTML = '';
+    
+    equipmentList.forEach(item => {
+        const selectedEq = selectedEquipmentState.find(eq => eq.id === item.id);
+        const count = selectedEq ? selectedEq.count : 0;
+        
+        const div = document.createElement('div');
+        div.className = 'equipment-item';
+        
+        div.innerHTML = `
+            <img src="${item.photoPath || '/images/placeholder.png'}" 
+                alt="${item.name}" 
+                class=""
+                onerror="this.src='/images/placeholder.png'">
+            <div class="equipment-info">
+                <h3>${item.title}</h3>
+                <p>${item.description || ''}</p>
+                <p>Стоимость: ${((item.price || 0) / 100).toFixed(2)} ₽/час</p>
+                <div class="btn-block">
+                    <button class="change-ct-btn" onclick="changeEquipmentCount('${item.id}', -1)" ${count === 0 ? 'disabled' : ''}>
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <line x1="5" y1="8" x2="11" y2="8" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                    <span class="equipment-count">${count}</span>
+                    <button class="change-ct-btn" onclick="changeEquipmentCount('${item.id}', 1)">
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                            <line x1="5" y1="8" x2="11" y2="8" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+                            <line x1="8" y1="5" x2="8" y2="11" stroke="currentColor" stroke-width="1" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        `;
+        listContainer.appendChild(div);
+    });
+    
+    updateEquipmentInfo();
 }
 
 function selectPhotographer(id, name) {
@@ -587,6 +684,24 @@ function deselectPhotographer() {
     updatePhotographerInfo();
 }
 
+function changeEquipmentCount(id, delta) {
+    const existing = selectedEquipmentState.find(eq => eq.id === id);
+    let newCount = existing ? existing.count + delta : delta;
+
+    if (newCount < 0) newCount = 0;
+
+    if (newCount === 0) {
+        selectedEquipmentState = selectedEquipmentState.filter(eq => eq.id !== id);
+    } else if (existing) {
+        existing.count = newCount;
+    } else {
+        selectedEquipmentState.push({ id: id, count: newCount });
+    }
+
+    renderEquipmentList(currentEquipmentList);
+    updateEquipmentInfo();
+}
+
 function updatePhotographerInfo() {
     const infoSpan = document.getElementById('photographer-selected-info');
     if (infoSpan) {
@@ -594,10 +709,28 @@ function updatePhotographerInfo() {
     }
 }
 
+function updateEquipmentInfo() {
+    const infoSpan = document.getElementById('equipment-selected-info');
+    if (infoSpan) {
+        const totalCount = selectedEquipmentState.reduce((sum, eq) => sum + eq.count, 0);
+        infoSpan.textContent = totalCount > 0 ? `ВЫБРАНО: ${totalCount}` : 'ВЫБРАНО: 0';
+        updatePriceDisplay(); 
+    }
+}
+
 function confirmPhotographerSelection() {
     currentOrderState.body.photographerId = selectedPhotographerId;
     sendCurrentOrderStatus();
     closePhotographerModal();
+}
+
+function confirmEquipmentSelection() {
+    currentOrderState.body.equipment = selectedEquipmentState.map(eq => ({
+        id: eq.id,
+        count: eq.count
+    }));
+    sendCurrentOrderStatus();
+    closeEquipmentModal();
 }
 
 document.addEventListener('DOMContentLoaded', async () => {
@@ -632,5 +765,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     const photographerConfirmBtn = document.getElementById('photographer-close-btn');
     if (photographerConfirmBtn) {
         photographerConfirmBtn.addEventListener('click', confirmPhotographerSelection);
+    }
+    const btnEquipment = document.getElementById('order-btn-equipment');
+    if (btnEquipment) {
+        btnEquipment.addEventListener('click', openEquipmentModal);
+    }
+    const equipmentConfirmBtn = document.getElementById('equipment-close-btn');
+    if (equipmentConfirmBtn) {
+        equipmentConfirmBtn.addEventListener('click', confirmEquipmentSelection);
     }
 });
