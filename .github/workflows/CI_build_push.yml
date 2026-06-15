@@ -2,8 +2,9 @@ name: Build Dockerfile and push
 
 on:
   workflow_run:
-    workflows: ["CI_master"]
-    types: [completed]
+    pull_request:
+      types: [closed]
+      branches: [master]
   workflow_dispatch: 
 
 permissions:
@@ -11,6 +12,7 @@ permissions:
 
 jobs:
   build-and-push:
+    if: github.event.pull_request.merged == true || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
 
     environment: CI_build
