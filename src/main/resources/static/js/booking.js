@@ -749,6 +749,69 @@ function confirmEquipmentSelection() {
     closeEquipmentModal();
 }
 
+async function confirmOrder() {
+    const statusMessageEl = document.getElementById('order-status-message');
+    if (statusMessageEl) {
+        statusMessageEl.textContent = '';
+        statusMessageEl.className = 'status-message';
+    }
+
+    const payload = {
+        roomId: currentOrderState.roomId,
+        body: {
+            startTime: currentOrderState.body.startTime,
+            endTime: currentOrderState.body.endTime,
+            photographerId: currentOrderState.body.photographerId,
+            equipment: currentOrderState.body.equipment || [],
+            price: currentOrderState.body.price
+        }
+    };
+
+    try {
+        const response = await fetch('/order/confirm', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (response.status === 200) {
+            window.location.href = '/profile';
+        } else if (response.status === 202) {
+            const updatedData = await response.json();
+            if (updatedData) {
+                currentOrderState = updatedData;
+                restoreSelectionFromOrderState();
+                updatePriceDisplay();
+                updateEquipmentInfo();
+            }
+            if (statusMessageEl) {
+                statusMessageEl.textContent = 'При оформлении заказа что-то пошло не так. Изменились доступные опции. Пожалуйста, проверьте свой заказ.';
+                statusMessageEl.classList.add('status-warning');
+            }
+        } else if (response.status === 422) {
+            resetOrderToZero();
+            if (statusMessageEl) {
+                statusMessageEl.textContent = 'При оформлении заказа что-то пошло не так. Возможно, выбранное время уже занято. Пожалуйста, сформируйте заказ заново.';
+                statusMessageEl.classList.add('status-error');
+            }
+        } else {
+            if (statusMessageEl) {
+                statusMessageEl.textContent = 'Произошла ошибка при оформлении заказа.';
+                statusMessageEl.classList.add('status-error');
+            }
+        }
+    } catch (error) {
+        console.error("Network error during order confirmation:", error);
+        if (statusMessageEl) {
+            statusMessageEl.textContent = 'Ошибка сети. Пожалуйста, попробуйте позже.';
+            statusMessageEl.classList.add('status-error');
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', async () => {
     updateCalendarButtonStates();
     
@@ -789,5 +852,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const equipmentConfirmBtn = document.getElementById('equipment-close-btn');
     if (equipmentConfirmBtn) {
         equipmentConfirmBtn.addEventListener('click', confirmEquipmentSelection);
+    }
+    const btnConfirm = document.getElementById('order-btn-confirm');
+    if (btnConfirm) {
+        btnConfirm.addEventListener('click', confirmOrder);
     }
 });
