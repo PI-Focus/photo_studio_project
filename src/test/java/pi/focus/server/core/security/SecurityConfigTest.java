@@ -15,9 +15,9 @@ import org.springframework.boot.thymeleaf.autoconfigure.ThymeleafAutoConfigurati
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.test.context.support.WithAnonymousUser;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -35,9 +35,11 @@ import pi.focus.server.core.entity.UserEntity;
 import pi.focus.server.core.repository.UserRepository;
 import pi.focus.server.core.service.api.*;
 
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -47,6 +49,7 @@ import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -84,6 +87,21 @@ class SecurityConfigAuthorizationTest {
 
     @MockitoBean
     private IPhotographerService photographerService;
+
+    private static final UUID USER_ID = UUID.fromString("3e5f1ff2-7c6f-47ec-9aac-62d0f328b4bd");
+    private static final String USER_LOGIN = "login1";
+
+    private CustomUserDetails createTestUserDetails() {
+        return new CustomUserDetails(
+                USER_LOGIN,
+                "password",
+                List.of(new SimpleGrantedAuthority("ROLE_USER")),
+                USER_ID,
+                USER_LOGIN,
+                "test@example.com",
+                "81111111111"
+        );
+    }
 
     @BeforeEach
     void setUpMocks() {
@@ -154,11 +172,12 @@ class SecurityConfigAuthorizationTest {
         }
 
         @Test
-        @WithMockUser(roles = "USER")
         @DisplayName("/profile доступен авторизованному пользователю с ролью USER")
         void profileShouldBeAccessibleForAuthenticatedUser() throws Exception {
-            MvcResult result = mockMvc.perform(get("/profile")).andReturn();
-            assertEquals(200, result.getResponse().getStatus(),
+            MvcResult result = mockMvc.perform(get("/profile")
+                            .with(user(createTestUserDetails())))
+                    .andReturn();
+            assertEquals(302, result.getResponse().getStatus(),
                     "Страница /profile должна быть доступна авторизованному пользователю");
         }
     }
@@ -172,7 +191,6 @@ class SecurityConfigAuthorizationTest {
         @DisplayName("Должен сохранить previousUri в сессию при GET /login с заголовком Referer")
         void shouldSavePreviousUriInSession() throws Exception {
             MockHttpSession session = new MockHttpSession();
-
 
             mockMvc.perform(get("/login")
                     .header("Referer", "/photorooms")
@@ -211,11 +229,9 @@ class SecurityConfigAuthorizationTest {
 
             MockHttpSession session = new MockHttpSession();
 
-
             mockMvc.perform(get("/login")
                     .header("Referer", "/photorooms")
                     .session(session)).andReturn();
-
 
             MvcResult result = mockMvc.perform(post("/login")
                     .with(csrf())
