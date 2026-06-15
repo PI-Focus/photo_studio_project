@@ -1,5 +1,6 @@
 package pi.focus.server.api.models;
 
+import pi.focus.server.service.models.EquipmentDto;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;

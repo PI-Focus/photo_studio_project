@@ -5,6 +5,17 @@ let selectedCol = null;
 let selectedRowStart = null;
 let selectedRowEnd = null;
 
+let currentOrderState = {
+    roomId: null,
+    body: {
+        startTime: null,
+        endTime: null,
+        photographerId: null,
+        equipment: [],
+        price: null
+    }
+};
+
 async function loadCalendarData(url) {
     try {
         const response = await fetch(url, {
@@ -13,13 +24,90 @@ async function loadCalendarData(url) {
                 'Accept': 'application/json'
             }
         });
-
         if (!response.ok) throw new Error();
-
         return await response.json();
     } catch (error) {
         return null;
     }
+}
+
+async function fetchCurrentOrderStatus(url) {
+    try {
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+        if (response.ok) {
+            const data = await response.json();
+            if (data) currentOrderState = data;
+        }
+    } catch (error) {
+        console.error("Failed to load current order status:", error);
+    }
+}
+
+async function sendCurrentOrderStatus() {
+    try {
+        const response = await fetch('/order/current', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify(currentOrderState)
+        });
+
+        if (response.status === 200 || response.status === 202 || response.status === 422) {
+            const updatedData = await response.json();
+            if (updatedData) {
+                currentOrderState = updatedData;
+            }
+            
+            if (response.status === 422 || !currentOrderState.body?.startTime) {
+                clearSelectionVisualsOnly();
+            }
+            
+            updatePriceDisplay();
+        } else {
+            resetOrderToZero();
+        }
+    } catch (error) {
+        console.error("Network error, failed to send order status:", error);
+        resetOrderToZero();
+    }
+}
+
+function resetOrderToZero() {
+    currentOrderState.body.startTime = null;
+    currentOrderState.body.endTime = null;
+    currentOrderState.body.price = null;
+    currentOrderState.body.photographerId = null;
+    currentOrderState.body.equipment = [];   
+
+    selectedCol = null;
+    selectedRowStart = null;
+    selectedRowEnd = null;
+    document.querySelectorAll('.slot-selected').forEach(cell => {
+        cell.classList.remove('slot-selected');
+    });
+
+    updatePriceDisplay();
+}
+
+
+function clearSelectionVisualsOnly() {
+    selectedCol = null;
+    selectedRowStart = null;
+    selectedRowEnd = null;
+    document.querySelectorAll('.slot-selected').forEach(cell => {
+        cell.classList.remove('slot-selected');
+    });
+}
+
+function updatePriceDisplay() {
+    
 }
 
 function updateHeaderDates(daysForward) {
@@ -166,6 +254,43 @@ function restoreSelectionVisuals() {
     }
 }
 
+function syncSelectionWithOrderState() {
+    if (selectedCol === null || selectedRowStart === null || selectedRowEnd === null) {
+        currentOrderState.body.startTime = null;
+        currentOrderState.body.endTime = null;
+        sendCurrentOrderStatus();
+        return;
+    }
+
+    const startHour = getStartHour();
+    const startRow = Math.min(selectedRowStart, selectedRowEnd);
+    const endRow = Math.max(selectedRowStart, selectedRowEnd);
+
+    const targetDate = new Date();
+    targetDate.setDate(targetDate.getDate() + currentDaysOffset);
+    
+    const currentDay = targetDate.getDay();
+    const distanceToMonday = currentDay === 0 ? -6 : 1 - currentDay;
+    const monday = new Date(targetDate);
+    monday.setDate(targetDate.getDate() + distanceToMonday);
+
+    const bookingDate = new Date(monday);
+    bookingDate.setDate(monday.getDate() + selectedCol);
+
+    const year = bookingDate.getFullYear();
+    const month = String(bookingDate.getMonth() + 1).padStart(2, '0');
+    const day = String(bookingDate.getDate()).padStart(2, '0');
+
+    const startFormattedHour = String(startHour + startRow).padStart(2, '0');
+    const endFormattedHour = String(startHour + endRow + 1).padStart(2, '0');
+
+    currentOrderState.body.startTime = `${year}-${month}-${day}T${startFormattedHour}:00:00`;
+    currentOrderState.body.endTime = `${year}-${month}-${day}T${endFormattedHour}:00:00`;
+
+    sendCurrentOrderStatus();
+}
+
+
 function handleTableClick(event) {
     const cell = event.target.closest('.slot-cell');
     if (!cell || !cell.classList.contains('slot-available')) return;
@@ -204,32 +329,71 @@ function handleTableClick(event) {
         selectedRowEnd = row;
         restoreSelectionVisuals();
     }
+
+    syncSelectionWithOrderState();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-    updateButtonStates();
-    updateHeaderDates(0);
-    updateCalendar(0); 
+function getStartHour() {
+    const firstTimeCell = document.querySelector('.time-cell');
+    if (!firstTimeCell) return 8; 
+    return parseInt(firstTimeCell.textContent.split(':')) || 8;
+}
 
+function getMonday(date) {
+    const d = new Date(date);
+    const day = d.getDay();
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1 - day);
+    const monday = new Date(d.setDate(diff));
+    monday.setHours(0, 0, 0, 0);
+    return monday;
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+    updateButtonStates();
+    
+    await fetchCurrentOrderStatus('/order/current');
+    
     const table = document.querySelector('.time-calendar');
+    const currentRoomId = table ? table.dataset.uuid : '';
+    
+    currentOrderState.roomId = currentRoomId;
+
+    if (currentOrderState && currentOrderState.body && currentOrderState.body.startTime && currentOrderState.roomId === currentRoomId) {
+        const startDt = new Date(currentOrderState.body.startTime);
+        const endDt = new Date(currentOrderState.body.endTime);
+        
+        const currentMonday = getMonday(new Date());
+        const orderMonday = getMonday(startDt);
+        
+        const msPerDay = 24 * 60 * 60 * 1000;
+        const offsetInDays = Math.round((orderMonday - currentMonday) / msPerDay);
+        
+        if (offsetInDays >= 0 && offsetInDays <= 35) {
+            currentDaysOffset = offsetInDays;
+            
+            const startHour = getStartHour();
+            selectedCol = startDt.getDay() === 0 ? 6 : startDt.getDay() - 1;
+            selectedRowStart = startDt.getHours() - startHour;
+            selectedRowEnd = endDt.getHours() - 1 - startHour;
+        }
+    }
+    
+    updateButtonStates();
+    updateHeaderDates(currentDaysOffset);
+    updateCalendar(currentDaysOffset);
     if (table) {
         table.addEventListener('click', handleTableClick);
     }
-
     const btnPrev = document.getElementById('calendar-btn-prev');
     if (btnPrev) {
         btnPrev.addEventListener('click', () => navigateCalendar(currentDaysOffset - 7));
     }
-
     const btnNext = document.getElementById('calendar-btn-next');
     if (btnNext) {
         btnNext.addEventListener('click', () => navigateCalendar(currentDaysOffset + 7));
     }
-
     const btnToday = document.getElementById('calendar-btn-today');
     if (btnToday) {
-        btnToday.addEventListener('click', () => {
-            if (currentDaysOffset !== 0) navigateCalendar(0);
-        });
+        btnToday.addEventListener('click', () => {if (currentDaysOffset !== 0) navigateCalendar(0);});
     }
 });
