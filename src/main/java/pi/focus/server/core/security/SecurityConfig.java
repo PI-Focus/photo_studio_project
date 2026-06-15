@@ -5,9 +5,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -44,7 +42,7 @@ public class SecurityConfig {
                 .requestMatchers("/css/**", "/images/**", "/js/**", "/fonts/**", "/docs/**", "/favicon.ico").permitAll()
                 .requestMatchers("/", "/actuator/health", "/photorooms", "/photorooms/*", "/equipment", "/photographers", "/login", "/login?*", "/registration").permitAll()
                 .requestMatchers("/order/calendar/*", "/order/equipment", "/order/photographers", "/order/current").permitAll()
-                .requestMatchers("/profile").hasRole(UserRole.USER.name())
+                .requestMatchers("/profile", "/order/confirm").hasRole(UserRole.USER.name())
             ).formLogin(form -> form
                 .loginPage("/login").permitAll()
                 .usernameParameter("login")
@@ -85,10 +83,13 @@ public class SecurityConfig {
             }
             List<SimpleGrantedAuthority> roles = List.of(user.getRole().toAuthority());
 
-            return new User(
-                user.getLogin(),
-                user.getPassword(),
-                roles
+            return new CustomUserDetails(
+                    user.getLogin(),
+                    user.getPassword(),
+                    roles,
+                    user.getId(),
+                    user.getEmail(),
+                    user.getPhoneNumber()
             );
         };
     }

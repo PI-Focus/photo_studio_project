@@ -5,5 +5,6 @@ import java.util.UUID;
 public record ReservedEquipment(
         UUID reservedEquipmentId,
         UUID reservationId,
-        UUID equipmentId
+        UUID equipmentId,
+        Integer count
 ) { }

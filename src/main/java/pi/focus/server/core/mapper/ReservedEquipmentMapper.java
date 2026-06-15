@@ -13,7 +13,8 @@ public final class ReservedEquipmentMapper {
         return new ReservedEquipment(
                 reservedEquipmentEntity.getReservedEquipmentId(),
                 reservedEquipmentEntity.getReservation().getId(),
-                reservedEquipmentEntity.getEquipment().getId()
+                reservedEquipmentEntity.getEquipment().getId(),
+                reservedEquipmentEntity.getCount()
         );
     }
 
@@ -21,7 +22,8 @@ public final class ReservedEquipmentMapper {
         return new ReservedEquipmentEntity(
                 reservedEquipment.reservedEquipmentId(),
                 null,
-                null
+                null,
+                reservedEquipment.count()
         );
     }
 }

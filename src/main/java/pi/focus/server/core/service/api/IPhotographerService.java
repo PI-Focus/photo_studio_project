@@ -12,4 +12,6 @@ public interface IPhotographerService {
     IPhotographersContext getEquipmentContext();
     List<Photographer> getPhotographersByTime(Range<LocalDateTime> time);
     Boolean exists(UUID id);
+    Photographer getPhotographerById(UUID id);
+    boolean freePhotographer(UUID id, Range<LocalDateTime> time);
 }

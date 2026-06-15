@@ -27,4 +27,9 @@ public class EquipmentServiceMock implements IEquipmentService {
     public Boolean exists(UUID id) {
         return false;
     }
+
+    @Override
+    public Equipment getEquipmentById(UUID id) {
+        return null;
+    }
 }
