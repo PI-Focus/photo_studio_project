@@ -50,7 +50,7 @@ public class SecurityConfig {
             .csrf(AbstractHttpConfigurer::disable) // TODO: delete this row
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/css/**", "/images/**", "/js/**", "/fonts/**", "/docs/**", "/favicon.ico").permitAll()
-                .requestMatchers("/", "/photorooms", "/photorooms/{id}", "/equipment", "/photographers", "/login", "/login?*", "/registration").permitAll()
+                .requestMatchers("/", "/photorooms", "/photorooms/{id}", "/equipment", "/photographers", "/login", "/login?*", "/registration", "/actuator/health").permitAll()
                 .requestMatchers("/profile").hasRole(UserRole.USER.name())
             ).formLogin(form -> form
                 .loginPage("/login").permitAll()
