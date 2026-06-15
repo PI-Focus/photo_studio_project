@@ -5,6 +5,7 @@ import java.util.UUID;
 public record Room(
         UUID id,
         String title,
-        String description
+        String description,
+        Integer price
 ) { }
 

@@ -1,4 +1,8 @@
 {
+  "logoBright": "/images/logo-bright.svg",
+  "logoDark": "/images/logo-dark.svg",
+  "profileBright": "/images/profile-bright.svg",
+  "profileDark": "/images/profile-dark.svg",
   "inn": "666666666666",
   "ogrnip": "026766666666660",
   "companyName": "ИП Окуловский Владимир Андреевич",

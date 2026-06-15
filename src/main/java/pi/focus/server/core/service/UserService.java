@@ -1,19 +1,24 @@
 package pi.focus.server.core.service;
 
 import org.springframework.context.annotation.Profile;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pi.focus.server.core.domain.User;
-import pi.focus.server.core.mapper.UserMapper;
+import pi.focus.server.core.entity.UserEntity;
 import pi.focus.server.core.repository.UserRepository;
 import pi.focus.server.core.service.api.IUserService;
 
+import java.util.ArrayList;
+
 @Service
-@Profile({"dev", "prod"})
+@Profile({"dev", "prod", "test"})
 public class UserService implements IUserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -21,7 +26,17 @@ public class UserService implements IUserService {
         if (existsByLogin(user.login())) {
             return false;
         }
-        userRepository.save(UserMapper.toEntity(user));
+        userRepository.save(
+                new UserEntity(
+                        user.id(),
+                        user.login(),
+                        user.phoneNumber(),
+                        user.email(),
+                        passwordEncoder.encode(user.password()),
+                        user.role(),
+                        new ArrayList<>()
+                )
+        );
         return true;
     }
 

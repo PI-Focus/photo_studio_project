@@ -3,6 +3,8 @@ package pi.focus.server.core.mapper;
 import pi.focus.server.core.domain.Room;
 import pi.focus.server.core.entity.RoomEntity;
 
+import java.util.ArrayList;
+
 
 public final class RoomMapper {
     private RoomMapper() {
@@ -12,7 +14,8 @@ public final class RoomMapper {
         return new Room(
             roomEntity.getId(),
             roomEntity.getTitle(),
-            roomEntity.getDescription()
+            roomEntity.getDescription(),
+            roomEntity.getPrice()
         );
     }
 
@@ -20,7 +23,10 @@ public final class RoomMapper {
         return new RoomEntity(
                 room.id(),
                 room.title(),
-                room.description()
+                room.description(),
+                room.price(),
+                new ArrayList<>(),
+                new ArrayList<>()
         );
     }
 }

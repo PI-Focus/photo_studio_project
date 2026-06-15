@@ -18,7 +18,7 @@ import pi.focus.server.api.models.IDataCard;
 import pi.focus.server.api.models.INamedData;
 import pi.focus.server.api.models.ITextCard;
 import pi.focus.server.core.exception.StaticDataLoadingException;
-import pi.focus.server.core.json.JsonMapper;
+import pi.focus.server.core.mapper.JsonMapper;
 import pi.focus.server.core.service.api.IStaticDataService;
 import pi.focus.server.service.context.BaseContextDto;
 import pi.focus.server.service.context.InfoContextDto;

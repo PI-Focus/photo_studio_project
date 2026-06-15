@@ -3,6 +3,8 @@ package pi.focus.server.core.mapper;
 import pi.focus.server.core.domain.Equipment;
 import pi.focus.server.core.entity.EquipmentEntity;
 
+import java.util.ArrayList;
+
 
 public final class EquipmentMapper {
     private EquipmentMapper() {
@@ -13,6 +15,7 @@ public final class EquipmentMapper {
                 equipmentEntity.getId(),
                 equipmentEntity.getTitle(),
                 equipmentEntity.getDescription(),
+                equipmentEntity.getPrice(),
                 equipmentEntity.getPhotoPath()
         );
     }
@@ -22,7 +25,9 @@ public final class EquipmentMapper {
                 equipment.id(),
                 equipment.title(),
                 equipment.description(),
-                equipment.photoPath()
+                equipment.price(),
+                equipment.photoPath(),
+                new ArrayList<>()
         );
     }
 }

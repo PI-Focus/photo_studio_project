@@ -20,11 +20,18 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (toggleBtn) {
         toggleBtn.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const htmlEl = document.documentElement;
+            const currentTheme = htmlEl.getAttribute('data-theme');
             const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
             
-            document.documentElement.setAttribute('data-theme', newTheme);
+            htmlEl.classList.add('is-switching-theme');
+            
+            htmlEl.setAttribute('data-theme', newTheme);
             localStorage.setItem('theme', newTheme);
+            
+            setTimeout(() => {
+                htmlEl.classList.remove('is-switching-theme');
+            }, 300); 
         });
     }
 });

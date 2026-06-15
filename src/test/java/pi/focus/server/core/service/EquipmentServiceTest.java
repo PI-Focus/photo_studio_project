@@ -30,29 +30,35 @@ class EquipmentServiceIntegrationTest extends AbstractIntegrationTest {
         IEquipmentContext context = eqService.getEquipmentContext();
 
         assertSoftly(softly -> {
-            softly.assertThat(context).isNotNull();
-            softly.assertThat(context.getEquipment()).hasSize(3);
+            softly.assertThat(context)
+                    .as("Контекст оборудования не должен быть null")
+                    .isNotNull();
+            softly.assertThat(context.getEquipment())
+                    .as("В БД должно быть ровно 3 записи оборудования (согласно тестовой миграции)")
+                    .hasSize(3);
         });
     }
 
     @Test
-    @DisplayName("Должен корректно мапить все поля из Entity в DTO")
-    void shouldMapAllFieldsCorrectly() {
+    @DisplayName("Должен корректно мапить поля title, description и photoPath из Entity в DTO")
+    void shouldMapFieldsCorrectly() {
         IEquipmentContext context = eqService.getEquipmentContext();
         List<? extends IImagedTextCard> cards = context.getEquipment();
 
         assertSoftly(softly -> {
-            softly.assertThat(cards).hasSize(3);
+            softly.assertThat(cards)
+                    .as("Список карточек оборудования должен содержать 3 элемента")
+                    .hasSize(3);
 
             cards.forEach(card -> {
                 softly.assertThat(card.getTitle())
                         .as("Title не должен быть null")
                         .isNotNull();
-                softly.assertThat(card.getText())
-                        .as("Text не должен быть null")
+                softly.assertThat(card.getText()) // Маппинг из поля description
+                        .as("Text (описание) не должен быть null")
                         .isNotNull();
-                softly.assertThat(card.getImage())
-                        .as("Image не должен быть null")
+                softly.assertThat(card.getImage()) // Маппинг из поля photo_path
+                        .as("Image (путь к фото) не должен быть null")
                         .isNotNull();
             });
         });
@@ -63,7 +69,9 @@ class EquipmentServiceIntegrationTest extends AbstractIntegrationTest {
     void shouldReturnEmptyListAfterCleanup() {
         eqRepository.deleteAll();
         IEquipmentContext context = eqService.getEquipmentContext();
-        assertThat(context.getEquipment()).isEmpty();
-    }
 
+        assertThat(context.getEquipment())
+                .as("Список оборудования должен быть пуст после вызова deleteAll()")
+                .isEmpty();
+    }
 }

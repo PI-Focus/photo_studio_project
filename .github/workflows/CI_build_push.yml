@@ -4,8 +4,11 @@ on:
   workflow_run:
     workflows: ["CI"]
     types: [completed]
-    branches: [main]
+    branches: [master]
   workflow_dispatch: 
+
+permissions:
+  contents: read
 
 jobs:
   build-and-push:
@@ -41,4 +44,6 @@ jobs:
         with:
           context: .
           push: true
-          tags: ${{ vars.DOCKER_APP_IMAGE }}:${{ github.sha }} ${{ vars.DOCKER_APP_IMAGE }}:latest
+          tags: |
+            ${{ secrets.DOCKER_HUB_USER }}/${{ vars.DOCKER_APP_IMAGE }}:${{ github.sha }}
+            ${{ secrets.DOCKER_HUB_USER }}/${{ vars.DOCKER_APP_IMAGE }}:latest
