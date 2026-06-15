@@ -34,7 +34,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http
-            .csrf(AbstractHttpConfigurer::disable) // TODO: delete this row
+            .csrf(AbstractHttpConfigurer::disable)
             .sessionManagement(session -> session
                     .sessionFixation().migrateSession()
             )
@@ -42,7 +42,7 @@ public class SecurityConfig {
                 .requestMatchers("/css/**", "/images/**", "/js/**", "/fonts/**", "/docs/**", "/favicon.ico").permitAll()
                 .requestMatchers("/", "/actuator/health", "/photorooms", "/photorooms/*", "/equipment", "/photographers", "/login", "/login?*", "/registration").permitAll()
                 .requestMatchers("/order/calendar/*", "/order/equipment", "/order/photographers", "/order/current").permitAll()
-                .requestMatchers("/profile", "/order/confirm").hasRole(UserRole.USER.name())
+                .requestMatchers("/profile/**", "/order/confirm").hasRole(UserRole.USER.name())
             ).formLogin(form -> form
                 .loginPage("/login").permitAll()
                 .usernameParameter("login")
@@ -88,6 +88,7 @@ public class SecurityConfig {
                     user.getPassword(),
                     roles,
                     user.getId(),
+                    user.getLogin(),
                     user.getEmail(),
                     user.getPhoneNumber()
             );

@@ -5,9 +5,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,6 +17,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pi.focus.server.api.context.IConcretePhotoroomContext;
 import pi.focus.server.core.domain.User;
 import pi.focus.server.core.domain.UserRole;
+import pi.focus.server.core.security.CustomUserDetails;
 import pi.focus.server.core.service.api.IEquipmentService;
 import pi.focus.server.core.service.api.IPhotographerService;
 import pi.focus.server.core.service.api.IRoomService;
@@ -92,8 +95,16 @@ public class HomeController {
     }
 
     @GetMapping("/profile")
-    public String getProfile(Model model) {
-        return "pages/login"; // idk какая тут страница
+    public String getProfile(
+            Model model,
+            @ModelAttribute("previousURI") String previousURI,
+            @AuthenticationPrincipal CustomUserDetails userDetails,
+            HttpSession session
+    ) {
+        if (previousURI != null && !previousURI.contains("/login") && !previousURI.contains("/registration")) {
+            session.setAttribute("previousUri", previousURI);
+        }
+        return "redirect:/profile/" + userDetails.userId() + "/orders";
     }
 
     @GetMapping("/login")
