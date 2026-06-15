@@ -2,6 +2,7 @@ package pi.focus.server.core.service;
 
 import io.hypersistence.utils.hibernate.type.range.Range;
 import jakarta.transaction.Transactional;
+import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import pi.focus.server.api.models.IEquipment;
@@ -29,6 +30,7 @@ import java.util.UUID;
 @Service
 @Transactional
 @Profile({"dev", "prod", "test"})
+@Primary
 @SuppressWarnings({"PMD.ConfusingTernary"})
 public class OrderFacade implements IOrderFacade {
     private final RoomService roomService;
