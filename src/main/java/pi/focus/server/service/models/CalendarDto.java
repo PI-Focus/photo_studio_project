@@ -4,6 +4,10 @@ import pi.focus.server.api.models.ICalendar;
 
 import java.util.List;
 
+/**
+ * DTO для передачи сетки календаря.
+ * Представляет собой матрицу целых чисел, где каждое число кодирует статус ячейки.
+ */
 public record CalendarDto(List<List<Integer>> calendar) implements ICalendar {
     private static final Integer ROWS = 14;
     private static final Integer COLUMNS = 7;

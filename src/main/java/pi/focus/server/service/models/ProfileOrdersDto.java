@@ -9,6 +9,10 @@ import tools.jackson.databind.annotation.JsonDeserialize;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Агрегирующий DTO для отображения информации в профиле пользователя.
+ * Содержит имя пользователя, календарь занятости и список бронирований.
+ */
 public record ProfileOrdersDto(
         String login,
         @JsonDeserialize(as = CalendarDto.class)
