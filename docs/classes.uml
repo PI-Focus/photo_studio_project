@@ -1,0 +1,171 @@
+@startuml
+top to bottom direction
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam wrapWidth 350
+skinparam maxMessageSize 200
+
+class ServerApplication <<(J,#FF7700)>> 
+note right
+  <b>Точка запуска (Main)</b>
+  Главный класс со SpringBootApplication.
+  Инициализирует контекст, запускает 
+  встроенный сервер и сканирует 
+  все пакеты на наличие бинов.
+end note
+
+package "controller" #E3F2FD {
+    class HomeController
+    class ProfileController
+    class OrderController
+    class GlobalTemplateControllerAdvice
+}
+note right of "controller"
+  <b>Слой контроллеров:</b>
+  — <b>HomeController</b>: Обрабатывает клики юзера и навигацию.
+  — <b>OrderController</b>: Управляет бронированием. Работает с календарем, 
+  выбором оборудования и поиском фотографов. Хранит состояние заказа в сессии.
+  — <b>ProfileController</b>: Личный кабинет. Позволяет юзеру смотреть свои 
+  заказы на календаре, отменять их и менять свои данные (email, телефон).
+  — <b>GlobalTemplateAdvice</b>: Прокидывает общие данные на все страницы.
+end note
+
+package "core" #F5F5F5 {
+    
+    package "security" #FFF9C4 {
+        class SecurityConfig
+        class CustomAuthenticationSuccessHandler
+    }
+    note left of "security"
+      <b>Безопасность:</b>
+      Настройка Spring Security. 
+      Определяет, кто может зайти 
+      в профиль, как работает форма 
+      логина и куда редиректить юзера 
+      после успешного входа.
+    end note
+
+    package "core.service" #C8E6C9 {
+        package "api (interfaces)" #FFFFFF {
+            interface IUserService
+            interface IRoomService
+        }
+        package "mocks" #F1F8E9 {
+            class UserServiceMock
+            class RoomServiceMock
+        }
+        class UserService
+        class RoomService
+    }
+    note left of "core.service"
+      <b>Бизнес-логика:</b>
+      — <b>api</b>: Строгие интерфейсы (контракты).
+      — <b>Service</b>: Реальная работа с БД.
+      — <b>Mocks</b>: Заглушки для разработки. 
+      Позволяют верстать фронт, если база 
+      еще не наполнена или отключена.
+    end note
+
+    ' --- Разделенный Data Access ---
+    package "domain" #FFCCBC {
+        class User <<Record>>
+        class Room <<Record>>
+    }
+    package "entity" #FFCCBC {
+        class UserEntity
+        class RoomEntity
+    }
+    package "repository" #FFCCBC {
+        interface UserRepository
+        interface RoomRepository
+    }
+    package "mapper" #FFCCBC {
+        class UserMapper
+        class RoomMapper
+    }
+    
+    note right of "mapper"
+      <b>Работа с данными:</b>
+      — <b>Repository</b>: Делает SQL-запросы.
+      — <b>Entity</b>: Объект, который 1-в-1 
+      совпадает с таблицей в базе данных.
+      — <b>Mapper</b>: Превращает "грязные" 
+      Entity из базы в "чистые" Java-модели.
+      — <b>Domain</b>: Модель, с которой 
+      удобно работать в коде.
+    end note
+    
+    package "exception" #FFD2D2 {
+      class "StaticDataLoadingException" 
+    }
+    note bottom of "exception"
+      <b>Исключения:</b>
+      Выбрасывает исключения, 
+      при нахождении ошибок
+    end note
+ }
+
+package "api" #E1BEE7 {
+    package "api.context" #FFFFFF {
+        interface IBaseContext
+    }
+    package "api.models" #FFFFFF {
+        interface IDataCard
+    }
+}
+note right of "api"
+  <b>Глобальное API:</b>
+  Тут лежат интерфейсы, которые 
+  описывают структуру данных 
+  для отображения. Это "общий язык" 
+  между бэкендом и фронтендом.
+end note
+
+package "service" #F3E5F5 {
+    package "service.context" #FFFFFF {
+        class BaseContextDto
+        package "mocks" #F5F5F5 {
+            class BaseContextMock
+        }
+    }
+    package "service.models" #FFFFFF {
+        class DataCardDto
+    }
+}
+note right of "service"
+  <b>DTO (Data Transfer Objects):</b>
+  Это классы-упаковщики. 
+  Мы не отправляем в браузер секретные 
+  данные из БД. Мы пакуем результат 
+  в DTO, где лежат только те поля, 
+  которые реально нужно нарисовать 
+  на странице (логотипы, тексты, пути к фото).
+end note
+
+ServerApplication -[hidden]down-> "controller"
+"controller" -down-> "core" : "1. Запрос логики"
+"core" -down-> "api" : "2. Проверка интерфейсов"
+"core" -down-> "service" : "3. Упаковка в DTO"
+
+' Связи для User
+UserService .up.|> IUserService
+UserServiceMock .up.|> IUserService
+UserService -down-> UserRepository
+UserRepository -down-> UserEntity
+UserService -down-> UserMapper
+UserMapper -down-> User
+
+' Связи для Room
+RoomService .up.|> IRoomService
+RoomServiceMock .up.|> IRoomService
+RoomService -down-> RoomRepository
+RoomRepository -down-> RoomEntity
+RoomService -down-> RoomMapper
+RoomMapper -down-> Room
+
+' Связи для API/DTO
+BaseContextDto .up.|> IBaseContext
+BaseContextMock .up.|> IBaseContext
+DataCardDto .up.|> IDataCard
+
+@enduml
