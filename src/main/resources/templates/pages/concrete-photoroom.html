@@ -80,6 +80,24 @@
                 <button id="order-btn-photographers">ВЫБРАТЬ ФОТОГРАФА</button>
                 <button id="order-btn-confirm">ЗАБРОНИРОВАТЬ</button>
             </div>
+
+            <div class="order-status-block">
+                <div class="status-item">
+                    <span class="status-label">Итоговая стоимость:</span>
+                    <span class="status-value" id="summary-total-price">0.00 ₽</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Фотограф:</span>
+                    <span class="status-value" id="summary-photographer">Не выбран</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Выбрано оборудования:</span>
+                    <span class="status-value" id="summary-equipment-count">0</span>
+                </div>
+                <div class="status-item">
+                    <span class="error-label" id="order-status-message">Ohh hell naah</span>
+                </div>
+            </div>
         </div>
     </th:block>
 
