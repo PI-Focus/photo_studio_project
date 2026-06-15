@@ -2,7 +2,31 @@ package pi.focus.server.service.context.mocks;
 
 import pi.focus.server.api.context.IBaseContext;
 
+/**
+ * Мок-реализация базового контекста приложения.
+ * Содержит демонстрационные контактные данные студии, ИНН и пути к логотипам.
+ */
 public class BaseContextMock implements IBaseContext{
+
+    @Override
+    public String getLogoBright() {
+        return MocksDefines.LOGO_BRIGHT_PATH;
+    }
+
+    @Override
+    public String getLogoDark() {
+        return MocksDefines.LOGO_DARK_PATH;
+    }
+
+    @Override
+    public String getProfileBright() {
+        return MocksDefines.PROFILE_BRIGHT_PATH;
+    }
+
+    @Override
+    public String getProfileDark() {
+        return MocksDefines.PROFILE_DARK_PATH;
+    }
 
     @Override
     public String getInn() {

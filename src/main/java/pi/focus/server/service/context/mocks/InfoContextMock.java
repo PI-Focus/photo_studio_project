@@ -12,6 +12,9 @@ import pi.focus.server.service.models.DataCardDto;
 import pi.focus.server.service.models.TabDto;
 import pi.focus.server.service.models.TextCardDto;
 
+/**
+ * Мок-реализация контекста главной информационной страницы, содержащий правила аренды
+ */
 public class InfoContextMock implements IInfoContext {
     private final List<ITextCard> rentRules;
     private final List<INamedData<IDataCard>> imagedTabs;
@@ -36,7 +39,6 @@ public class InfoContextMock implements IInfoContext {
         );
 
         aboutData = new AboutDataBlockDto(
-            "/images/logo-bright.svg",
             "Фотостудия «Фокус» в Ярославле — это 5 отдельных пространств, чтобы каждая съёмка была в своей вселенной. " +
             "Минимализм, характерные интерьеры, бесшумный хромакей и профильный свет. Вам не придётся тащить с собой полкомнаты. " +
             "Тумбы, стойки, отражатели, объективы — всё под рукой. Если своего мастера кадра нет, за пульт встают наши фотографы. " +

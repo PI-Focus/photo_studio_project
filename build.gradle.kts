@@ -32,9 +32,13 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.flywaydb:flyway-database-postgresql")
     implementation("io.github.cdimascio:dotenv-java:3.2.0")
+    implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-session-data-redis")
+    implementation("org.thymeleaf.extras:thymeleaf-extras-springsecurity6:3.1.5.RELEASE")
 
     runtimeOnly("org.postgresql:postgresql")
-
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
 	testImplementation("org.springframework.boot:spring-boot-starter-thymeleaf-test")
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
@@ -43,6 +47,8 @@ dependencies {
     testImplementation("org.testcontainers:testcontainers")
     testImplementation("org.testcontainers:testcontainers-postgresql")
     testImplementation("org.testcontainers:testcontainers-junit-jupiter")
+    testImplementation("org.springframework.boot:spring-boot-starter-security-test")
+    testImplementation("org.springframework.boot:spring-boot-starter-session-data-redis-test")
 
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 

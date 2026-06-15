@@ -8,6 +8,13 @@ import pi.focus.server.api.models.ITextCard;
 
 import java.util.List;
 
+/**
+ * DTO для формирования главной информационной страницы.
+ * 
+ * @param aboutBlock данные для блока «О компании»
+ * @param rentRules список правил аренды студии
+ * @param dataTabs данные для навигационных вкладок
+ */
 public record InfoContextDto(
     IAboutDataBlock aboutBlock,
     List<ITextCard> rentRules,

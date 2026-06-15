@@ -5,6 +5,11 @@ import pi.focus.server.api.models.IImagedTextCard;
 
 import java.util.List;
 
+/**
+ * DTO для контекста страницы фотографов.
+ * 
+ * @param equipment список карточек фотографов (используется общий интерфейс карточки с картинкой)
+ */
 public record PhotographersContextDto(List<IImagedTextCard> equipment) implements IPhotographersContext{
     @Override
     public List<IImagedTextCard> getPhotographers() {

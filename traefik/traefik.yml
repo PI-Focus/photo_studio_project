@@ -24,7 +24,7 @@ certificatesResolvers:
       tlsChallenge: { }
 
 log:
-  level: DEBUG
+  level: INFO
   format: json
 
 
