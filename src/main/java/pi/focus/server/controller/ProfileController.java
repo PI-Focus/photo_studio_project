@@ -121,6 +121,23 @@ public class ProfileController {
         }
     }
 
+    @GetMapping("/{id}/options")
+    public String getOptions(
+            @PathVariable String id,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        UUID uuid;
+        try {
+            uuid = UUID.fromString(id);
+        } catch (IllegalArgumentException e) {
+            return "redirect:/";
+        }
+        if (!uuid.equals(userDetails.userId())) {
+            return "redirect:/";
+        }
+        return "pages/login";
+    }
+
     @GetMapping("{id}/credentials")
     public ResponseEntity<ICredentials> getCredentials(
             @PathVariable String id,
