@@ -196,8 +196,6 @@ public class UserService implements IUserService {
         return "";
     }
 
-
-
     private boolean existsByLogin(String login) {
         return userRepository.existsByLogin(login);
     }
