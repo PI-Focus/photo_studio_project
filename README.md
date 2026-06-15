@@ -54,7 +54,7 @@ To run the project, you must have the following installed on your computer **JDK
    ```bash
    docker build -t poer1/photostudio-app:latest .
    ```
-3. Change .env.example according to the configuration and write it to .env
+3. Change env.example according to the configuration and write it to .env
 4. Deploy the infrastructure as a team:
    ```bash
    docker compose -f docker-compose.prod.yml up
