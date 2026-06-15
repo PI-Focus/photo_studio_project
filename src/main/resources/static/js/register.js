@@ -11,11 +11,34 @@ function initRegistrationValidation() {
     const loginRegex = /^[a-z0-9_-]+$/;
     const hasLetterRegex = /[a-z]/;
     
-    let hasServerError = errorElement.textContent.trim().length > 0;
+    const serverErrorText = errorElement.getAttribute('data-server-error') || "";
+    let isUserTyping = false; 
 
-    function validateForm(event) {
-        if (event && event.type === 'input') {
-            hasServerError = false;
+    function checkFormValidity() {
+        const loginValue = loginInput.value;
+        const passwordValue = passwordInput.value;
+        const confirmValue = confirmInput.value;
+
+        const isLoginValid = loginValue.length >= 4 && loginRegex.test(loginValue) && hasLetterRegex.test(loginValue);
+        const isPasswordValid = passwordValue.length >= 8;
+        const isConfirmValid = confirmValue.length > 0 && passwordValue === confirmValue;
+
+        if (!isUserTyping && serverErrorText.trim().length > 0) {
+            submitBtn.setAttribute('disabled', 'true');
+            return;
+        }
+
+        if (isLoginValid && isPasswordValid && isConfirmValid) {
+            submitBtn.removeAttribute('disabled');
+        } else {
+            submitBtn.setAttribute('disabled', 'true');
+        }
+    }
+
+    function handleErrors() {
+        if (!isUserTyping && serverErrorText.trim().length > 0) {
+            errorElement.textContent = serverErrorText;
+            return;
         }
 
         const loginValue = loginInput.value;
@@ -42,25 +65,36 @@ function initRegistrationValidation() {
             clientErrorMessage = "Пароли не совпадают.";
         }
 
-        if (!hasServerError) {
-            errorElement.textContent = clientErrorMessage;
-        }
-
-        const isLoginValid = loginValue.length >= 4 && loginRegex.test(loginValue) && hasLetterRegex.test(loginValue);
-        const allFilled = isLoginValid && passwordValue.length >= 8 && confirmValue.length > 0;
-        
-        if (!clientErrorMessage && !hasServerError && allFilled) {
-            submitBtn.removeAttribute('disabled');
-        } else {
-            submitBtn.setAttribute('disabled', 'true');
-        }
+        errorElement.textContent = clientErrorMessage;
     }
 
-    form.addEventListener('input', validateForm);
-    form.addEventListener('change', validateForm);
+    function onFormChange() {
+        handleErrors();
+        checkFormValidity();
+    }
 
-    validateForm();
-    setTimeout(validateForm, 100);
+    form.addEventListener('keydown', function() {
+        if (!isUserTyping) {
+            isUserTyping = true;
+        }
+    });
+
+    form.addEventListener('input', onFormChange);
+    form.addEventListener('change', onFormChange);
+
+    if (serverErrorText.trim().length > 0) {
+        errorElement.textContent = serverErrorText;
+    }
+    checkFormValidity();
+
+    const intervals = intervals.forEach(delay => {
+        setTimeout(() => {
+            if (!isUserTyping && serverErrorText.trim().length > 0) {
+                errorElement.textContent = serverErrorText; 
+            }
+            checkFormValidity();
+        }, delay);
+    });
 }
 
 if (document.readyState === 'loading') {
