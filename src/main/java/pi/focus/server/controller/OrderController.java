@@ -98,6 +98,17 @@ public class OrderController {
         return ResponseEntity.ok().body(photographerService.getPhotographersByTime(time));
     }
 
+    @GetMapping("/current")
+    public ResponseEntity<IOrderStatus> getCurrent(HttpServletRequest request) {
+        HttpSession session = request.getSession(true);
+        IOrderStatus orderStatus = (IOrderStatus) session.getAttribute("orderStatus");
+        if (orderStatus == null) {
+            orderStatus = orderService.getEmptyOrderStatus();
+        }
+        session.setAttribute("orderStatus", orderStatus);
+        return ResponseEntity.ok().body(orderStatus);
+    }
+
     @PostMapping("/current")
     public ResponseEntity<IOrderStatus> postCurrent(
             @RequestBody String stringOrderStatus,
