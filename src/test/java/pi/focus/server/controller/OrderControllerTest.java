@@ -96,6 +96,7 @@ class OrderControllerTest {
                 "password",
                 List.of(new SimpleGrantedAuthority("ROLE_USER")),
                 UUID.fromString("3e5f1ff2-7c6f-47ec-9aac-62d0f328b4bd"),
+                "testuser",
                 "test@example.com",
                 "81111111111"
         );
