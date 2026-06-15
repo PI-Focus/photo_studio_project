@@ -12,6 +12,7 @@ public record CustomUserDetails(
         String password,
         Collection<? extends GrantedAuthority> authorities,
         UUID userId,
+        String login,
         String email,
         String phoneNumber
 ) implements UserDetails {
