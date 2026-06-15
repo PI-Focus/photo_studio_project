@@ -37,7 +37,7 @@ public class PhotographerEntity {
     String photoPath;
 
     @OneToMany(mappedBy = "photographer", cascade = CascadeType.ALL)
-    private List<ReservedPhotographerEntity> reservedPhotographers = new ArrayList<>();
+    private List<ReservationEntity> reservations = new ArrayList<>();
 
     public PhotographerEntity() {
     }
@@ -49,7 +49,7 @@ public class PhotographerEntity {
             String description,
             Integer price,
             String photoPath,
-            List<ReservedPhotographerEntity> reservedPhotographers
+            List<ReservationEntity> reservations
     ) {
         this.id = id;
         this.name = name;
@@ -57,7 +57,7 @@ public class PhotographerEntity {
         this.description = description;
         this.price = price;
         this.photoPath = photoPath;
-        this.reservedPhotographers = reservedPhotographers;
+        this.reservations = reservations;
     }
 
     public UUID getId() {
@@ -108,11 +108,11 @@ public class PhotographerEntity {
         this.photoPath = photoPath;
     }
 
-    public List<ReservedPhotographerEntity> getReservedPhotographers() {
-        return reservedPhotographers;
+    public List<ReservationEntity> getReservations() {
+        return reservations;
     }
 
-    public void setReservedPhotographers(List<ReservedPhotographerEntity> reservedPhotographers) {
-        this.reservedPhotographers = reservedPhotographers;
+    public void setReservations(List<ReservationEntity> reservations) {
+        this.reservations = reservations;
     }
 }

@@ -1,9 +1,12 @@
 package pi.focus.server.service.models;
 
+import pi.focus.server.api.models.IEquipment;
 import pi.focus.server.api.models.IOrder;
+import tools.jackson.databind.annotation.JsonDeserialize;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -12,14 +15,15 @@ public class OrderDto implements IOrder, Serializable {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private UUID photographerId;
-    private List<EquipmentDto> equipment;
+    @JsonDeserialize(as = ArrayList.class, contentAs = EquipmentDto.class)
+    private List<IEquipment> equipment;
     private Integer price;
 
     public OrderDto(
             LocalDateTime startTime,
             LocalDateTime endTime,
             UUID photographerId,
-            List<EquipmentDto> equipment,
+            List<IEquipment> equipment,
             Integer price
     ) {
         this.startTime = startTime;
@@ -45,7 +49,7 @@ public class OrderDto implements IOrder, Serializable {
     }
 
     @Override
-    public List<EquipmentDto> getEquipment() {
+    public List<IEquipment> getEquipment() {
         return equipment;
     }
 
@@ -70,7 +74,7 @@ public class OrderDto implements IOrder, Serializable {
     }
 
     @Override
-    public void setEquipment(List<EquipmentDto> equipment) {
+    public void setEquipment(List<IEquipment> equipment) {
         this.equipment = equipment;
     }
 

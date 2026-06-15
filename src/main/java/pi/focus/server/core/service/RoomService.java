@@ -8,9 +8,11 @@ import pi.focus.server.api.context.IConcretePhotoroomContext;
 import pi.focus.server.api.context.IPhotoroomsContext;
 import pi.focus.server.api.models.ICalendar;
 import pi.focus.server.api.models.IDataCard;
+import pi.focus.server.core.domain.Room;
 import pi.focus.server.core.entity.PhotoEntity;
 import pi.focus.server.core.entity.ReservationEntity;
 import pi.focus.server.core.entity.RoomEntity;
+import pi.focus.server.core.mapper.RoomMapper;
 import pi.focus.server.core.repository.RoomRepository;
 import pi.focus.server.core.service.api.IRoomService;
 import pi.focus.server.service.models.CalendarDto;
@@ -144,5 +146,26 @@ public class RoomService implements IRoomService {
     @Override
     public Boolean exists(UUID id) {
         return roomRepository.findById(id).isPresent();
+    }
+
+    @Override
+    public Room getRoomById(UUID id) {
+        return roomRepository.findById(id).map(RoomMapper::toDomain).orElse(null);
+    }
+
+    @Override
+    public Boolean freeRoom(UUID id, Range<LocalDateTime> time) {
+        Optional<RoomEntity> roomOpt = roomRepository.findById(id);
+        if (roomOpt.isEmpty()) {
+            return false;
+        }
+        RoomEntity room = roomOpt.get();
+        boolean free = true;
+        for (ReservationEntity reservation: room.getReservations()) {
+            if (reservation.getTime().contains(time)) {
+                free = false;
+            }
+        }
+        return free;
     }
 }

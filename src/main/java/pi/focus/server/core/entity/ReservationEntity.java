@@ -35,6 +35,10 @@ public class ReservationEntity {
     @JoinColumn(name = "room_id")
     RoomEntity room;
 
+    @ManyToOne
+    @JoinColumn(name = "photographer_id")
+    private PhotographerEntity photographer;
+
     @Column(name = "time", nullable = false, columnDefinition = "tsrange")
     @Type(PostgreSQLRangeType.class)
     private Range<LocalDateTime> time;
@@ -42,26 +46,16 @@ public class ReservationEntity {
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
     private List<ReservedEquipmentEntity> reservedEquipments = new ArrayList<>();
 
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.ALL)
-    private List<ReservedPhotographerEntity> reservedPhotographers = new ArrayList<>();
-
     public ReservationEntity() {
     }
 
-    public ReservationEntity(
-        UUID id,
-        UserEntity user,
-        RoomEntity room,
-        Range<LocalDateTime> time,
-        List<ReservedEquipmentEntity> reservedEquipments,
-        List<ReservedPhotographerEntity> reservedPhotographers
-    ) {
+    public ReservationEntity(UUID id, UserEntity user, RoomEntity room, PhotographerEntity photographer, Range<LocalDateTime> time, List<ReservedEquipmentEntity> reservedEquipments) {
         this.id = id;
         this.user = user;
         this.room = room;
+        this.photographer = photographer;
         this.time = time;
         this.reservedEquipments = reservedEquipments;
-        this.reservedPhotographers = reservedPhotographers;
     }
 
     public UUID getId() {
@@ -88,6 +82,14 @@ public class ReservationEntity {
         this.room = room;
     }
 
+    public PhotographerEntity getPhotographer() {
+        return photographer;
+    }
+
+    public void setPhotographer(PhotographerEntity photographer) {
+        this.photographer = photographer;
+    }
+
     public Range<LocalDateTime> getTime() {
         return time;
     }
@@ -102,14 +104,6 @@ public class ReservationEntity {
 
     public void setReservedEquipments(List<ReservedEquipmentEntity> reservedEquipments) {
         this.reservedEquipments = reservedEquipments;
-    }
-
-    public List<ReservedPhotographerEntity> getReservedPhotographers() {
-        return reservedPhotographers;
-    }
-
-    public void setReservedPhotographers(List<ReservedPhotographerEntity> reservedPhotographers) {
-        this.reservedPhotographers = reservedPhotographers;
     }
 }
 

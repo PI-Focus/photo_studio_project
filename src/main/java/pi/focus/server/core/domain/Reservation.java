@@ -9,5 +9,6 @@ public record Reservation(
         UUID id ,
         UUID userId,
         UUID roomId,
+        UUID photographerId,
         Range<LocalDateTime> time
 ) { }

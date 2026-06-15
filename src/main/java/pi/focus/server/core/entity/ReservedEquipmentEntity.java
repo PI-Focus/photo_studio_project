@@ -27,13 +27,17 @@ public class ReservedEquipmentEntity{
     @JoinColumn(name = "equipment_id")
     EquipmentEntity equipment;
 
+    @Column(name = "count", nullable = false)
+    Integer count;
+
     public ReservedEquipmentEntity() {
     }
 
-    public ReservedEquipmentEntity(UUID reservedEquipmentId, ReservationEntity reservation, EquipmentEntity equipment) {
+    public ReservedEquipmentEntity(UUID reservedEquipmentId, ReservationEntity reservation, EquipmentEntity equipment, Integer count) {
         this.reservedEquipmentId = reservedEquipmentId;
         this.reservation = reservation;
         this.equipment = equipment;
+        this.count = count;
     }
 
     public UUID getReservedEquipmentId() {
@@ -58,5 +62,13 @@ public class ReservedEquipmentEntity{
 
     public void setEquipment(EquipmentEntity equipment) {
         this.equipment = equipment;
+    }
+
+    public Integer getCount() {
+        return count;
+    }
+
+    public void setCount(Integer count) {
+        this.count = count;
     }
 }
