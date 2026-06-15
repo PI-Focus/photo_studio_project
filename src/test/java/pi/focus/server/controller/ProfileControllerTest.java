@@ -71,6 +71,7 @@ class ProfileControllerTest {
         objectMapper = new ObjectMapper();
 
         ProfileController controller = new ProfileController(userService, reservationService);
+
         mockMvc = MockMvcBuilders.standaloneSetup(controller)
                 .setCustomArgumentResolvers(new AuthenticationPrincipalArgumentResolver())
                 .build();
