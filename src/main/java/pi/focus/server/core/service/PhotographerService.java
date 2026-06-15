@@ -7,7 +7,7 @@ import pi.focus.server.api.context.IPhotographersContext;
 import pi.focus.server.api.models.IImagedTextCard;
 import pi.focus.server.core.domain.Photographer;
 import pi.focus.server.core.entity.PhotographerEntity;
-import pi.focus.server.core.entity.ReservedPhotographerEntity;
+import pi.focus.server.core.entity.ReservationEntity;
 import pi.focus.server.core.mapper.PhotographerMapper;
 import pi.focus.server.core.repository.PhotographerRepository;
 import pi.focus.server.core.service.api.IPhotographerService;
@@ -47,13 +47,7 @@ public class PhotographerService implements IPhotographerService {
     public List<Photographer> getPhotographersByTime(Range<LocalDateTime> time) {
         List<Photographer> photographers = new ArrayList<>();
         for (PhotographerEntity photographer: photographerRepository.findAll()) {
-            boolean free = true;
-            for (ReservedPhotographerEntity reservation: photographer.getReservedPhotographers()) {
-                if (reservation.getReservation().getTime().contains(time)) {
-                    free = false;
-                }
-            }
-            if (free) {
+            if (freePhotographer(photographer.getId(), time)) {
                 photographers.add(PhotographerMapper.toDomain(photographer));
             }
         }
@@ -78,12 +72,11 @@ public class PhotographerService implements IPhotographerService {
         }
         PhotographerEntity photographer = photographerOpt.get();
         boolean free = true;
-        for (ReservedPhotographerEntity reservation: photographer.getReservedPhotographers()) {
-            if (reservation.getReservation().getTime().contains(time)) {
+        for (ReservationEntity reservation: photographer.getReservations()) {
+            if (reservation.getTime().contains(time)) {
                 free = false;
             }
         }
         return free;
-
     }
 }

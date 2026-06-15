@@ -2,6 +2,7 @@ package pi.focus.server.service.models;
 
 import pi.focus.server.api.models.IOrder;
 import pi.focus.server.api.models.IOrderStatus;
+import tools.jackson.databind.annotation.JsonDeserialize;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -9,6 +10,7 @@ import java.util.UUID;
 public class OrderStatusDto implements IOrderStatus, Serializable {
     private static final long serialVersionUID = 1L;
     private UUID roomId;
+    @JsonDeserialize(as = OrderDto.class)
     private IOrder body;
 
     public OrderStatusDto(UUID roomId, OrderDto body) {

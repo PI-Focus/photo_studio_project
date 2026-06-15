@@ -7,40 +7,53 @@ import org.springframework.stereotype.Service;
 import pi.focus.server.api.models.IEquipment;
 import pi.focus.server.api.models.IOrder;
 import pi.focus.server.api.models.IOrderStatus;
-import pi.focus.server.core.domain.Equipment;
-import pi.focus.server.core.domain.Photographer;
-import pi.focus.server.core.domain.Room;
-import pi.focus.server.core.service.api.IEquipmentService;
-import pi.focus.server.core.service.api.IOrderService;
-import pi.focus.server.core.service.api.IPhotographerService;
-import pi.focus.server.core.service.api.IReservationService;
-import pi.focus.server.core.service.api.IRoomService;
+import pi.focus.server.core.entity.EquipmentEntity;
+import pi.focus.server.core.entity.PhotographerEntity;
+import pi.focus.server.core.entity.ReservationEntity;
+import pi.focus.server.core.entity.ReservedEquipmentEntity;
+import pi.focus.server.core.entity.RoomEntity;
+import pi.focus.server.core.repository.EquipmentRepository;
+import pi.focus.server.core.repository.PhotographerRepository;
+import pi.focus.server.core.repository.ReservationRepository;
+import pi.focus.server.core.repository.RoomRepository;
+import pi.focus.server.core.repository.UserRepository;
+import pi.focus.server.core.service.api.IOrderFacade;
 import pi.focus.server.service.models.OrderDto;
 import pi.focus.server.service.models.OrderStatusDto;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Transactional
 @Profile({"dev", "prod", "test"})
 @SuppressWarnings({"PMD.ConfusingTernary"})
-public class OrderService implements IOrderService {
-    private final IRoomService roomService;
-    private final IEquipmentService equipmentService;
-    private final IPhotographerService photographerService;
-    private final IReservationService reservationService;
+public class OrderFacade implements IOrderFacade {
+    private final RoomService roomService;
+    private final PhotographerService photographerService;
+    private final ReservationRepository reservationRepository;
+    private final RoomRepository roomRepository;
+    private final EquipmentRepository equipmentRepository;
+    private final PhotographerRepository photographerRepository;
+    private final UserRepository userRepository;
 
-    public OrderService(
-            IRoomService roomService,
-            IEquipmentService equipmentService,
-            IPhotographerService photographerService,
-            IReservationService reservationService
+    public OrderFacade(
+            RoomService roomService,
+            PhotographerService photographerService,
+            ReservationRepository reservationRepository,
+            RoomRepository roomRepository,
+            EquipmentRepository equipmentRepository,
+            PhotographerRepository photographerRepository, UserRepository userRepository
     ) {
         this.roomService = roomService;
-        this.equipmentService = equipmentService;
         this.photographerService = photographerService;
-        this.reservationService = reservationService;
+        this.reservationRepository = reservationRepository;
+        this.roomRepository = roomRepository;
+        this.equipmentRepository = equipmentRepository;
+        this.photographerRepository = photographerRepository;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -58,23 +71,59 @@ public class OrderService implements IOrderService {
     }
 
     @Override
+    public void createReservation(UUID id, IOrderStatus orderStatus) {
+        IOrder order = orderStatus.getBody();
+
+        ReservationEntity reservation = new ReservationEntity();
+        reservation.setId(null);
+        reservation.setUser(userRepository.findById(id).orElse(null));
+        reservation.setRoom(roomRepository.findById(orderStatus.getRoomId()).orElse(null));
+        reservation.setPhotographer(photographerRepository.findById(order.getPhotographerId()).orElse(null));
+
+        Range<LocalDateTime> time = Range.closed(
+                order.getStartTime(),
+                order.getEndTime()
+        );
+        reservation.setTime(time);
+
+        List<ReservedEquipmentEntity> reservedEquipmentEntities = new ArrayList<>();
+        for (IEquipment equipment: order.getEquipment()) {
+            reservedEquipmentEntities.add(
+                    new ReservedEquipmentEntity(
+                            null,
+                            reservation,
+                            equipmentRepository.findById(equipment.getId()).orElse(null),
+                            equipment.getCount()
+                    )
+            );
+        }
+        reservation.setReservedEquipments(reservedEquipmentEntities);
+
+        reservationRepository.save(reservation);
+    }
+
+    @Override
     @SuppressWarnings({"PMD.CognitiveComplexity", "PMD.CyclomaticComplexity"})
     public Integer validateOrderStatus(IOrderStatus orderStatus) {
         int price = 0;
+        RoomEntity room;
         if (orderStatus.getRoomId() == null) {
             return -1;
         } else {
-            Room room = roomService.getRoomById(orderStatus.getRoomId());
+            room = roomRepository.findById(orderStatus.getRoomId()).orElse(null);
             if (room == null) {
                 return -1;
             } else {
-                price += room.price();
+                price += room.getPrice();
             }
         }
         IOrder order = orderStatus.getBody();
         if (order.getStartTime() == null || order.getEndTime() == null
                 || !order.getStartTime().isBefore(order.getEndTime())
                 || !order.getStartTime().toLocalDate().isEqual(order.getEndTime().toLocalDate())) {
+            return -1;
+        }
+        if (!roomService.freeRoom(room.getId(), Range.closed(order.getStartTime(), order.getEndTime()))) {
             return -1;
         }
         boolean changed = false;
@@ -84,17 +133,17 @@ public class OrderService implements IOrderService {
                 changed = true;
                 order.setPhotographerId(null);
             } else {
-                Photographer photographer = photographerService.getPhotographerById(order.getPhotographerId());
-                price += photographer.price();
+                PhotographerEntity photographer = photographerRepository.findById(order.getPhotographerId()).get();
+                price += photographer.getPrice();
             }
         }
         List<IEquipment> validEquipment = new ArrayList<>();
         for (IEquipment equipmentDto: order.getEquipment()) {
             if (equipmentDto.getId() != null) {
-                Equipment equipment = equipmentService.getEquipmentById(equipmentDto.getId());
+                EquipmentEntity equipment = equipmentRepository.findById(equipmentDto.getId()).orElse(null);
                 if (equipment != null && equipmentDto.getCount() != null && equipmentDto.getCount() > 0) {
                     validEquipment.add(equipmentDto);
-                    price += equipment.price() * equipmentDto.getCount();
+                    price += equipment.getPrice() * equipmentDto.getCount();
                 } else {
                     changed = true;
                 }

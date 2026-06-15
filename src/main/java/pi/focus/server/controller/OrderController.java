@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,10 +23,12 @@ import pi.focus.server.api.models.IOrderStatus;
 import pi.focus.server.core.domain.Equipment;
 import pi.focus.server.core.domain.Photographer;
 import pi.focus.server.core.mapper.JsonMapper;
+import pi.focus.server.core.security.CustomUserDetails;
 import pi.focus.server.core.service.api.IEquipmentService;
-import pi.focus.server.core.service.api.IOrderService;
+import pi.focus.server.core.service.api.IOrderFacade;
 import pi.focus.server.core.service.api.IPhotographerService;
 import pi.focus.server.core.service.api.IRoomService;
+import pi.focus.server.service.models.OrderStatusDto;
 import tools.jackson.core.JacksonException;
 
 import java.time.format.DateTimeParseException;
@@ -39,13 +42,13 @@ public class OrderController {
     private final IRoomService roomService;
     private final IEquipmentService equipmentService;
     private final IPhotographerService photographerService;
-    private final IOrderService orderService;
+    private final IOrderFacade orderService;
 
     public OrderController(
             IRoomService roomService,
             IEquipmentService equipmentService,
             IPhotographerService photographerService,
-            IOrderService orderService
+            IOrderFacade orderService
     ) {
         this.roomService = roomService;
         this.equipmentService = equipmentService;
@@ -113,7 +116,7 @@ public class OrderController {
     ) {
         IOrderStatus orderStatus;
         try {
-            orderStatus =  JsonMapper.getInstance().readValue(stringOrderStatus, IOrderStatus.class);
+            orderStatus =  JsonMapper.getInstance().readValue(stringOrderStatus, OrderStatusDto.class);
         } catch (JacksonException e) {
             return ResponseEntity.unprocessableContent().build();
         }
@@ -134,19 +137,21 @@ public class OrderController {
     @PostMapping("/confirm")
     public ResponseEntity<IOrderStatus> createReservation (
             @RequestBody String stringOrderStatus,
-            HttpServletRequest request
+            HttpServletRequest request,
+            @AuthenticationPrincipal CustomUserDetails userDetails
     ) {
         IOrderStatus orderStatus;
         try {
-            orderStatus =  JsonMapper.getInstance().readValue(stringOrderStatus, IOrderStatus.class);
+            orderStatus = JsonMapper.getInstance().readValue(stringOrderStatus, OrderStatusDto.class);
         } catch (JacksonException e) {
             return ResponseEntity.unprocessableContent().build();
         }
-        HttpSession session = request.getSession(true);
+        HttpSession session = request.getSession(false);
         Integer validateStatus = orderService.validateOrderStatus(orderStatus);
         if (validateStatus == 0) {
             session.setAttribute("orderStatus", orderStatus);
-            // тут будет бронирование
+            orderService.createReservation(userDetails.userId(), orderStatus);
+            session.removeAttribute("orderStatus");
             return ResponseEntity.ok().body(orderStatus);
         } else if (validateStatus == 1) {
             session.setAttribute("orderStatus", orderStatus);

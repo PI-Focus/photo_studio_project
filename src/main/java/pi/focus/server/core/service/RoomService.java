@@ -152,4 +152,20 @@ public class RoomService implements IRoomService {
     public Room getRoomById(UUID id) {
         return roomRepository.findById(id).map(RoomMapper::toDomain).orElse(null);
     }
+
+    @Override
+    public Boolean freeRoom(UUID id, Range<LocalDateTime> time) {
+        Optional<RoomEntity> roomOpt = roomRepository.findById(id);
+        if (roomOpt.isEmpty()) {
+            return false;
+        }
+        RoomEntity room = roomOpt.get();
+        boolean free = true;
+        for (ReservationEntity reservation: room.getReservations()) {
+            if (reservation.getTime().contains(time)) {
+                free = false;
+            }
+        }
+        return free;
+    }
 }

@@ -2,9 +2,11 @@ package pi.focus.server.service.models;
 
 import pi.focus.server.api.models.IEquipment;
 import pi.focus.server.api.models.IOrder;
+import tools.jackson.databind.annotation.JsonDeserialize;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,6 +15,7 @@ public class OrderDto implements IOrder, Serializable {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private UUID photographerId;
+    @JsonDeserialize(as = ArrayList.class, contentAs = EquipmentDto.class)
     private List<IEquipment> equipment;
     private Integer price;
 
