@@ -28,4 +28,9 @@ public class UserServiceMock implements IUserService {
     public List<ReservationDto> getUserReservationDtos(UUID id, LocalDate day) {
         return List.of();
     }
+
+    @Override
+    public String updateUser(User user) {
+        return null;
+    }
 }

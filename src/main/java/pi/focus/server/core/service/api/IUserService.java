@@ -12,4 +12,5 @@ public interface IUserService {
     boolean createUser(User user);
     ICalendar getUserCalendar(UUID id, LocalDate day);
     List<ReservationDto> getUserReservationDtos(UUID id, LocalDate day);
+    String updateUser(User user);
 }

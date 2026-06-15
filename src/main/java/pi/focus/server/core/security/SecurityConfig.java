@@ -42,7 +42,7 @@ public class SecurityConfig {
                 .requestMatchers("/css/**", "/images/**", "/js/**", "/fonts/**", "/docs/**", "/favicon.ico").permitAll()
                 .requestMatchers("/", "/actuator/health", "/photorooms", "/photorooms/*", "/equipment", "/photographers", "/login", "/login?*", "/registration").permitAll()
                 .requestMatchers("/order/calendar/*", "/order/equipment", "/order/photographers", "/order/current").permitAll()
-                .requestMatchers("/profile/**", "/order/confirm").hasRole(UserRole.USER.name())
+                .requestMatchers("/profile", "/profile/**", "/order/confirm").hasRole(UserRole.USER.name())
             ).formLogin(form -> form
                 .loginPage("/login").permitAll()
                 .usernameParameter("login")
