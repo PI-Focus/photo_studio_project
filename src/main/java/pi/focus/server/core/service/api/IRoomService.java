@@ -3,6 +3,7 @@ package pi.focus.server.core.service.api;
 import pi.focus.server.api.context.IConcretePhotoroomContext;
 import pi.focus.server.api.context.IPhotoroomsContext;
 import pi.focus.server.api.models.ICalendar;
+import pi.focus.server.core.domain.Room;
 
 import java.time.LocalDate;
 import java.util.UUID;
@@ -12,4 +13,5 @@ public interface IRoomService {
     IConcretePhotoroomContext getConcretePhotoroomContext(UUID id);
     ICalendar getRoomCalendar(UUID id, LocalDate day);
     Boolean exists(UUID id);
+    Room getRoomById(UUID id);
 }

@@ -17,6 +17,7 @@ import pi.focus.server.service.models.ImagedTextCardDto;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 
@@ -62,5 +63,27 @@ public class PhotographerService implements IPhotographerService {
     @Override
     public Boolean exists(UUID id) {
         return photographerRepository.findById(id).isPresent();
+    }
+
+    @Override
+    public Photographer getPhotographerById(UUID id) {
+        return photographerRepository.findById(id).map(PhotographerMapper::toDomain).orElse(null);
+    }
+
+    @Override
+    public boolean freePhotographer(UUID id, Range<LocalDateTime> time) {
+        Optional<PhotographerEntity> photographerOpt = photographerRepository.findById(id);
+        if (photographerOpt.isEmpty()) {
+            return false;
+        }
+        PhotographerEntity photographer = photographerOpt.get();
+        boolean free = true;
+        for (ReservedPhotographerEntity reservation: photographer.getReservedPhotographers()) {
+            if (reservation.getReservation().getTime().contains(time)) {
+                free = false;
+            }
+        }
+        return free;
+
     }
 }

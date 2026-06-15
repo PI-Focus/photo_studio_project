@@ -47,4 +47,9 @@ public class EquipmentService implements IEquipmentService {
     public Boolean exists(UUID id) {
         return equipmentRepository.findById(id).isPresent();
     }
+
+    @Override
+    public Equipment getEquipmentById(UUID id) {
+        return equipmentRepository.findById(id).map(EquipmentMapper::toDomain).orElse(null);
+    }
 }

@@ -11,4 +11,5 @@ public interface IEquipmentService {
     IEquipmentContext getEquipmentContext();
     List<Equipment> getEquipment();
     Boolean exists(UUID id);
+    Equipment getEquipmentById(UUID id);
 }

@@ -29,4 +29,14 @@ public class PhotographerServiceMock implements IPhotographerService {
     public Boolean exists(UUID id) {
         return false;
     }
+
+    @Override
+    public Photographer getPhotographerById(UUID id) {
+        return null;
+    }
+
+    @Override
+    public boolean freePhotographer(UUID id, Range<LocalDateTime> time) {
+        return false;
+    }
 }

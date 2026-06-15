@@ -2,7 +2,6 @@ package pi.focus.server.controller;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,16 +18,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import pi.focus.server.api.models.ICalendar;
-import pi.focus.server.api.models.IOrder;
 import pi.focus.server.api.models.IOrderStatus;
 import pi.focus.server.core.domain.Equipment;
 import pi.focus.server.core.domain.Photographer;
+import pi.focus.server.core.mapper.JsonMapper;
 import pi.focus.server.core.service.api.IEquipmentService;
+import pi.focus.server.core.service.api.IOrderService;
 import pi.focus.server.core.service.api.IPhotographerService;
 import pi.focus.server.core.service.api.IRoomService;
-import pi.focus.server.service.models.EquipmentDto;
-import pi.focus.server.service.models.OrderDto;
-import pi.focus.server.service.models.OrderStatusDto;
+import tools.jackson.core.JacksonException;
 
 import java.time.format.DateTimeParseException;
 
@@ -36,19 +34,23 @@ import java.time.format.DateTimeParseException;
 @Controller
 @RequestMapping("/order")
 @Transactional
+@SuppressWarnings({"PMD.AvoidDuplicateLiterals", "PMD.AvoidLiteralsInIfCondition"})
 public class OrderController {
     private final IRoomService roomService;
     private final IEquipmentService equipmentService;
     private final IPhotographerService photographerService;
+    private final IOrderService orderService;
 
     public OrderController(
             IRoomService roomService,
             IEquipmentService equipmentService,
-            IPhotographerService photographerService
+            IPhotographerService photographerService,
+            IOrderService orderService
     ) {
         this.roomService = roomService;
         this.equipmentService = equipmentService;
         this.photographerService = photographerService;
+        this.orderService = orderService;
     }
 
     @GetMapping("/calendar/{id}")
@@ -98,65 +100,60 @@ public class OrderController {
         HttpSession session = request.getSession(true);
         IOrderStatus orderStatus = (IOrderStatus) session.getAttribute("orderStatus");
         if (orderStatus == null) {
-            orderStatus = new OrderStatusDto(
-                    null,
-                    new OrderDto(
-                            null,
-                            null,
-                            null,
-                            new ArrayList<>(),
-                            0
-                    )
-            );
+            orderStatus = orderService.getEmptyOrderStatus();
         }
         session.setAttribute("orderStatus", orderStatus);
         return ResponseEntity.ok().body(orderStatus);
     }
 
-//    @PostMapping("/current")
-//    public ResponseEntity<IOrderStatus> getCurrent(
-//            @RequestBody IOrderStatus orderStatus,
-//            HttpServletRequest request
-//    ) {
-//        HttpSession session = request.getSession(true);
-//        Integer validateStatus = validateOrderStatus(orderStatus);
-//        if (validateStatus == 0) {
-//            session.setAttribute("orderStatus", orderStatus);
-//            return ResponseEntity.ok().body(orderStatus);
-//        } else if (validateStatus == 1) {
-//            session.setAttribute("orderStatus", orderStatus);
-//            return ResponseEntity.accepted().body(orderStatus);
-//        } else {
-//            session.removeAttribute("orderStatus");
-//            return ResponseEntity.unprocessableContent().build();
-//        }
-//    }
-//
-//    private Integer validateOrderStatus(IOrderStatus orderStatus) {
-//        boolean changed = false;
-//        if (!roomService.exists(orderStatus.getRoomId())) {
-//            return -1;
-//        }
-//        IOrder order = orderStatus.getBody();
-//        if (!order.getStartTime().isBefore(order.getEndTime())) {
-//            return -1;
-//        }
-//        if (!photographerService.exists(order.getPhotographerId())) {
-//            changed = true;
-//            order.setPhotographerId(null);
-//        }
-//        List<EquipmentDto> validEquipment = new ArrayList<>();
-//        for (EquipmentDto equipment: order.getEquipment()) {
-//            if (equipmentService.exists(equipment.getId())) {
-//                validEquipment.add(equipment);
-//            } else {
-//                changed = true;
-//            }
-//        }
-//        order.setEquipment(validEquipment);
-//        if (changed) {
-//            return 1;
-//        }
-//    }
+    @PostMapping("/current")
+    public ResponseEntity<IOrderStatus> postCurrent(
+            @RequestBody String stringOrderStatus,
+            HttpServletRequest request
+    ) {
+        IOrderStatus orderStatus;
+        try {
+            orderStatus =  JsonMapper.getInstance().readValue(stringOrderStatus, IOrderStatus.class);
+        } catch (JacksonException e) {
+            return ResponseEntity.unprocessableContent().build();
+        }
+        HttpSession session = request.getSession(true);
+        Integer validateStatus = orderService.validateOrderStatus(orderStatus);
+        if (validateStatus == 0) {
+            session.setAttribute("orderStatus", orderStatus);
+            return ResponseEntity.ok().body(orderStatus);
+        } else if (validateStatus == 1) {
+            session.setAttribute("orderStatus", orderStatus);
+            return ResponseEntity.accepted().body(orderStatus);
+        } else {
+            session.removeAttribute("orderStatus");
+            return ResponseEntity.unprocessableContent().build();
+        }
+    }
 
+    @PostMapping("/confirm")
+    public ResponseEntity<IOrderStatus> createReservation (
+            @RequestBody String stringOrderStatus,
+            HttpServletRequest request
+    ) {
+        IOrderStatus orderStatus;
+        try {
+            orderStatus =  JsonMapper.getInstance().readValue(stringOrderStatus, IOrderStatus.class);
+        } catch (JacksonException e) {
+            return ResponseEntity.unprocessableContent().build();
+        }
+        HttpSession session = request.getSession(true);
+        Integer validateStatus = orderService.validateOrderStatus(orderStatus);
+        if (validateStatus == 0) {
+            session.setAttribute("orderStatus", orderStatus);
+            // тут будет бронирование
+            return ResponseEntity.ok().body(orderStatus);
+        } else if (validateStatus == 1) {
+            session.setAttribute("orderStatus", orderStatus);
+            return ResponseEntity.accepted().body(orderStatus);
+        } else {
+            session.removeAttribute("orderStatus");
+            return ResponseEntity.unprocessableContent().build();
+        }
+    }
 }
