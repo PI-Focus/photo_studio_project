@@ -8,7 +8,14 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Интерфейс сервиса для работы с командой фотографов студии.
+ */
 public interface IPhotographerService {
+    /**
+     * Возвращает данные о фотографах для формирования страницы каталога.
+     * @return контекст со списком фотографов
+     */
     IPhotographersContext getEquipmentContext();
     List<Photographer> getPhotographersByTime(Range<LocalDateTime> time);
     Boolean exists(UUID id);

@@ -13,32 +13,54 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Сущность оборудования для хранения в базе данных.
+ * Соответствует таблице "equipment" и содержит информацию о технике, доступной для аренды в студии.
+ */
 @Entity
 @Table(name = "equipment")
 public class EquipmentEntity {
+    /** Уникальный идентификатор оборудования в базе данных */
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
+    /** Название оборудования */
     @Column(name = "title", nullable = false, length = 32)
     String title;
 
+    /** Описание оборудования */
     @Column(name = "description", nullable = false)
     String description;
 
+    /** Стоимость аренды*/
     @Column(name = "price", nullable = false)
     private Integer price;
 
+    /** Относительный путь к файлу изображения оборудования */
     @Column(name = "photo_path", nullable = false, length = 64)
     String photoPath;
 
+    /** Список всех записей о бронировании, в которых участвует данное оборудование */
     @OneToMany(mappedBy = "equipment", cascade = CascadeType.ALL)
     private List<ReservedEquipmentEntity> reservedEquipments = new ArrayList<>();
 
+    /**
+     * Коструктор. Нужен для работы спецификации JPA
+     */
     public EquipmentEntity() {
     }
 
+    /**
+     * Конструктор для инициализации сущности со всеми параметрами.
+     * @param id уникальный идентификатор
+     * @param title название оборудования
+     * @param description описание оборудования
+     * @param price стоимость аренды
+     * @param photoPath путь к фотографии
+     * @param reservedEquipments список связанных бронирований
+     */
     public EquipmentEntity(
             UUID id,
             String title,

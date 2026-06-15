@@ -9,7 +9,21 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import java.io.IOException;
 import java.util.Objects;
 
+/**
+ * Обработчик успешной аутентификации.
+ * Обеспечивает редирект: возвращает пользователя на ту страницу, 
+ * с которой он пришел до авторизации.
+ */
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
+    /**
+     * Вызывается после успешного входа пользователя.
+     * Проверяет сессию на наличие сохраненного URI предыдущей страницы.
+     * 
+     * @param request текущий запрос
+     * @param response текущий ответ
+     * @param authentication объект с данными об авторизованном пользователе
+     * @throws IOException при ошибках редиректа
+     */
     @Override
     public void onAuthenticationSuccess(
             HttpServletRequest request,

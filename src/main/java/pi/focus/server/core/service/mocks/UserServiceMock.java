@@ -11,9 +11,17 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Мок-реализация сервиса пользователей.
+ * В текущей версии всегда отклоняет регистрацию (возвращает false).
+ */
 @Service
 @Profile({"mock", "test"})
 public class UserServiceMock implements IUserService {
+    /**
+     * Имитирует попытку регистрации.
+     * @return всегда false для проверки обработки ошибок регистрации
+     */
     @Override
     public boolean createUser(User user) {
         return false;

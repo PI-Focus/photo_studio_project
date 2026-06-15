@@ -29,7 +29,7 @@
                 </div>
             </form>
 
-            <p id="error-msg" class="error-msg" th:text="${error}"></p>
+            <p id="error-msg" class="error-msg" th:text="${error}" th:data-server-error="${error}"></p>
         </div>
     </th:block>
 

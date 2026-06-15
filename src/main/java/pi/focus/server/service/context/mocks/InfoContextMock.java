@@ -12,6 +12,9 @@ import pi.focus.server.service.models.DataCardDto;
 import pi.focus.server.service.models.TabDto;
 import pi.focus.server.service.models.TextCardDto;
 
+/**
+ * Мок-реализация контекста главной информационной страницы, содержащий правила аренды
+ */
 public class InfoContextMock implements IInfoContext {
     private final List<ITextCard> rentRules;
     private final List<INamedData<IDataCard>> imagedTabs;

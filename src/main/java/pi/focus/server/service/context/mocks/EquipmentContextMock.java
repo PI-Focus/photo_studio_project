@@ -6,6 +6,10 @@ import pi.focus.server.api.context.IEquipmentContext;
 import pi.focus.server.api.models.IImagedTextCard;
 import pi.focus.server.service.models.ImagedTextCardDto;
 
+/**
+ * Мок-реализация контекста оборудования.
+ * Содержит список техники.
+ */
 public class EquipmentContextMock implements IEquipmentContext{
     private final List<IImagedTextCard> equipment;
 

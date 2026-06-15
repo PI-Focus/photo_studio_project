@@ -6,6 +6,9 @@ import pi.focus.server.api.context.IPhotoroomsContext;
 import pi.focus.server.api.models.IDataCard;
 import pi.focus.server.service.models.DataCardDto;
 
+/**
+ * Мок-реализация контекста списка всех залов.
+ */
 public class PhotoroomsContextMock implements IPhotoroomsContext {
     private final List<IDataCard> photorooms;
 

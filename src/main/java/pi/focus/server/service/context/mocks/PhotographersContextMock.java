@@ -6,6 +6,9 @@ import pi.focus.server.api.context.IPhotographersContext;
 import pi.focus.server.api.models.IImagedTextCard;
 import pi.focus.server.service.models.ImagedTextCardDto;
 
+/**
+ * Мок-реализация контекста списка фотографов.
+ */
 public class PhotographersContextMock implements IPhotographersContext{
     private final List<IImagedTextCard> equipment;
 
