@@ -8,7 +8,20 @@ import org.springframework.security.web.authentication.logout.LogoutSuccessHandl
 
 import java.io.IOException;
 
+/**
+ * Обработчик успешного выхода из системы.
+ * Позволяет пользователю остаться на той же странице, где он нажал кнопку "Выход".
+ */
 public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
+    /**
+     * Вызывается после завершения процесса логаута.
+     * Использует заголовок Referer для определения страницы возврата.
+     * 
+     * @param request текущий запрос
+     * @param response текущий ответ
+     * @param authentication данные пользователя
+     * @throws IOException при ошибках редиректа
+     */
     @Override
     public void onLogoutSuccess(
         HttpServletRequest request,

@@ -5,5 +5,8 @@ import pi.focus.server.core.entity.PhotoEntity;
 
 import java.util.UUID;
 
+/**
+ * Репозиторий для управления фотографиями залов.
+ */
 public interface PhotoRepository extends JpaRepository<PhotoEntity, UUID> {
 }

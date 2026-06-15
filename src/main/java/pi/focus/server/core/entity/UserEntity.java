@@ -18,37 +18,61 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Сущность пользователя системы.
+ * Содержит учетные данные для авторизации, контактную информацию 
+ * и определяет уровень прав доступа (роль) в приложении.
+ */
 @Entity
 @Table(name = "users")
 public class UserEntity {
+    /** Уникальный идентификатор пользователя */
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
+    /** Уникальный логин пользователя, используемый для входа в систему */
     @Column(name = "login", nullable = false, length = 32, unique = true)
     private String login;
 
+    /** Контактный номер телефона пользователя */
     @Column(name = "phone_number", length = 11, unique = true)
     String phoneNumber;
 
+    /** Адрес электронной почты пользователя для связи и уведомлений */
     @Column(name = "email", unique = true)
     String email;
 
+    /** Хэшированный пароль пользователя для аутентификации */
     @Column(name = "password", nullable = false)
     private String password;
 
+    /** Роль пользователя в системе */
     @Enumerated(EnumType.STRING)
     @JdbcTypeCode(SqlTypes.NAMED_ENUM)
     @Column(name = "role", nullable = false)
     private UserRole role;
 
+    /** Список всех бронирований, совершенных данным пользователем */
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<ReservationEntity> reservations = new ArrayList<>();
 
+    /** Конструктор для спецификации JPA */
     public UserEntity() {
     }
 
+    /**
+     * Конструктор для создания полной записи о пользователе.
+     * 
+     * @param id уникальный идентификатор
+     * @param login логин
+     * @param phoneNumber номер телефона
+     * @param email электронная почта
+     * @param password пароль 
+     * @param role роль в системе
+     * @param reservations история бронирований
+     */
     public UserEntity(
             UUID id,
             String login,

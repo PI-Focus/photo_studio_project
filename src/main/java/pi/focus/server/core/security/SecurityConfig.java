@@ -20,6 +20,11 @@ import pi.focus.server.core.repository.UserRepository;
 
 import java.util.List;
 
+/**
+ * Главный конфигурационный класс безопасности приложения.
+ * Настраивает цепочку фильтров безопасности правила доступа к эндпоинтам,
+ * процесс авторизации через форму и алгоритмы шифрования паролей.
+ */
 @SuppressWarnings({"PMD.AvoidDuplicateLiterals"})
 @Configuration
 @EnableWebSecurity
@@ -32,6 +37,13 @@ public class SecurityConfig {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Конфигурация HTTP безопасности.
+     * Определяет публичные и защищенные ресурсы, настройки формы входа и выхода.
+     * 
+     * @param http объект для настройки безопасности
+     * @return сконфигурированная цепочка фильтров
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         http
@@ -53,11 +65,21 @@ public class SecurityConfig {
         return http.build();
     }
 
+    /**
+     * Бин для шифрования паролей с использованием алгоритма BCrypt.
+     */
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Пользовательский сервис для поиска и загрузки данных пользователя при входе.
+     * Поддерживает три формата логина: телефон, email или классический логин.
+     * 
+     * @return реализация UserDetailsService
+     * @throws UsernameNotFoundException если формат логина неверен или пользователь не найден
+     */
     @Bean
     public UserDetailsService userDetailsService() {
         return login -> {
@@ -88,16 +110,34 @@ public class SecurityConfig {
         };
     }
 
+    /**
+     * Создает бин обработчика успешной аутентификации.
+     * Использует CustomAuthenticationSuccessHandler для управления редиректами после входа.
+     * 
+     * @return объект обработчика успешного входа
+     */
     @Bean
     public AuthenticationSuccessHandler authenticationSuccessHandler() {
         return new CustomAuthenticationSuccessHandler();
     }
 
+    /**
+     * Создает бин обработчика неудачной аутентификации.
+     * Использует CustomAuthenticationFailureHandler для возврата на страницу логина с ошибкой.
+     * 
+     * @return объект обработчика ошибок входа
+     */
     @Bean
     public AuthenticationFailureHandler authenticationFailureHandler() {
         return new CustomAuthenticationFailureHandler();
     }
 
+    /**
+     * Создает бин обработчика успешного выхода из системы.
+     * Использует CustomLogoutSuccessHandler для возврата пользователя на исходную страницу.
+     * 
+     * @return объект обработчика завершения сессии
+     */
     @Bean
     public LogoutSuccessHandler logoutSuccessHandler() {
         return new CustomLogoutSuccessHandler();

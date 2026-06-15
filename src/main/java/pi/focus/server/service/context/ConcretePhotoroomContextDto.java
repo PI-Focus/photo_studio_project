@@ -5,7 +5,12 @@ import pi.focus.server.api.models.ITextCard;
 
 import java.util.List;
 
-
+/**
+ * DTO для передачи данных о конкретном фотозале.
+ * 
+ * @param textData текстовое описание зала (заголовок и контент)
+ * @param images список путей к изображениям для галереи зала
+ */
 public record ConcretePhotoroomContextDto(
         ITextCard textData,
         List<String> images

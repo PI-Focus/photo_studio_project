@@ -27,13 +27,27 @@ import pi.focus.server.service.models.DataCardDto;
 import pi.focus.server.service.models.TabDto;
 import pi.focus.server.service.models.TextCardDto;
 
+/**
+ * Сервис загрузки и предоставления статических данных студии.
+ * Загружает информацию из внешних JSON-файлов при запуске приложения.
+ */
 @Service
 @Profile({"dev", "prod", "test"})
 public class StaticDataService implements IStaticDataService {
     private static final String ERROR_STRING = "File load or parsing error: ";
+    /** Кэшированный контекст информационной страницы */
     private final IInfoContext infoContext;
+    /** Кэшированный базовый контекст сайта */
     private final IBaseContext baseContext;
 
+    /**
+     * Конструктор сервиса. Выполняет первичную загрузку всех JSON-ресурсов.
+     * 
+     * @param aboutResource путь к JSON с информацией о студии
+     * @param rulesResource путь к JSON с правилами аренды
+     * @param previewResource путь к JSON с превью-данными
+     * @param baseResource путь к JSON с базовыми контактами
+     */
     public StaticDataService(
         @Value("${app.static-data.about-path:classpath:/data/about.json}") Resource aboutResource,
         @Value("${app.static-data.rules-path:classpath:/data/rules.json}") Resource rulesResource,
@@ -53,6 +67,10 @@ public class StaticDataService implements IStaticDataService {
         return infoContext;
     }
 
+    /**
+     * Читает JSON ресурс и преобразует его в блок данных «О нас».
+     * @throws StaticDataLoadingException при ошибках чтения или парсинга
+     */
     @Override
     public IBaseContext getBaseContext() {
         return baseContext;
@@ -65,6 +83,10 @@ public class StaticDataService implements IStaticDataService {
         }
     }
 
+    /**
+     * Читает JSON ресурс и преобразует его в блок данных «Правила аренды».
+     * @throws StaticDataLoadingException при ошибках чтения или парсинга
+     */
     private List<ITextCard> loadRulesData(Resource resource) {
         try (InputStream inputStream = resource.getInputStream()) {
             List<TextCardDto> dtos = JsonMapper.getInstance().readValue(inputStream, new TypeReference<>() {});
@@ -74,6 +96,10 @@ public class StaticDataService implements IStaticDataService {
         }
     }
 
+    /**
+     * Читает JSON ресурс и преобразует его в блок данных «Предпросмотр».
+     * @throws StaticDataLoadingException при ошибках чтения или парсинга
+     */
     private List<INamedData<IDataCard>> loadPreviewData(Resource resource) {
         try (InputStream inputStream = resource.getInputStream()) {
             List<TabDto<DataCardDto>> dtos = JsonMapper.getInstance().readValue(inputStream, new TypeReference<>() {});

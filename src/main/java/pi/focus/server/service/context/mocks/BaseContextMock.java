@@ -2,6 +2,10 @@ package pi.focus.server.service.context.mocks;
 
 import pi.focus.server.api.context.IBaseContext;
 
+/**
+ * Мок-реализация базового контекста приложения.
+ * Содержит демонстрационные контактные данные студии, ИНН и пути к логотипам.
+ */
 public class BaseContextMock implements IBaseContext{
 
     @Override

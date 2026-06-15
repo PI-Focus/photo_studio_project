@@ -9,6 +9,10 @@ import pi.focus.server.core.service.api.IStaticDataService;
 import pi.focus.server.service.context.mocks.BaseContextMock;
 import pi.focus.server.service.context.mocks.InfoContextMock;
 
+/**
+ * Мок-реализация сервиса статических данных.
+ * Возвращает фиксированную информацию о студии (логотипы, контакты, правила) для тестов UI.
+ */
 @Service
 @Profile({"mock", "test"})
 public class StaticDataServiceMock implements IStaticDataService {

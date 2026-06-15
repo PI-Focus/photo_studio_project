@@ -9,7 +9,20 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 
 import java.io.IOException;
 
+/**
+ * Обработчик ошибок аутентификации. 
+ * Используется для кастомизации поведения системы при неудачной попытке входа.
+ */
 public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
+    /**
+     * Вызывается при возникновении исключения во время процесса входа.
+     * Перенаправляет пользователя обратно на страницу логина с параметром ошибки.
+     * 
+     * @param request текущий HTTP-запрос
+     * @param response текущий HTTP-ответ
+     * @param exception исключение, возникшее при аутентификации
+     * @throws IOException при ошибках ввода-вывода или редиректа
+     */
     @Override
     public void onAuthenticationFailure(
             HttpServletRequest request,

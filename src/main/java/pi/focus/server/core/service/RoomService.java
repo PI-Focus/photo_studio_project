@@ -20,18 +20,32 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-
+/**
+ * Сервис для управления данными фотозалов.
+ * Реализует логику сборки контекстов для отображения каталога залов и страниц конкретных локаций.
+ */
 @Service
 @Profile({"dev", "prod", "test"})
 public class RoomService implements IRoomService {
+    /** Путь к заглушке изображения, если у зала нет загруженных фото */
     @Value("${app.static-data.placeholder-path}")
     private String placeholderPath;
     private final RoomRepository roomRepository;
 
+    /**
+     * Конструктор для внедрения зависимости репозитория.
+     * @param roomRepository репозиторий залов
+     */
     public RoomService(RoomRepository roomRepository) {
         this.roomRepository = roomRepository;
     }
 
+    /**
+     * Формирует список карточек всех залов для страницы каталога.
+     * Для каждой карточки выбирается первое доступное фото из галереи зала.
+     * 
+     * @return контекст со списком залов для фронтенда
+     */
     @Override
     public IPhotoroomsContext getPhotoroomsContext() {
         List<RoomEntity> roomEntities = roomRepository.findAll();
@@ -54,6 +68,12 @@ public class RoomService implements IRoomService {
         return new PhotoroomsContextDto(dataCards);
     }
 
+    /**
+     * Получает детальную информацию о зале по его ID.
+     * 
+     * @param id уникальный идентификатор зала
+     * @return контекст конкретного зала или null, если зал не найден
+     */
     @Override
     public IConcretePhotoroomContext getConcretePhotoroomContext(UUID id) {
         Optional<RoomEntity> roomOpt = roomRepository.findById(id);

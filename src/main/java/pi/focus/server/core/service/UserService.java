@@ -10,17 +10,35 @@ import pi.focus.server.core.service.api.IUserService;
 
 import java.util.ArrayList;
 
+/**
+ * Сервис для управления пользователями и процессом регистрации.
+ * Обрабатывает бизнес-логику создания учетных записей и проверки уникальности данных.
+ */
 @Service
 @Profile({"dev", "prod", "test"})
 public class UserService implements IUserService {
     private final UserRepository userRepository;
+    /** Компонент для безопасного шифрования паролей */
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Конструктор для внедрения зависимости репозитория.
+     * @param userRepository репозиторий пользователя
+     * @param passwordEncoder кодирование пароля
+     * 
+     */
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
     }
 
+    /**
+     * Создает нового пользователя в системе.
+     * Перед сохранением проверяет логин на уникальность и шифрует пароль.
+     * 
+     * @param user данные нового пользователя из доменной модели
+     * @return true, если пользователь успешно создан; false, если логин уже занят
+     */
     @Override
     public boolean createUser(User user) {
         if (existsByLogin(user.login())) {

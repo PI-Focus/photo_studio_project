@@ -5,5 +5,8 @@ import pi.focus.server.core.entity.ReservedEquipmentEntity;
 
 import java.util.UUID;
 
+/**
+ * Репозиторий для работы со связями зарезервированного оборудования.
+ */
 public interface ReservedEquipmentRepository extends JpaRepository<ReservedEquipmentEntity, UUID> {
 }

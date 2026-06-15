@@ -10,6 +10,10 @@ import pi.focus.server.service.context.mocks.PhotoroomsContextMock;
 
 import java.util.UUID;
 
+/**
+ * Мок-реализация сервиса фотозалов.
+ * Предназначена для демонстрации интерфейса каталога залов без обращения к БД.
+ */
 @Service
 @Profile({"mock", "test"})
 public class RoomServiceMock implements IRoomService {
@@ -18,6 +22,11 @@ public class RoomServiceMock implements IRoomService {
         return new PhotoroomsContextMock();
     }
 
+    /**
+     * Генерирует мок-данные для конкретного зала.
+     * @param id UUID зала
+     * @return контекст зала 
+     */
     @Override
     public IConcretePhotoroomContext getConcretePhotoroomContext(UUID id) {
         return new ConcretePhotoroomContextMock(id.toString().substring(0, 8));
