@@ -9,7 +9,6 @@
 //import org.junit.jupiter.params.provider.ValueSource;
 //import org.mockito.ArgumentCaptor;
 //import org.springframework.beans.factory.annotation.Autowired;
-//
 //import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 //import org.springframework.http.MediaType;
 //import org.springframework.security.test.context.support.WithMockUser;
@@ -18,32 +17,37 @@
 //import org.springframework.test.web.servlet.MvcResult;
 //import pi.focus.server.api.context.IInfoContext;
 //import pi.focus.server.api.models.ICalendar;
+//import pi.focus.server.api.models.IOrderStatus;
 //import pi.focus.server.core.domain.Equipment;
 //import pi.focus.server.core.domain.Photographer;
 //import pi.focus.server.core.service.api.IEquipmentService;
+//import pi.focus.server.core.service.api.IOrderFacade;
 //import pi.focus.server.core.service.api.IPhotographerService;
 //import pi.focus.server.core.service.api.IRoomService;
 //import pi.focus.server.core.service.api.IStaticDataService;
 //import pi.focus.server.service.models.CalendarDto;
-//
+//import pi.focus.server.service.models.OrderDto;
+//import pi.focus.server.service.models.OrderStatusDto;
+//import tools.jackson.databind.ObjectMapper;
+//import java.nio.charset.StandardCharsets;
 //import java.time.LocalDate;
 //import java.time.LocalDateTime;
 //import java.util.ArrayList;
 //import java.util.List;
 //import java.util.UUID;
-//
 //import static org.assertj.core.api.SoftAssertions.assertSoftly;
 //import static org.hamcrest.Matchers.hasSize;
 //import static org.hamcrest.Matchers.is;
 //import static org.junit.jupiter.api.Assertions.assertEquals;
 //import static org.junit.jupiter.api.Assertions.assertNotNull;
 //import static org.mockito.ArgumentMatchers.any;
-//import static org.mockito.ArgumentMatchers.eq;
 //import static org.mockito.Mockito.RETURNS_DEEP_STUBS;
 //import static org.mockito.Mockito.mock;
 //import static org.mockito.Mockito.verify;
 //import static org.mockito.Mockito.when;
+//import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 //import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+//import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 //import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 //import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 //import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -51,11 +55,14 @@
 //@WebMvcTest(OrderController.class)
 //@DisplayName("Тесты для OrderController")
 //@WithMockUser
-//@SuppressWarnings({"PMD.LongVariable", "PMD.AvoidDuplicateLiterals", "PMD.LawOfDemeter"})
+//@SuppressWarnings({"PMD.LawOfDemeter","PMD.LongVariable", "PMD.AvoidDuplicateLiterals", "PMD.CouplingBetweenObjects"})
 //class OrderControllerTest {
 //
 //    @Autowired
 //    private MockMvc mockMvc;
+//
+//    @Autowired
+//    private ObjectMapper objectMapper;
 //
 //    @MockitoBean
 //    private IRoomService roomService;
@@ -65,6 +72,9 @@
 //
 //    @MockitoBean
 //    private IPhotographerService photographerService;
+//
+//    @MockitoBean
+//    private IOrderFacade orderService;
 //
 //    @MockitoBean
 //    private IStaticDataService staticDataService;
@@ -120,57 +130,6 @@
 //                    "Тело ответа не должно быть пустым при успешном запросе календаря");
 //        }
 //
-//        @Test
-//        @DisplayName("Должен распарсить строку даты и передать LocalDate в сервис")
-//        void shouldParseAndPassLocalDateToService() throws Exception {
-//            UUID uuid = UUID.fromString(VALID_UUID);
-//            LocalDate expectedDate = LocalDate.parse(VALID_DATE);
-//
-//            ICalendar mockCalendar = new CalendarDto(createEmptyCalendar());
-//            when(roomService.getRoomCalendar(uuid, expectedDate)).thenReturn(mockCalendar);
-//
-//            mockMvc.perform(get("/order/calendar/" + VALID_UUID)
-//                    .param("date", VALID_DATE)).andReturn();
-//
-//            assertSoftly(softly -> {
-//                ArgumentCaptor<LocalDate> dateCaptor = ArgumentCaptor.forClass(LocalDate.class);
-//                verify(roomService).getRoomCalendar(eq(uuid), dateCaptor.capture());
-//
-//                softly.assertThat(dateCaptor.getValue())
-//                        .as("Дата должна быть корректно распарсена из строки и передана в сервис как LocalDate")
-//                        .isEqualTo(expectedDate);
-//            });
-//        }
-//
-//        @Test
-//        @DisplayName("Должен вернуть календарь с бронированиями (частично занятая неделя)")
-//        void shouldReturnCalendarWithBookedSlots() throws Exception {
-//            List<List<Integer>> calendarData = createEmptyCalendar();
-//
-//            calendarData.get(2).set(0, 1);
-//            calendarData.get(3).set(0, 1);
-//            calendarData.get(4).set(0, 1);
-//
-//            ICalendar mockCalendar = new CalendarDto(calendarData);
-//            when(roomService.getRoomCalendar(eq(UUID.fromString(VALID_UUID)), eq(LocalDate.parse(VALID_DATE))))
-//                    .thenReturn(mockCalendar);
-//
-//            MvcResult result = mockMvc.perform(get("/order/calendar/" + VALID_UUID)
-//                            .param("date", VALID_DATE)
-//                            .accept(MediaType.APPLICATION_JSON))
-//                    .andExpect(status().isOk())
-//                    .andExpect(jsonPath("$.calendar[2][0]", is(1)))
-//                    .andExpect(jsonPath("$.calendar[3][0]", is(1)))
-//                    .andExpect(jsonPath("$.calendar[4][0]", is(1)))
-//                    .andExpect(jsonPath("$.calendar[1][0]", is(0)))
-//                    .andExpect(jsonPath("$.calendar[5][0]", is(0)))
-//                    .andExpect(jsonPath("$.calendar[2][1]", is(0)))
-//                    .andReturn();
-//
-//
-//            assertNotNull(result.getResponse().getContentAsString(),
-//                    "Тело ответа не должно быть пустым при успешном запросе календаря с бронированиями");
-//        }
 //        @ParameterizedTest
 //        @ValueSource(strings = {
 //                "not-a-uuid",
@@ -316,6 +275,7 @@
 //                    .param("end", VALID_END)).andReturn();
 //
 //            assertSoftly(softly -> {
+//                @SuppressWarnings("unchecked")
 //                ArgumentCaptor<Range<LocalDateTime>> rangeCaptor = ArgumentCaptor.forClass(Range.class);
 //                verify(photographerService).getPhotographersByTime(rangeCaptor.capture());
 //
@@ -329,6 +289,7 @@
 //                        .isEqualTo(LocalDateTime.parse(VALID_END));
 //            });
 //        }
+//
 //        @ParameterizedTest
 //        @ValueSource(strings = {
 //                "not-a-date",
@@ -369,6 +330,203 @@
 //
 //            assertEquals(400, result.getResponse().getStatus(),
 //                    "Статус должен быть 400, если обязательный параметр end не передан");
+//        }
+//    }
+//
+//    @Nested
+//    @DisplayName("POST /order/current")
+//    class PostCurrentOrderEndpoint {
+//
+//        private OrderStatusDto createTestOrderStatus() {
+//            OrderDto testOrder = new OrderDto(
+//                    LocalDateTime.of(2026, 6, 15, 15, 0),
+//                    LocalDateTime.of(2026, 6, 15, 17, 0),
+//                    UUID.fromString("692d3820-d762-436a-93ae-aaa1c7d2c1f5"),
+//                    List.of(),
+//                    150_000
+//            );
+//
+//            return new OrderStatusDto(
+//                    UUID.fromString("8718f425-0ebe-48aa-9127-4541ed29524c"),
+//                    testOrder
+//            );
+//        }
+//
+//        @Test
+//        @DisplayName("Должен вернуть 200 OK при валидном JSON и validateStatus = 0")
+//        void shouldReturnOkWhenValidationPasses() throws Exception {
+//            OrderStatusDto testDto = createTestOrderStatus();
+//            String json = objectMapper.writeValueAsString(testDto);
+//
+//            when(orderService.validateOrderStatus(any(IOrderStatus.class))).thenReturn(0);
+//
+//            MvcResult result = mockMvc.perform(post("/order/current")
+//                            .with(csrf())
+//                            .contentType(MediaType.APPLICATION_JSON)
+//                            .content(json))
+//                    .andExpect(status().isOk())
+//                    .andReturn();
+//
+//            assertSoftly(softly -> {
+//                String content = new String(result.getResponse().getContentAsByteArray(), StandardCharsets.UTF_8);
+//
+//                softly.assertThat(content)
+//                        .as("Тело ответа не должно быть пустым")
+//                        .isNotBlank();
+//            });
+//
+//        }
+//
+//        @Test
+//        @DisplayName("Должен вернуть 202 Accepted при валидном JSON и validateStatus = 1")
+//        void shouldReturnAcceptedWhenValidationHasWarnings() throws Exception {
+//            OrderStatusDto testDto = createTestOrderStatus();
+//            String json = objectMapper.writeValueAsString(testDto);
+//
+//            when(orderService.validateOrderStatus(any(IOrderStatus.class))).thenReturn(1);
+//
+//            MvcResult result = mockMvc.perform(post("/order/current")
+//                            .with(csrf())
+//                            .contentType(MediaType.APPLICATION_JSON)
+//                            .content(json))
+//                    .andExpect(status().isAccepted())
+//                    .andReturn();
+//
+//            assertSoftly(softly -> softly.assertThat(result.getResponse().getStatus())
+//                    .as("Статус должен быть 202 Accepted при предупреждениях валидации")
+//                    .isEqualTo(202));
+//        }
+//
+//        @Test
+//        @DisplayName("Должен вернуть 422 Unprocessable Content при валидном JSON и validateStatus = 2")
+//        void shouldReturnUnprocessableWhenValidationFails() throws Exception {
+//            OrderStatusDto testDto = createTestOrderStatus();
+//            String json = objectMapper.writeValueAsString(testDto);
+//
+//            when(orderService.validateOrderStatus(any(IOrderStatus.class))).thenReturn(2);
+//
+//            MvcResult result = mockMvc.perform(post("/order/current")
+//                            .with(csrf())
+//                            .contentType(MediaType.APPLICATION_JSON)
+//                            .content(json))
+//                    .andExpect(status().isUnprocessableContent())
+//                    .andReturn();
+//
+//            assertSoftly(softly -> softly.assertThat(result.getResponse().getStatus())
+//                    .as("Статус должен быть 422 при ошибках валидации")
+//                    .isEqualTo(422));
+//        }
+//
+//        @Test
+//        @DisplayName("Должен вернуть 422 Unprocessable Content при невалидном JSON")
+//        void shouldReturnUnprocessableForInvalidJson() throws Exception {
+//            MvcResult result = mockMvc.perform(post("/order/current")
+//                            .with(csrf())
+//                            .contentType(MediaType.APPLICATION_JSON)
+//                            .content("{invalid json}"))
+//                    .andExpect(status().isUnprocessableContent())
+//                    .andReturn();
+//
+//            assertSoftly(softly -> softly.assertThat(result.getResponse().getStatus())
+//                    .as("Статус должен быть 422 при невалидном JSON")
+//                    .isEqualTo(422));
+//        }
+//    }
+//
+//    @Nested
+//    @DisplayName("POST /order/confirm")
+//    class ConfirmOrderEndpoint {
+//        private OrderStatusDto createTestOrderStatus() {
+//            OrderDto testOrder = new OrderDto(
+//                    LocalDateTime.of(2026, 6, 15, 15, 0),
+//                    LocalDateTime.of(2026, 6, 15, 17, 0),
+//                    UUID.fromString("692d3820-d762-436a-93ae-aaa1c7d2c1f5"),
+//                    List.of(),
+//                    150_000
+//            );
+//
+//            return new OrderStatusDto(
+//                    UUID.fromString("8718f425-0ebe-48aa-9127-4541ed29524c"),
+//                    testOrder
+//            );
+//        }
+//
+//        @Test
+//        @DisplayName("Должен вернуть 200 OK при валидном JSON и validateStatus = 0")
+//        void shouldReturnOkWhenConfirmationPasses() throws Exception {
+//            OrderStatusDto testDto = createTestOrderStatus();
+//            String json = objectMapper.writeValueAsString(testDto);
+//
+//            when(orderService.validateOrderStatus(any(IOrderStatus.class))).thenReturn(0);
+//
+//            MvcResult result = mockMvc.perform(post("/order/confirm")
+//                            .with(csrf())
+//                            .contentType(MediaType.APPLICATION_JSON)
+//                            .content(json))
+//                    .andExpect(status().isOk())
+//                    .andReturn();
+//            assertSoftly(softly -> {
+//                String content = new String(result.getResponse().getContentAsByteArray(), StandardCharsets.UTF_8);
+//
+//                softly.assertThat(content)
+//                        .as("Тело ответа не должно быть пустым")
+//                        .isNotBlank();
+//            });
+//        }
+//
+//        @Test
+//        @DisplayName("Должен вернуть 202 Accepted при валидном JSON и validateStatus = 1")
+//        void shouldReturnAcceptedWhenConfirmationHasWarnings() throws Exception {
+//            OrderStatusDto testDto = createTestOrderStatus();
+//            String json = objectMapper.writeValueAsString(testDto);
+//
+//            when(orderService.validateOrderStatus(any(IOrderStatus.class))).thenReturn(1);
+//
+//            MvcResult result = mockMvc.perform(post("/order/confirm")
+//                            .with(csrf())
+//                            .contentType(MediaType.APPLICATION_JSON)
+//                            .content(json))
+//                    .andExpect(status().isAccepted())
+//                    .andReturn();
+//
+//            assertSoftly(softly -> softly.assertThat(result.getResponse().getStatus())
+//                    .as("Статус должен быть 202 Accepted при предупреждениях подтверждения")
+//                    .isEqualTo(202));
+//        }
+//
+//        @Test
+//        @DisplayName("Должен вернуть 422 Unprocessable Content при валидном JSON и validateStatus = 2")
+//        void shouldReturnUnprocessableWhenConfirmationFails() throws Exception {
+//            OrderStatusDto testDto = createTestOrderStatus();
+//            String json = objectMapper.writeValueAsString(testDto);
+//
+//            when(orderService.validateOrderStatus(any(IOrderStatus.class))).thenReturn(2);
+//
+//            MvcResult result = mockMvc.perform(post("/order/confirm")
+//                            .with(csrf())
+//                            .contentType(MediaType.APPLICATION_JSON)
+//                            .content(json))
+//                    .andExpect(status().isUnprocessableContent())
+//                    .andReturn();
+//
+//            assertSoftly(softly -> softly.assertThat(result.getResponse().getStatus())
+//                    .as("Статус должен быть 422 при ошибках подтверждения")
+//                    .isEqualTo(422));
+//        }
+//
+//        @Test
+//        @DisplayName("Должен вернуть 422 Unprocessable Content при невалидном JSON")
+//        void shouldReturnUnprocessableForInvalidJsonInConfirm() throws Exception {
+//            MvcResult result = mockMvc.perform(post("/order/confirm")
+//                            .with(csrf())
+//                            .contentType(MediaType.APPLICATION_JSON)
+//                            .content("{invalid json}"))
+//                    .andExpect(status().isUnprocessableContent())
+//                    .andReturn();
+//
+//            assertSoftly(softly -> softly.assertThat(result.getResponse().getStatus())
+//                    .as("Статус должен быть 422 при невалидном JSON в подтверждении")
+//                    .isEqualTo(422));
 //        }
 //    }
 //}
