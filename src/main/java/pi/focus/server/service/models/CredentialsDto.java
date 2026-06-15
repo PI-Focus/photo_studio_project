@@ -3,10 +3,10 @@ package pi.focus.server.service.models;
 import pi.focus.server.api.models.ICredentials;
 
 public class CredentialsDto implements ICredentials {
-    private String login;
-    private String password;
-    private String phoneNumber;
-    private String email;
+    private final String login;
+    private final String password;
+    private final String phoneNumber;
+    private final String email;
     private String error;
 
     public CredentialsDto(String login, String password, String phoneNumber, String email, String error) {

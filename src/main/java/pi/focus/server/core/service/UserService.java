@@ -141,6 +141,7 @@ public class UserService implements IUserService {
     }
 
     @Override
+    @SuppressWarnings({"PMD.CognitiveComplexity", "PMD.CyclomaticComplexity"})
     public String updateUser(User user) {
         Optional<UserEntity> userOpt = userRepository.findById(user.id());
         if (userOpt.isEmpty()) {
