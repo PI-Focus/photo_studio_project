@@ -33,7 +33,11 @@ import tools.jackson.core.JacksonException;
 
 import java.time.format.DateTimeParseException;
 
-
+/**
+ * Контроллер для управления процессами бронирования и оформления заказов.
+ * Обеспечивает работу с календарем залов, подбор оборудования и фотографов,
+ * а также управляет состоянием корзины заказа через сессию пользователя.
+ */
 @Controller
 @RequestMapping("/order")
 @Transactional
@@ -44,6 +48,7 @@ public class OrderController {
     private final IPhotographerService photographerService;
     private final IOrderFacade orderService;
 
+    /** Конструктор с необходимыми сервисами для обработки логики заказов */
     public OrderController(
             IRoomService roomService,
             IEquipmentService equipmentService,
@@ -56,6 +61,14 @@ public class OrderController {
         this.orderService = orderService;
     }
 
+    /**
+     * Возвращает календарь занятости конкретного фотозала на выбранную дату.
+     * Проверяет корректность ID и даты .
+     * 
+     * @param id уникальный идентификатор зала
+     * @param date дата для просмотра расписания 
+     * @return ResponseEntity с объектом календаря или ошибка 400
+     */
     @GetMapping("/calendar/{id}")
     public ResponseEntity<ICalendar> getPhotorooms(@PathVariable String id, @RequestParam String date) {
         UUID uuid;
@@ -76,11 +89,23 @@ public class OrderController {
         return ResponseEntity.ok(calendar);
     }
 
+    /**
+     * Предоставляет список всего доступного в студии оборудования.
+     * 
+     * @return список объектов оборудования
+     */
     @GetMapping("/equipment")
     public ResponseEntity<List<Equipment>> getEquipment() {
         return ResponseEntity.ok().body(equipmentService.getEquipment());
     }
 
+    /**
+     * Возвращает список фотографов, которые свободны в указанный временной интервал.
+     * 
+     * @param start время начала интервала 
+     * @param end время окончания интервала 
+     * @return список доступных фотографов
+     */
     @GetMapping("/photographers")
     public ResponseEntity<List<Photographer>> getPhotoPhotographer(
             @RequestParam String start,
@@ -98,6 +123,13 @@ public class OrderController {
         return ResponseEntity.ok().body(photographerService.getPhotographersByTime(time));
     }
 
+    /**
+     * Получает текущий статус неоформленного заказа из сессии пользователя.
+     * Если сессия новая, инициализирует пустой статус заказа.
+     * 
+     * @param request текущий HTTP запрос
+     * @return текущий объект статуса заказа
+     */
     @GetMapping("/current")
     public ResponseEntity<IOrderStatus> getCurrent(HttpServletRequest request) {
         HttpSession session = request.getSession(true);
@@ -109,6 +141,13 @@ public class OrderController {
         return ResponseEntity.ok().body(orderStatus);
     }
 
+    /**
+     * Обновляет данные текущего заказа в сессии после предварительной валидации.
+     * 
+     * @param stringOrderStatus JSON-строка с данными заказа
+     * @param request текущий HTTP запрос
+     * @return обновленный статус заказа или статус ошибки валидации
+     */
     @PostMapping("/current")
     public ResponseEntity<IOrderStatus> postCurrent(
             @RequestBody String stringOrderStatus,
@@ -134,6 +173,15 @@ public class OrderController {
         }
     }
 
+    /**
+     * Подтверждает создание бронирования и сохраняет заказ в базе данных.
+     * После успешного создания очищает данные заказа в сессии.
+     * 
+     * @param stringOrderStatus JSON-строка с финальными данными заказа
+     * @param request текущий HTTP запрос
+     * @param userDetails данные авторизованного пользователя
+     * @return результат операции и объект заказа
+     */
     @PostMapping("/confirm")
     public ResponseEntity<IOrderStatus> createReservation (
             @RequestBody String stringOrderStatus,

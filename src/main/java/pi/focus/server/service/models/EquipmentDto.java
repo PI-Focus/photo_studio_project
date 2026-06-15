@@ -5,6 +5,9 @@ import pi.focus.server.api.models.IEquipment;
 import java.io.Serializable;
 import java.util.UUID;
 
+/**
+ * DTO единицы оборудования, используемое в составе заказа.
+ */
 public class EquipmentDto implements IEquipment, Serializable {
     private static final long serialVersionUID = 1L;
     private UUID id;

@@ -7,9 +7,14 @@ import tools.jackson.databind.annotation.JsonDeserialize;
 import java.io.Serializable;
 import java.util.UUID;
 
+/**
+ * DTO верхнего уровня для процесса бронирования.
+ * Связывает идентификатор комнаты с телом заказа.
+ */
 public class OrderStatusDto implements IOrderStatus, Serializable {
     private static final long serialVersionUID = 1L;
     private UUID roomId;
+    /** Детали заказа с явным указанием реализации для Jackson */
     @JsonDeserialize(as = OrderDto.class)
     private IOrder body;
 

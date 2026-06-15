@@ -2,6 +2,9 @@ package pi.focus.server.service.models;
 
 import pi.focus.server.api.models.ICredentials;
 
+/**
+ * DTO для передачи регистрационных и контактных данных пользователя.
+ */
 public class CredentialsDto implements ICredentials {
     private final String login;
     private final String password;

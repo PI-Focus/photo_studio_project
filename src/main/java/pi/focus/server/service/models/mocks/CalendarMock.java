@@ -9,10 +9,16 @@ import java.util.List;
 
 import java.time.temporal.ChronoUnit;
 
+/**
+ * Mock-реализация календаря для тестирования фронтенда.
+ * Генерирует циклическую сетку занятости на основе базового шаблона,
+ * которая сдвигается в зависимости от выбранной даты.
+ */
 public class CalendarMock implements ICalendar {
     private static final Integer ROWS = 7;
     private static final Integer COLUMNS = 14;
     
+    /** Базовый шаблон занятости (1000 — занято, -1 — свободно) */
     private static final List<List<Integer>> BASE_CALENDAR = Arrays.asList(
         Arrays.asList(1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1000), 
         Arrays.asList(1000, 1000, 1000, 1000, -1,   -1,   -1,   -1,   1000, 1000, 1000, 1000, 1000, 1000), 
@@ -25,6 +31,11 @@ public class CalendarMock implements ICalendar {
 
     private final List<List<Integer>> calendar;
 
+    /**
+     * Конструктор мока. Если дата в прошлом — календарь пуст.
+     * Если в будущем — строки шаблона циклически перемешиваются.
+     * @param targetDate целевая дата календаря
+     */
     public CalendarMock(LocalDate targetDate) {
         LocalDate today = LocalDate.now();
 
