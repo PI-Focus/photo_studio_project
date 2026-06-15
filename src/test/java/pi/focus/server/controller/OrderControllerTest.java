@@ -548,5 +548,4 @@ class OrderControllerTest {
                     .isEqualTo(422));
         }
     }
->>>>>>> refs/remotes/origin/feature/profile-orders
 }
