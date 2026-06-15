@@ -1,0 +1,103 @@
+main {
+    height: 100%;
+}
+
+.main-wrapper {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 17.5% 1fr;
+}
+
+.left-pane {
+    display: flex;
+    flex-flow: column wrap;
+    background: var(--color-secondary);
+    height: 100%;
+    padding: var(--space-xxl) var(--space-xl);
+    box-sizing: border-box;
+
+    will-change: background;
+    transition: background var(--time-m) ease;
+
+    .logo-login-wrap {
+        p {
+            font-size: var(--text-xl);
+            margin: var(--space-l) 0;
+            text-align: center;
+        }
+
+        .logo-block img {
+            background: none;
+        }
+    }
+
+    a {
+        color: var(--color-text-main);
+        text-decoration: none;
+
+        will-change: color;
+        transition: color var(--time-m) ease;
+
+        &.active {
+            color: var(--color-text-accent);
+        }
+
+        &:hover {
+            color: var(--color-accent);
+        }
+    }
+
+    #link-logout {
+        margin-top: auto;
+    }
+}
+
+.reservations-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s);
+    width: 100%;
+    box-sizing: border-box;
+    padding: var(--space-xxl)
+}
+
+.reservation-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center; 
+    width: 100%;
+    box-sizing: border-box;
+    padding: var(--space-m); 
+
+    background: var(--color-secondary);
+    border-radius: var(--radius-m);
+}
+
+.card-info {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-s); 
+}
+
+.room-title, 
+.booking-time {
+    margin: 0;
+    padding: 0;
+}
+
+.delete-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: var(--space-s); 
+    margin: 0;
+    line-height: 1;
+
+    font-size: var(--space-l);
+}

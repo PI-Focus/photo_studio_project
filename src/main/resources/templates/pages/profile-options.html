@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://thymeleaf.org" 
+      th:replace="~{fragments/layout :: main-layout(~{::main-content}, ~{::title}, ~{::#profile-css}, ~{::#profile-options-scripts})}">
+<head>
+    <th:block id="profile-css">
+        <link rel="stylesheet" th:href="@{/css/components.css}" blocking="render">
+        <link rel="stylesheet" th:href="@{/css/profile.css}" blocking="render">
+    </th:block>
+    <title>Настройки - Фотостудия «Фокус»</title>
+</head>
+<body>
+
+    <th:block th:fragment="main-content">
+        <div class="left-pane">
+            <div class="logo-login-wrap">
+                <div class="logo-block">
+                    <div th:replace="~{fragments/basic-components :: safe-img(${base.profileBright}, '', 'square theme-bright')}"></div>
+                    <div th:replace="~{fragments/basic-components :: safe-img(${base.profileDark}, '', 'square theme-dark')}"></div>
+                </div>
+                <p>ЛОГИН</p>
+            </div>
+            <a th:href="@{orders}">Заказы</a>
+            <a th:href="@{options}" class="active">Настройки</a>
+            <a th:href="@{/logout}" id="link-logout">Выход</a>
+        </div>
+        <div class="content-pane">
+            <div class="options-disable">
+                <h2>Страница в разработке</h2>
+                <!-- <form>
+                    <h2>Настройки аккаунта</h2>
+
+                    <div>
+                        <label for="login"></label>
+                        <input type="text" id="login" name="login" value="LOGIN">
+                    </div>
+
+                    <div>
+                        <label for="password"></label>
+                        <input type="password" id="password" name="password" value="password123">
+                    </div>
+
+                    <div>
+                        <label for="phone"></label>
+                        <input type="tel" id="phone" name="phone" value="8-666-666-66-66">
+                    </div>
+
+                    <div>
+                        <label for="email"></label>
+                        <input type="email" id="email" name="email" value="" placeholder="Не указана">
+                    </div>
+
+                    <div>
+                        <button type="submit">СОХРАНИТЬ ИЗМЕНЕНИЯ</button>
+                    </div>
+
+                    <div role="alert">
+                        <span>Ошибка: неверный пароль, попробуйте ещё раз</span>
+                    </div>
+                </form> -->
+            </div>
+        </div>
+    </th:block>
+
+    <th:block id="profile-options-scripts">
+    </th:block>
+</body>
+</html>
