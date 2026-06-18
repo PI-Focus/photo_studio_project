@@ -441,7 +441,8 @@ function handleTableClick(event) {
         selectedRowEnd = row;
         cell.classList.add('slot-selected');
     } else {
-        selectedRowEnd = row;
+        selectedRowEnd = end;
+        selectedRowStart = start;
         restoreSelectionVisuals();
     }
 
@@ -449,20 +450,15 @@ function handleTableClick(event) {
 }
 
 function getStartHour() {
-    const firstCell = document.querySelector('.slot-cell[data-row="0"]');
+    const startCell = document.querySelector('.start-time-marker');
     
-    if (firstCell && firstCell.dataset.time) {
-        return parseInt(firstCell.dataset.time.split(':')[0], 10);
-    }
-    
-    if (firstCell) {
-        const timeText = firstCell.innerText || firstCell.textContent;
-        const match = timeText.match(/(\d{1,2})/);
-        if (match) return parseInt(match[1], 10);
+    if (startCell && startCell.dataset.startHour) {
+        return parseInt(startCell.dataset.startHour, 10);
     }
     
     return 8; 
 }
+
 
 
 function getMonday(date) {

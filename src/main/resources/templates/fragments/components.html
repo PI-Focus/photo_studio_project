@@ -98,7 +98,9 @@
    th:data-uuid="${tableDataUuid}">
    <thead>
         <tr>
-            <th class="time-cell"><span th:text="${#strings.concat(#numbers.formatInteger(startHour, 2), ':00')}">time</span></th>
+            <th class="time-cell start-time-marker" th:data-start-hour="${startHour}">
+                <span th:text="${#strings.concat(#numbers.formatInteger(startHour, 2), ':00')}">time</span>
+            </th>
             <th class="day-header" data-day="0">Пн <span>--</span></th>
             <th class="day-header" data-day="1">Вт <span>--</span></th>
             <th class="day-header" data-day="2">Ср <span>--</span></th>
