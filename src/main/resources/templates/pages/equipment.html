@@ -13,7 +13,7 @@
     <th:block th:fragment="main-content">
         <th:block th:if="${equipment.equipment != null && !equipment.equipment.isEmpty()}">
             <th:block th:each="item : ${equipment.equipment}">
-                <th:block th:replace="~{fragments/components :: imaged-text-card(${item}, 'horizontal', 'underlined')}"></th:block>
+                <th:block th:replace="~{fragments/components :: imaged-text-card(${item}, '', 'underlined')}"></th:block>
             </th:block>
         </th:block>
     </th:block>
